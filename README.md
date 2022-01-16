@@ -1,4 +1,4 @@
-# ShaaPy 
+# ShaarPy 
 
 The very nice Shaarli (https://sebsauvage.net/wiki/doku.php?id=php:shaarli) 'cloned' in Python
 
@@ -100,7 +100,7 @@ then, access the project with your browser http://127.0.0.1:8001/
 
 ![Tags list](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png)
 
-to easyly find links by tags
+to easily find links by tags
 
 ### Daily links
 
