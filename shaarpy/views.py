@@ -233,13 +233,16 @@ class TagsList(SettingsMixin, ListView):
 
 class DailyLinks(SettingsMixin, ListView):
     """
-        Tags List
+        Daily Links List
     """
     template_name = 'shaarpy/daily_list.html'
     queryset = Links.objects.none()
     ordering = ['-date_created']
 
     def get_queryset(self):
+        """
+        by default, get the "yesterday" links
+        """
         today = date.today()
         yesterday = today - timedelta(days=1)
 
@@ -248,6 +251,38 @@ class DailyLinks(SettingsMixin, ListView):
         queryset = Links.objects.filter(date_created__date=yesterday)
 
         return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        """
+            checkout which "yesterday" it is
+        """
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+
+        if 'yesterday' in self.kwargs:
+            yesterday = self.kwargs['yesterday']
+
+        queryset = object_list if object_list is not None else self.object_list
+        context_object_name = self.get_context_object_name(queryset)
+
+        previous_date = Links.objects.filter(date_created__lte=yesterday).order_by("-date_created").first()
+        if previous_date:
+            previous_date = previous_date.date_created.date()
+
+        next_date = Links.objects.filter(date_created__date__gt=yesterday).order_by("date_created").first()
+        if next_date:
+            next_date = next_date.date_created.date()
+
+        context = {
+                'object_list': queryset,
+                'previous_date': previous_date,
+                'next_date': next_date,
+        }
+
+        if context_object_name is not None:
+            context[context_object_name] = queryset
+        context.update(kwargs)
+        return super().get_context_data(**context)
 
 # USERS
 

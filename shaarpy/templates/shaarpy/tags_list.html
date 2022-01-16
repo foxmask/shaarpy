@@ -4,7 +4,7 @@
 <title>{% block title %}{{ SHAARPY_NAME }} :: {% trans "Tags list" %}{% endblock %}</title>
 {% block content %}
 <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
-  <h1>{% trans "Tags list" %}</h1>
+  <h1><i class="fas fa-tags"></i> {% trans "Tags list" %}</h1>
 {% for key, value in tags.items %}
     <a href="{% url 'links_by_tag_list' key %}" type="button" class="p-3 m-2 btn btn-dark position-relative">
       {{ key }}
