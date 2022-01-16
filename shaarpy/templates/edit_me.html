@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "My Profile" %} - {{ SHAARPY_NAME }}{% endblock %}
+
+{% block content %}
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+  <h1 class="page-header">{% trans "My Profile" %}</h1>
+  <form role="form" method="post" class="form-horizontal">{% csrf_token %}
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      {% if form.errors.items %}You should fix the error(s) below {% endif  %}
+    </div>
+    {% endif %}
+
+    <div class="tab-content">
+      <table class='table table-hover table-bordered table-striped caption-top'>
+          <caption>{% trans "Profile Details" %}</caption>
+          <thead>
+          <tr>
+          <th>{% trans "Last name" %}</th>
+          <th>{% trans "Email" %}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>
+              {{ form.last_name }}
+            </td>
+            <td>
+              {{ form.email }}
+            </td>
+          </tr>
+          {% if form.last_name.errors or form.email.errors %}
+          <tr>
+            <td class="alert alert-danger">{% if form.last_name.errors %}{{ form.last_name.errors }}{% endif %}</td>
+            <td class="alert alert-danger">{% if form.email.errors %}{{ form.email.errors }}{% endif %}</td>
+          </tr>
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+      <div class="form-group">
+          <input type="submit" class="btn btn-primary"  value="{% trans 'Save' %}" />
+      </div>
+  </form>
+</div>
+{% endblock %}

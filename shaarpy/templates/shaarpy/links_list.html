@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load shaarpy_extras %}
+{% if tag %}
+<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'Links for tag' %} {{ tag }}{% endblock %}</title>
+{% endif %}
+{% block content %}
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+<nav aria-label="Page navigation" class="mt-3">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+    {% endif %}
+    <li class="page-item active" aria-current="page">
+      <a class="page-link" href="#">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</a>
+    </li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% for data in object_list %}
+<div class="card">
+  <div class="card-body">
+    {% if data.url %}
+    <h5><a href="{{ data.url }}" target="_blank">{{ data.title }}</a></h5>
+    {% else %}
+    <h5><a href="{% url 'link_detail' data.id %}">{{ data.title }}</a></h5>
+    {% endif %}
+    <p class="card-text">{{ data.text | markdown |safe }}</p>
+  </div>
+  <div class="card-footer text-muted">
+    {% if data.private %}
+    <i class="fas fa-key"></i> -
+    {% endif %}
+    <i class="far fa-clock"></i> {{ data.date_created }}
+    <a type="button" href="{% url 'link_edit' data.id %}" class="btn btn-outline-primary btn-sm">
+      <i class="far fa-edit"></i>
+    </a>
+    <a type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ data.id }}">
+      <i class="far fa-trash-alt"></i>
+    </a> -
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal{{ data.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ data.id }}" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel{{ data.id }}">{% trans 'Deletion of your link' %}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% blocktrans %}
+                Are you sure you want to remove this link ?
+            {% endblocktrans %}
+            <p>
+            {% if data.link %}{{ data.link }}{% endif %}
+            {% if data.title %}{{ data.title }}{% endif %}
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+            <a href="{% url 'link_delete' data.id %}" type="button" class="btn btn-danger">Yes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="{% url 'link_detail' data.id %}">Permalink</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.id %}{% endif %}
+    {% if data.tags %}
+    - <i class="fas fa-tags"></i> {{ data.tags | tags | safe }}
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+<nav aria-label="Page navigation" class="mt-3">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+    {% endif %}
+    <li class="page-item active" aria-current="page">
+      <a class="page-link" href="#">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</a>
+    </li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+    {% endif %}
+  </ul>
+</nav>
+</div>
+{% endblock %}

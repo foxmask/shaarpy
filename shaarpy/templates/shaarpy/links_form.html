@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %}
+<title>{% block title %}{{ SHAARPY_NAME }} :: New shaarpy/note{% endblock %}</title>
+{% block content %}
+{% if messages %}
+<div class="alert alert-warning">
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+  <form action="" method="post" role="form" class="form-horizontal">
+    {% csrf_token %}
+    <fieldset>
+    {{ form.non_field_errors }}
+      {% if edit %}
+      <legend> Update the link/note</legend>
+      {% else %}
+      <legend> Share a link/a note</legend>
+      {% endif %}
+      <div class="mb-3">
+          <label class="col-sm-9 control-label" for="id_url"> URL</label>
+          <div class="col-sm-9">{{ form.url }}</div>
+          <div class="col-sm-offset-2 col-sm-8">{{ form.url.errors }}</div>
+      </div>
+      <div class="mb-3">
+          <label class="col-sm-9 control-label" for="id_title"> {% trans 'Title' %}</label>
+          <div class="col-sm-9">{{ form.title }}</div>
+          <div class="col-sm-offset-2 col-sm-8">{{ form.title.errors }}</div>
+      </div>
+      <div class="mb-3">
+          <label class="col-sm-9 control-label" for="id_text"> {% trans 'Text' %}</label>
+          <div class="col-sm-9">{{ form.text }}</div>
+          <div class="col-sm-offset-2 col-sm-8">{{ form.text.errors }}</div>
+      </div>
+      <div class="mb-3">
+          <label class="col-sm-9 control-label" for="id_tags"> {% trans 'Tags' %}</label>
+          <div class="col-sm-9">{{ form.tags }}</div>
+          <div class="col-sm-offset-2 col-sm-8">{{ form.tags.errors }}</div>
+      </div>
+      <div class="mb-3">
+          <label class="col-sm-9 control-label" for="id_private"> {% trans 'Private' %}</label>
+          <div class="col-sm-9">{{ form.private }}</div>
+          <div class="col-sm-offset-2 col-sm-8">{{ form.private.errors }}</div>
+      </div>
+      <a href="{% url 'home' %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
+      {% if edit %}
+      <button class="btn btn-primary">{% trans "Update link" %}</button>
+      {% else %}
+      <button class="btn btn-primary"><i class="fas fa-plus"></i> {% trans "Add link" %}</button>
+      {% endif %}
+
+    </fieldset>
+  </form>
+</div>
+{% endblock %}

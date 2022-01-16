@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% trans "My Profile" %} - {{ SHAARPY_NAME }}{% endblock %}
+
+{% block content %}
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+  <h2 class="page-header">{% trans "My Profile" %}</h2>
+    <table class='table table-hover table-bordered table-striped caption-top'>
+      <caption>{% trans "Profile Details" %}</caption>
+      <thead>
+      <tr>
+        <th>{% trans "Last name" %}</th>
+        <th>{% trans "Email" %}</th>
+        <th>{% trans "Last connection" %}</th>
+        <th>{% trans "Created" %}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{{ object.last_name }}</td>
+        <td>{{ object.email }}</td>
+        <td>{{ object.last_login }}</td>
+        <td>{{ object.date_joined }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <a href="{% url 'edit_me' %}"><span class="btn btn-primary"> {% trans "Edit" %}</span></a>
+</div>
+{% endblock %}

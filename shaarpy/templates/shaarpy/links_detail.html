@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load shaarpy_extras %}
+<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans "View" %} {{ object.title }} {% endblock %}</title>
+{% block content %}
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+<div class="card">
+  <div class="card-body">
+    {% if object.url %}
+    <h5><a href="{{ object.url }}" target="_blank">{{ object.title }}</a></h5>
+    {% else %}
+    <h5><a href="{% url 'link_detail' object.id %}">{{ object.title }}</a></h5>
+    {% endif %}
+    <p class="card-text">{{ object.text | markdown |safe }}</p>
+  </div>
+  <div class="card-footer text-muted">
+    {% if object.private %}
+    <i class="fas fa-key"></i> -
+    {% endif %}
+    <i class="far fa-clock"></i> {{ object.date_created }}
+    {% if request.user.is_authenticated == True %}
+    <a type="button" href="{% url 'link_edit' object.id %}" class="btn btn-outline-primary btn-sm">
+      <i class="far fa-edit"></i>
+    </a>
+    <a type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ object.id }}">
+      <i class="far fa-trash-alt"></i>
+    </a> -
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal{{ object.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ object.id }}" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel{{ object.id }}">{% trans 'Deletion of your link' %}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {% blocktrans %}
+                Are you sure you want to remove this link ?
+            {% endblocktrans %}
+            <p>
+            {% if object.link %}{{ object.link }}{% endif %}
+            {% if object.title %}{{ object.title }}{% endif %}
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+            <a href="{% url 'link_delete' object.id %}" type="button" class="btn btn-danger">Yes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <a href="{% url 'link_detail' object.id %}">Permalink</a> - {% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.id %}{% endif %}
+    {% if object.tags %}
+    - <i class="fas fa-tags"></i> {{ object.tags | tags | safe }}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
