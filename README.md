@@ -4,7 +4,7 @@ The very nice Shaarli (https://sebsauvage.net/wiki/doku.php?id=php:shaarli) 'clo
 
 Save your notes and links to share ... or not ;) 
 
-![Main page](https://framagit.org/foxmask/shaarpy/-/raw/master/shaarpy/docs/shaarpy_home.png)
+![Main page](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_home.png)
 
 ## Installation
 ## :package: Installation
@@ -94,14 +94,14 @@ then, access the project with your browser http://127.0.0.1:8001/
 
 ### Add a new link
 
-![New links](https://framagit.org/foxmask/shaarpy/-/raw/master/shaarpy/docs/new_link.png)
+![New links](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/new_link.png)
 
 ### Tags list 
 
-![Tags list](https://framagit.org/foxmask/shaarpy/-/raw/master/shaarpy/docs/tags_list.png)
+![Tags list](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png)
 
 to easyly find links by tags
 
 ### Daily links
 
-![Daily links](https://framagit.org/foxmask/shaarpy/-/raw/master/shaarpy/docs/daily.png)
+![Daily links](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png)
