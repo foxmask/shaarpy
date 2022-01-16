@@ -138,3 +138,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGOUT_REDIRECT_URL = '/'
 SHAARPY_NAME = env.str('SHAARPY_NAME', default="Shaarpy - My Links")
 SHAARPY_DESCRIPTION = env.str('SHAARPY_DESCRIPTION')
+SHAARPY_LOCALSTORAGE_MD = env.str('SHAARPY_LOCALSTORAGE_MD')
+SHAARPY_STYLE = env.str('SHAARPY_STYLE', default="blue")

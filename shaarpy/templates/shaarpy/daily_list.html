@@ -6,11 +6,17 @@
 <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
   <h1><i class="fas fa-calendar-day"></i> {% trans 'Daily Links' %}</h1>
   <h3 class="col-xs-8 col-md-8 col-lg-8 offset-xs-4 offset-md-4 offset-lg-4 mt-3 mb-3"><i class="far fa-calendar-alt"></i> list of the links of the day</h3>
-  <h6 class="col-xs-8 col-md-8 col-lg-8 offset-xs-4 offset-md-4 offset-lg-4 mt-3 mb-3">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
     {% if previous_date %}<a href="{% url 'daily' previous_date|date:'Y-m-d' %}"><i class="fas fa-long-arrow-alt-left"></i> <i class="far fa-clock"></i>{{ previous_date }}</a>{% endif %}&nbsp;
+    </div>
+    <div class="col">
+    <h6>{{ current_date|date:"DATE_FORMAT" }}</h6>
+    </div>
+    <div class="col">
     {% if next_date %}<a href="{% url 'daily' next_date|date:'Y-m-d' %}"><i class="far fa-clock"></i> {{ next_date }} <i class="fas fa-long-arrow-alt-right"></i> </a>{% endif %}
-  </h6>
-
+    </div>
+  </div>
   <div class="row row-cols-1 row-cols-md-3 g-4">
   {% for data in object_list %}
     <div class="col">

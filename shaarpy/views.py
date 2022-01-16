@@ -2,8 +2,9 @@
 """
    ShaarPy
 """
-from datetime import date
-from datetime import timedelta
+from datetime import date, datetime, timedelta
+
+from django.template import Context, Template
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -19,12 +20,51 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
 from newspaper import Article
 import newspaper
+import os
 import pypandoc
 
 from shaarpy.forms import LinksForm, MeForm
 from shaarpy.models import Links
 from shaarpy import settings
+
+from slugify import slugify
 from urllib.parse import urlparse
+
+
+def rm_md_file(title):
+    """
+        rm a markdown file
+    """
+    file_name = slugify(title) + '.md'
+    file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
+    if os.path.exists(file_md):
+        os.remove(file_md)
+
+
+def create_md_file(title, url, text):
+    """
+        create a markdown file
+    """
+    template = Template("\
+---\n\
+title: {{ title}}\n\
+date: {{ date }}\n\
+\n\
+toc: Contents\n\
+Style: {{ style }}\n\
+...\n\
+\n\
+# {{ title }}\n\
+\n\
+{{ text }}\n\
+    ")
+    d = {'title': title, 'url': url, 'text': text, 'date': datetime.now(), 'style': settings.SHAARPY_STYLE}
+    output = template.render(Context(d))
+    file_name = slugify(title) + '.md'
+    file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
+    # overwrite existing file with same slug name
+    with open(file_md, 'w') as ls:
+        ls.write(output)
 
 
 # Beginning of Handling content of Article with NewsPaPer
@@ -59,6 +99,8 @@ def grab_full_article(url):
 @login_required
 def link_delete(request, pk):
     link = Links.objects.get(pk=pk)
+    if link.title is not None:
+        rm_md_file(link.title)
     link.delete()
     return redirect('home')
 
@@ -144,6 +186,9 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
                 # just an url
                 elif url != '':
                     self.object.title, self.object.text = grab_full_article(url)
+
+        if settings.SHAARPY_LOCALSTORAGE_MD:
+            create_md_file(self.object.title, self.object.url, self.object.text)
 
         return super().form_valid(form)
 
@@ -261,6 +306,7 @@ class DailyLinks(SettingsMixin, ListView):
 
         if 'yesterday' in self.kwargs:
             yesterday = self.kwargs['yesterday']
+            yesterday = datetime.strptime(yesterday, '%Y-%m-%d')
 
         queryset = object_list if object_list is not None else self.object_list
         context_object_name = self.get_context_object_name(queryset)
@@ -277,6 +323,7 @@ class DailyLinks(SettingsMixin, ListView):
                 'object_list': queryset,
                 'previous_date': previous_date,
                 'next_date': next_date,
+                'current_date': yesterday
         }
 
         if context_object_name is not None:
