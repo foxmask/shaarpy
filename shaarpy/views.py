@@ -89,7 +89,7 @@ def grab_full_article(url):
     r.download()
     r.parse()
     # convert into markdown
-    output = Truncator(r.article_html).chars("400", html=False)
+    output = Truncator(r.article_html).chars("400", html=True)
     text = pypandoc.convert_text(output, 'md', format='html')
     title = r.title + ' - ' + get_brand(url)
     return title, text
@@ -165,27 +165,22 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         url = form.cleaned_data['url']
-        if url is None:
-            self.object = form.save()
-            title = form.cleaned_data['title']
-            text = form.cleaned_data['text']
-            # just a note
-            if url == '' and title == '' and text != '':
-                self.object.title = "Note:"
-        else:
+
+        if url:
             try:
                 links = Links.objects.get(url=url)
                 return redirect('link_detail', **{'pk': links.id})
             except Links.DoesNotExist:
-                self.object = form.save()
-                title = form.cleaned_data['title']
-                text = form.cleaned_data['text']
-                # just a note
-                if url == '' and title == '' and text != '':
-                    self.object.title = "Note:"
-                # just an url
-                elif url != '':
-                    self.object.title, self.object.text = grab_full_article(url)
+                pass
+
+            self.object = form.save()
+            self.object.title, self.object.text = grab_full_article(url)
+
+        else:
+            self.object = form.save()
+            self.object.title = "Note:"
+
+        self.object = form.save()
 
         if settings.SHAARPY_LOCALSTORAGE_MD:
             create_md_file(self.object.title, self.object.url, self.object.text)
