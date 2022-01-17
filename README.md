@@ -105,3 +105,18 @@ to easily find links by tags
 ### Daily links
 
 ![Daily links](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png)
+
+
+## Links sync on mobile
+
+### original webpage 
+
+![Link of the website](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article_website.png)
+
+### shaarpy grabbed link
+
+![Link in shaarpy](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png)
+
+### shaarpy link on mobile
+
+![Shaarpy link on mobile](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/article_mobile.png)
