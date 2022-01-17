@@ -22,18 +22,17 @@ class LinksForm(ModelForm):
             'private': CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        url = cleaned_data.get("url")
+        title = cleaned_data.get("title")
+        text = cleaned_data.get("text")
 
-#class LoginForm(ModelForm):
-#    """
-#        Form to manage the login page
-#    """
-#    class Meta:
-#        model = User
-#        fields = ('username', 'password')
-#        widgets = {
-#            'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
-#            'password': PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
-#        }
+        if url is None and title is None and text == '':
+            msg = "You need to enter something in one of those fields 'URL' or 'Title' or 'Text'"
+            self.add_error('url', msg)
+            self.add_error('title', msg)
+            self.add_error('text', msg)
 
 
 class MeForm(ModelForm):
