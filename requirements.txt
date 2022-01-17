@@ -1,4 +1,5 @@
 Django==4.0.1
 django-environ==0.8.1
+jinja2==3.0.3
 newspaper3k==0.2.8
 pypandoc==1.7.2

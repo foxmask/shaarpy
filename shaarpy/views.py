@@ -4,8 +4,6 @@
 """
 from datetime import date, datetime, timedelta
 
-from django.template import Context, Template
-
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -15,85 +13,13 @@ from django.contrib.syndication.views import Feed
 
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.utils.text import Truncator
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
-from newspaper import Article
-import newspaper
-import os
-import pypandoc
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
 from shaarpy.forms import LinksForm, MeForm
 from shaarpy.models import Links
 from shaarpy import settings
-
-from slugify import slugify
-from urllib.parse import urlparse
-
-
-def rm_md_file(title):
-    """
-        rm a markdown file
-    """
-    file_name = slugify(title) + '.md'
-    file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
-    if os.path.exists(file_md):
-        os.remove(file_md)
-
-
-def create_md_file(title, url, text):
-    """
-        create a markdown file
-    """
-    template = Template("\
----\n\
-title: {{ title}}\n\
-date: {{ date }}\n\
-\n\
-toc: Contents\n\
-Style: {{ style }}\n\
-...\n\
-\n\
-# {{ title }}\n\
-\n\
-{{ text }}\n\
-    ")
-    d = {'title': title, 'url': url, 'text': text, 'date': datetime.now(), 'style': settings.SHAARPY_STYLE}
-    output = template.render(Context(d))
-    file_name = slugify(title) + '.md'
-    file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
-    # overwrite existing file with same slug name
-    with open(file_md, 'w') as ls:
-        ls.write(output)
-
-
-# Beginning of Handling content of Article with NewsPaPer
-def get_host(url):
-    o = urlparse(url)
-    return o.scheme + '://' + o.hostname
-
-
-def get_brand(url):
-    brand = newspaper.build(get_host(url))
-    brand.download()
-    brand.parse()
-    return brand.brand
-
-
-def grab_full_article(url):
-    """
-        get the complete article page from the URL
-    """
-    # get the complete article
-    r = Article(url, keep_article_html=True)
-    r.download()
-    r.parse()
-    # convert into markdown
-    output = Truncator(r.article_html).chars("400", html=True)
-    text = pypandoc.convert_text(output, 'md', format='html')
-    title = r.title + ' - ' + get_brand(url)
-    return title, text
-# End of Handling content of Article with NewsPaPer
+from shaarpy.tools import grab_full_article, rm_md_file, create_md_file
 
 
 @login_required
@@ -183,7 +109,8 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
         self.object = form.save()
 
         if settings.SHAARPY_LOCALSTORAGE_MD:
-            create_md_file(self.object.title, self.object.url, self.object.text)
+            create_md_file(self.object.title, self.object.url, self.object.text, self.object.tags,
+                           self.object.date_created, self.object.private)
 
         return super().form_valid(form)
 
