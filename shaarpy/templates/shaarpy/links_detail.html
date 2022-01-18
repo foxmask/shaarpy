@@ -18,7 +18,7 @@
     <i class="fas fa-key"></i> -
     {% endif %}
     <i class="far fa-clock"></i> {{ object.date_created }}
-    {% if request.user.is_authenticated == True %}
+    {% if user.is_authenticated %}
     <a type="button" href="{% url 'link_edit' object.id %}" class="btn btn-outline-primary btn-sm">
       <i class="far fa-edit"></i>
     </a>

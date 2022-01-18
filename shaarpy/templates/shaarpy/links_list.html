@@ -35,7 +35,8 @@
     {% if data.private %}
     <i class="fas fa-key"></i> -
     {% endif %}
-    <i class="far fa-clock"></i> {{ data.date_created }}
+    <i class="far fa-clock"></i> {{ data.date_created }} -
+    {% if user.is_authenticated %}
     <a type="button" href="{% url 'link_edit' data.id %}" class="btn btn-outline-primary btn-sm">
       <i class="far fa-edit"></i>
     </a>
@@ -66,6 +67,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
     <a href="{% url 'link_detail' data.id %}">Permalink</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.id %}{% endif %}
     {% if data.tags %}
     - <i class="fas fa-tags"></i> {{ data.tags | tags | safe }}
