@@ -9,7 +9,7 @@ register = template.Library()
 def tags(value):
     out = ''
     for tag in value.split(','):
-        out += f'<a href="/links/{tag}"><span class="badge rounded-pill bg-secondary">{tag}</span></a> '
+        out += f'<a href="/tags/{tag}"><span class="badge rounded-pill bg-secondary">{tag}</span></a> '
     return out
 
 

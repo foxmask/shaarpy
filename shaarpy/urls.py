@@ -34,7 +34,7 @@ urlpatterns = [
     path('view/<int:pk>/', LinksDetail.as_view(), name='link_detail'),
     path('delete/<int:pk>/', link_delete, name='link_delete'),
     path('tags/', TagsList.as_view(), name='tags_list'),
-    re_path('links/(?P<tags>\w+)$', LinksByTagList.as_view(), name='links_by_tag_list'),
+    re_path('tags/(?P<tags>\w+)$', LinksByTagList.as_view(), name='links_by_tag_list'),
     path('daily/', DailyLinks.as_view(), name='daily'),
     re_path('daily/(?P<yesterday>\d\d\d\d-\d\d-\d\d)', DailyLinks.as_view(), name='daily'),
     # FEEDS
