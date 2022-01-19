@@ -1,8 +1,12 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Importing/Exporting in Netscape HTML File
+               Load article from url with image/video
+               Manage Markdown file creation
 """
 import base64
+import copy
+from bs4 import BeautifulSoup
 from datetime import datetime
 from django.utils import timezone
 from django.utils.text import Truncator
@@ -41,19 +45,47 @@ def _get_brand(url):
     return brand.brand
 
 
+def drop_image_node(content):
+    my_image = ''
+    soup = BeautifulSoup(content, 'html.parser')
+    if soup.find_all('img', src=True):
+        image = soup.find_all('img', src=True)[0]
+        my_image = copy.copy(image['src'])
+        # if not using copy.copy(image) before
+        # image.decompose(), it drops content of the 2 vars
+        # image and my_image
+        image.decompose()
+    return my_image, soup
+
+
 def grab_full_article(url):
     """
         get the complete article page from the URL
     """
     # get the complete article
     r = Article(url, keep_article_html=True)
-    r.download()
-    r.parse()
-    # convert into markdown
-    output = Truncator(r.article_html).chars("400", html=True)
-    text = pypandoc.convert_text(output, 'md', format='html')
-    title = r.title + ' - ' + _get_brand(url)
-    return title, text
+    try:
+        r.download()
+        r.parse()
+        article_html = r.article_html
+        video = r.movies[0] if len(r.movies) > 0 else ''
+        image = ''
+        # check if there is a top_image
+        if r.top_image:
+            # go to check it in the article_html
+            # and grab the first one found in article_html
+            # it may happened that top_image is not the same
+            # in article_html
+            # so go pickup this one and remove it in the
+            # article_html
+            image, article_html = drop_image_node(article_html)
+        # convert into markdown
+        output = Truncator(article_html).chars("400", html=True)
+        text = pypandoc.convert_text(output, 'md', format='html')
+        title = r.title + ' - ' + _get_brand(url)
+        return title, text, image, video
+    except newspaper.article.ArticleException as e:
+        pass
 
 
 """
@@ -71,7 +103,7 @@ def rm_md_file(title):
         os.remove(file_md)
 
 
-def create_md_file(title, url, text, tags, date_created, private):
+def create_md_file(storage, title, url, text, tags, date_created, private, image, video):
     """
         create a markdown file
     """
@@ -82,6 +114,8 @@ def create_md_file(title, url, text, tags, date_created, private):
             'date': date_created,
             'private': private,
             'tags': tags,
+            'image': image,
+            'video': video,
             'style': settings.SHAARPY_STYLE}
 
     env = Environment(
@@ -90,10 +124,13 @@ def create_md_file(title, url, text, tags, date_created, private):
     template = env.get_template('shaarpy/shaarpy_markdown.md')
     output = template.render(data=data)
     file_name = slugify(title) + '.md'
-    file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
+    file_md = f'{storage}/{file_name}'
     # overwrite existing file with same slug name
     with open(file_md, 'w') as ls:
         ls.write(output)
+
+
+# CRC Stuff
 
 
 def crc_that(string):
@@ -135,7 +172,9 @@ def small_hash(text):
     return final_value
 
 
-def import_shaarli(the_file):
+# IMPORTING SHAARLI FILE
+
+def import_shaarli(the_file, reload_article_from_url):
     private = 0
     with open(the_file, 'r') as f:
         data = f.read()
@@ -154,14 +193,19 @@ def import_shaarli(the_file):
                     'title': '',
                     'text': '',
                     'tags': '',
+                    'image': None,
+                    'video': None,
                     'date_created': '',
                     'private': False}
             if i == 1:
                 continue
 
+            if len(html_article.split('<DD>')) == 2:
+                line, text = html_article.split('<DD>')
+                link['text'] = html.unescape(text)
+
             for line in html_article.split('<DD>'):
                 if line.startswith('<A '):
-                    link['text'] = '' if line else html.unescape(line)
                     matches = re.match(r"<A (.*?)>(.*?)</A>", line)
 
                     attrs = matches[1]
@@ -183,8 +227,15 @@ def import_shaarli(the_file):
                         elif attr == 'PRIVATE':
                             link['private'] = 0 if value_found == '0' else 1
                         elif attr == 'TAGS':
-                            link['tags'] = html.unescape(value_found.replace(',', ' '))
-                    if link['url'] != '':
+                            link['tags'] = value_found
+
+                    if link['url'] != '' and link['url']:
+
+                        if reload_article_from_url:
+                            if link['url'].startswith('?'):
+                                continue
+                            link['title'], link['text'], link['image'], link['video'] = grab_full_article(link['url'])
+
                         if private:
                             link['private'] = 1
 
@@ -199,6 +250,8 @@ def import_shaarli(the_file):
                             obj.tags = link['tags']
                             obj.private = private
                             obj.date_created = link['date_created']
+                            obj.image = link['image']
+                            obj.video = link['video']
                             obj.save()
                         except Links.DoesNotExist:
                             new_values = {'url': link['url'],
@@ -207,8 +260,11 @@ def import_shaarli(the_file):
                                           'tags': link['tags'],
                                           'private': private,
                                           'date_created': link['date_created'],
+                                          'image': link['image'],
+                                          'video': link['video'],
                                           }
                             obj = Links(**new_values)
                             obj.save()
 
         console.print(table)
+

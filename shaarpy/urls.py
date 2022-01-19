@@ -1,3 +1,4 @@
+# coding: utf-8
 """shaarpy URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -19,7 +20,7 @@ from django.urls import path, re_path, include
 from shaarpy.views import (HomeView, LinksCreate, LinksDetail, LinksUpdate, link_delete, TagsList, LinksByTagList)
 from shaarpy.views import (DailyLinks, LatestLinksFeed, me, MeUpdate)
 from shaarpy import settings
-
+from django.utils.encoding import iri_to_uri
 
 urlpatterns = [
     # MANAGE USERS

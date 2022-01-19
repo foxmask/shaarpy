@@ -23,11 +23,19 @@
 </nav>
 {% for data in object_list %}
 <div class="card">
+    {% if data.image %}
+    <img src="{{ data.image }}" class="card-img-top" style="width: 24rem;"/>
+    {% endif %}
   <div class="card-body">
     {% if data.url %}
     <h5><a href="{{ data.url }}" target="_blank">{{ data.title }}</a></h5>
     {% else %}
     <h5><a href="{% url 'link_detail' data.id %}">{{ data.title }}</a></h5>
+    {% endif %}
+    {% if data.video %}
+    <div class="ratio ratio-16x9">
+      <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
+    </div>
     {% endif %}
     <p class="card-text">{{ data.text | markdown |safe }}</p>
   </div>

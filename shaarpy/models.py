@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-   ShaarPy
+    ShaarPy :: Models
 """
 import datetime
 from django.db import models
@@ -13,6 +13,8 @@ class Links(models.Model):
     title = models.CharField(max_length=255, null=True, blank=True)
     text = models.TextField(null=True, blank=True)
     private = models.BooleanField(default=False)
+    image = models.TextField(null=True, blank=True)
+    video = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(default=datetime.datetime.now)
 
     class Meta:

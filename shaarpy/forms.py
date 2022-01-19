@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-   ShaarPy
+    ShaarPy :: Forms
 """
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -16,7 +16,7 @@ class LinksForm(ModelForm):
         fields = ('url', 'title', 'text', 'tags', 'private')
         widgets = {
             'tags': TextInput(attrs={'class': 'form-control'}),
-            'url': TextInput(attrs={'class': 'form-control', 'placeholder': _('URL or leave if empty for creating a note')}),
+            'url': TextInput(attrs={'class': 'form-control', 'placeholder': _('Drop an URL or leave if empty for creating a note')}),
             'title': TextInput(attrs={'class': 'form-control', 'placeholder': _('Note:')}),
             'text': Textarea(attrs={'class': 'form-control', 'placeholder': _('content')}),
             'private': CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -33,6 +33,15 @@ class LinksForm(ModelForm):
             self.add_error('url', msg)
             self.add_error('title', msg)
             self.add_error('text', msg)
+
+    def clean_tags(self):
+        """
+            remove extra space
+        """
+        data = self.cleaned_data['tags']
+        if data.endswith(','):
+            data = data[:-1]
+        return data.replace(' ', '')
 
 
 class MeForm(ModelForm):

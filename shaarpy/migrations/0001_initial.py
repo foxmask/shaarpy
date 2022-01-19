@@ -21,6 +21,8 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=255, blank=True, null=True)),
                 ('text', models.TextField(blank=True, null=True)),
                 ('private', models.BooleanField(default=False)),
+                ('image', models.TextField(null=True, blank=True)),
+                ('video', models.TextField(null=True, blank=True)),
                 ('date_created', models.DateTimeField(default=datetime.datetime.now)),
             ],
             options={

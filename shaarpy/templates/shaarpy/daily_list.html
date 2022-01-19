@@ -27,6 +27,16 @@
           {% else %}
           <h5><a href="{% url 'link_detail' data.id %}">{{ data.title }}</a></h5>
           {% endif %}
+          {% if data.image %}
+          <div class="ratio ratio-4x3">
+            <img src="{{ data.image }}" class="card-img-top" />
+          </div>
+          {% endif %}
+          {% if data.video %}
+          <div class="ratio ratio-16x9">
+            <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
+          </div>
+          {% endif %}
           <p class="card-text">{{ data.text | markdown |safe }}</p>
         </div>
         <div class="card-footer text-muted">

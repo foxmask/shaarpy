@@ -11,6 +11,9 @@ Style: {{ data['style'] }}
 
 # {{ data['title'] }}
 
-[{{ data['url'] }}]({{ data['url'] }})
+[{{ data['title'] }}]({{ data['url'] }})
+
+{% if data['image'] %}![{{ data['image'] }}]({{ data['image'] }}){% endif %}
+{% if data['video'] %}{{ data['video'] }}{% endif %}
 
 {{ data['text'] }}

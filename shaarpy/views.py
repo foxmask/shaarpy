@@ -13,7 +13,7 @@ from django.contrib.syndication.views import Feed
 
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-
+from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 
 from shaarpy.forms import LinksForm, MeForm
@@ -100,7 +100,7 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
                 pass
 
             self.object = form.save()
-            self.object.title, self.object.text = grab_full_article(url)
+            self.object.title, self.object.text, self.object.image, self.object.video = grab_full_article(url)
 
         else:
             self.object = form.save()
@@ -109,8 +109,10 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
         self.object = form.save()
 
         if settings.SHAARPY_LOCALSTORAGE_MD:
-            create_md_file(self.object.title, self.object.url, self.object.text, self.object.tags,
-                           self.object.date_created, self.object.private)
+            create_md_file(settings.SHAARPY_LOCALSTORAGE_MD,
+                           self.object.title, self.object.url, self.object.text, self.object.tags,
+                           self.object.date_created, self.object.private,
+                           self.object.image, self.object.video)
 
         return super().form_valid(form)
 
@@ -228,7 +230,7 @@ class DailyLinks(SettingsMixin, ListView):
 
         if 'yesterday' in self.kwargs:
             yesterday = self.kwargs['yesterday']
-            yesterday = datetime.strptime(yesterday, '%Y-%m-%d')
+            yesterday = datetime.strptime(yesterday, '%Y-%m-%d').replace(tzinfo=timezone.utc)
 
         queryset = object_list if object_list is not None else self.object_list
         context_object_name = self.get_context_object_name(queryset)
