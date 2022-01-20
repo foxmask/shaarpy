@@ -70,7 +70,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
-            <a href="{% url 'link_delete' data.id %}" type="button" class="btn btn-danger">Yes</a>
+            <a href="{% url 'link_delete' data.id %}{% if page_obj.number %}?page={{ page_obj.number }}{% endif %}" type="button" class="btn btn-danger">Yes</a>
           </div>
         </div>
       </div>

@@ -62,10 +62,8 @@ def grab_full_article(url):
     """
         get the complete article page from the URL
     """
-    print(url)
     # get the complete article
     r = Article(url, keep_article_html=True)
-    print(r)
     try:
         r.download()
         r.parse()

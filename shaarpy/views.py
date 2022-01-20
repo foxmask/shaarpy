@@ -15,7 +15,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
-
+import pypandoc
 from shaarpy.forms import LinksForm, MeForm
 from shaarpy.models import Links
 from shaarpy import settings
@@ -24,11 +24,17 @@ from shaarpy.tools import grab_full_article, rm_md_file, create_md_file
 
 @login_required
 def link_delete(request, pk):
+    page = None
+    if 'page' in request.GET:
+        page = request.GET.get('page')
     link = Links.objects.get(pk=pk)
     if link.title is not None:
         rm_md_file(link.title)
     link.delete()
-    return redirect('home')
+    if page:
+       return redirect(reverse('home') + '?page=' + request.GET.get('page'))
+    else:
+        return redirect('home')
 
 
 class SettingsMixin:
@@ -257,6 +263,7 @@ class DailyLinks(SettingsMixin, ListView):
 
 # USERS
 
+
 @login_required
 def logout_view(request):
     logout(request)
@@ -300,7 +307,7 @@ class LatestLinksFeed(Feed):
         return item.title
 
     def item_description(self, item):
-        return item.text
+        return pypandoc.convert_text(item.text, 'html', format='gfm')
 
     # item_link is only needed if NewsItem has no get_absolute_url method.
     def item_link(self, item):

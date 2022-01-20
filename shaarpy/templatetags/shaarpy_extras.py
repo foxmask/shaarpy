@@ -15,6 +15,6 @@ def tags(value):
 
 @register.filter(name='markdown')
 def makrdown(text):
-    return pypandoc.convert_text(text, "html", format="md")
+    return pypandoc.convert_text(text, "html", format="gfm")
 
 
