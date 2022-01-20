@@ -136,6 +136,8 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+
 LOGOUT_REDIRECT_URL = '/'
 SHAARPY_NAME = env.str('SHAARPY_NAME', default="Shaarpy - My Links")
 SHAARPY_DESCRIPTION = env.str('SHAARPY_DESCRIPTION')

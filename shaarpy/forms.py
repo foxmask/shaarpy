@@ -39,9 +39,10 @@ class LinksForm(ModelForm):
             remove extra space
         """
         data = self.cleaned_data['tags']
-        if data.endswith(','):
-            data = data[:-1]
-        return data.replace(' ', '')
+        if data:
+            if data.endswith(','):
+                data = data[:-1]
+            return data.replace(' ', '')
 
 
 class MeForm(ModelForm):
