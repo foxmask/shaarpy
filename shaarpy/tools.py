@@ -62,8 +62,10 @@ def grab_full_article(url):
     """
         get the complete article page from the URL
     """
+    print(url)
     # get the complete article
     r = Article(url, keep_article_html=True)
+    print(r)
     try:
         r.download()
         r.parse()
@@ -83,9 +85,11 @@ def grab_full_article(url):
         output = Truncator(article_html).chars("400", html=True)
         text = pypandoc.convert_text(output, 'md', format='html')
         title = r.title + ' - ' + _get_brand(url)
+
         return title, text, image, video
     except newspaper.article.ArticleException as e:
-        pass
+
+        return url, "" , "" , ""
 
 
 """
