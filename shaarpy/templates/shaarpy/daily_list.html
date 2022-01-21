@@ -23,7 +23,7 @@
       <div class="card">
         <div class="card-body">
           {% if data.url %}
-          <h5><a href="{{ data.url }}" target="_blank">{{ data.title }}</a></h5>
+          <h5 class="card-title"><a href="{{ data.url }}" target="_blank">{{ data.title }}</a></h5>
           {% else %}
           <h5><a href="{% url 'link_detail' data.id %}">{{ data.title }}</a></h5>
           {% endif %}

@@ -56,10 +56,11 @@
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.private.errors }}</div>
           {% endif %}
       </div>
-      <a href="{% url 'home' %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
       {% if edit %}
+      <a href="{% url 'link_detail' object.id %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
       <button class="btn btn-primary">{% trans "Update link" %}</button>
       {% else %}
+      <a href="{% url 'home' %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
       <button class="btn btn-primary"><i class="fas fa-plus"></i> {% trans "Add link" %}</button>
       {% endif %}
 

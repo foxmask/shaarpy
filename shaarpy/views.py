@@ -100,6 +100,7 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
 
         if url:
             try:
+                # check if url already exist and then redirect to it
                 links = Links.objects.get(url=url)
                 return redirect('link_detail', **{'pk': links.id})
             except Links.DoesNotExist:
@@ -110,7 +111,8 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
 
         else:
             self.object = form.save()
-            self.object.title = "Note:"
+            if self.object.title is None:
+                self.object.title = "Note:"
 
         self.object = form.save()
 
