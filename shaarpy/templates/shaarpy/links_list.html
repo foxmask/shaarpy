@@ -5,9 +5,10 @@
 {% block title %}
   {% if tag %}
   {{ SHAARPY_NAME }} :: {% trans 'Links related to tag' %} {{ tag }}
-  {% endif %}
-  {% if q %}
+  {% elif q %}
   {{ SHAARPY_NAME }} :: {% trans 'Links related to ' %} {{ q }}
+  {% else %}
+  {{ SHAARPY_NAME }}
   {% endif %}
 {% endblock %}
 </title>
