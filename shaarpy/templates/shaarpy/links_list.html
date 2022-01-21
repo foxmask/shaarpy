@@ -1,23 +1,36 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load shaarpy_extras %}
-{% if tag %}
-<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'Links for tag' %} {{ tag }}{% endblock %}</title>
-{% endif %}
+<title>
+{% block title %}
+  {% if tag %}
+  {{ SHAARPY_NAME }} :: {% trans 'Links related to tag' %} {{ tag }}
+  {% endif %}
+  {% if q %}
+  {{ SHAARPY_NAME }} :: {% trans 'Links related to ' %} {{ q }}
+  {% endif %}
+{% endblock %}
+</title>
 {% block content %}
-<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
+  {% if q %}
+  <h2><i class="fas fa-search"></i> {% trans 'Links related to' %} {{ q }} </h2>
+  {% endif %}
+  {% if tag %}
+  <h2><i class="fas fa-tags"></i>{% trans 'Links related to tag' %} {{ tag }} </h2>
+  {% endif %}
 <nav aria-label="Page navigation" class="mt-3">
   <ul class="pagination">
     {% if page_obj.has_previous %}
-    <li class="page-item"><a title="{% trans 'First page' %}" class="page-link" href="?page=1"><i class="fas fa-angle-double-left"></i></a></li>
-    <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i></a></li>
+    <li class="page-item"><a title="{% trans 'First page' %}" class="page-link" href="?page=1{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-double-left"></i></a></li>
+    <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-left"></i></a></li>
     {% endif %}
     <li class="page-item active" aria-current="page">
       <a class="page-link" href="#">{{ page_obj.number }}{% trans " of " %}{{ page_obj.paginator.num_pages }}</a>
     </li>
     {% if page_obj.has_next %}
-    <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-angle-right"></i></a></li>
-    <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link" href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a></li>
+    <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-right"></i></a></li>
+    <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-double-right"></i></a></li>
     {% endif %}
   </ul>
 </nav>
@@ -86,15 +99,15 @@
 <nav aria-label="Page navigation" class="mt-3">
   <ul class="pagination">
     {% if page_obj.has_previous %}
-    <li class="page-item"><a title="{% trans 'First page' %}" class="page-link" href="?page=1"><i class="fas fa-angle-double-left"></i></a></li>
-    <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i></a></li>
+    <li class="page-item"><a title="{% trans 'First page' %}" class="page-link" href="?page=1{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-double-left"></i></a></li>
+    <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-left"></i></a></li>
     {% endif %}
     <li class="page-item active" aria-current="page">
       <a class="page-link" href="#">{{ page_obj.number }}{% trans " of " %}{{ page_obj.paginator.num_pages }}</a>
     </li>
     {% if page_obj.has_next %}
-    <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fas fa-angle-right"></i></a></li>
-    <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link" href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a></li>
+    <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-right"></i></a></li>
+    <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}"><i class="fas fa-angle-double-right"></i></a></li>
     {% endif %}
   </ul>
 </nav>

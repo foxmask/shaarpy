@@ -16,10 +16,24 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 import pypandoc
-from shaarpy.forms import LinksForm, MeForm
+from shaarpy.forms import LinksForm, MeForm, SearchForm
 from shaarpy.models import Links
 from shaarpy import settings
 from shaarpy.tools import grab_full_article, rm_md_file, create_md_file
+
+
+def search(request):
+    form = SearchForm(request.GET or {})
+    if form.is_valid():
+        results = form.get_queryset()
+    else:
+        results = Links.objects.none()
+
+    data = {
+        'form': form,
+        'object_list': results,
+    }
+    return render(request, 'search.html', data)
 
 
 @login_required
@@ -32,7 +46,7 @@ def link_delete(request, pk):
         rm_md_file(link.title)
     link.delete()
     if page:
-       return redirect(reverse('home') + '?page=' + request.GET.get('page'))
+        return redirect(reverse('home') + '?page=' + request.GET.get('page'))
     else:
         return redirect('home')
 
@@ -70,6 +84,10 @@ class HomeView(SettingsMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         queryset = object_list if object_list is not None else self.object_list
 
+        form = SearchForm(self.request.GET or {})
+        if form.is_valid():
+            queryset = form.get_queryset()
+
         page_size = self.paginate_by
         context_object_name = self.get_context_object_name(queryset)
 
@@ -80,6 +98,8 @@ class HomeView(SettingsMixin, ListView):
         context['page_obj'] = page
         context['is_paginated'] = is_paginated
         context['object_list'] = queryset
+        context['form'] = SearchForm
+        context['q'] = self.request.GET.get('q')
 
         if context_object_name is not None:
             context[context_object_name] = queryset

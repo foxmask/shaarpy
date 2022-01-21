@@ -1,3 +1,7 @@
+# coding: utf-8
+"""
+    ShaarPy :: Extra balls (because that remind me pinball:)
+"""
 
 from django import template
 import pypandoc
@@ -15,6 +19,7 @@ def tags(value):
 
 @register.filter(name='markdown')
 def makrdown(text):
+    # convert into Github_Flavor_Markdown
     return pypandoc.convert_text(text, "html", format="gfm")
 
 
