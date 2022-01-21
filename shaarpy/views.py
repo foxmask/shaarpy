@@ -98,7 +98,7 @@ class HomeView(SettingsMixin, ListView):
         context['page_obj'] = page
         context['is_paginated'] = is_paginated
         context['object_list'] = queryset
-        context['form'] = SearchForm
+        context['form_search'] = SearchForm
         context['q'] = self.request.GET.get('q')
 
         if context_object_name is not None:

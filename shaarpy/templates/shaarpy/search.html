@@ -1,6 +1,6 @@
 {% load i18n %}
 <form class="d-flex" method="get">
   {% csrf_token %}
-  {{ form.q }}
+  {{ form_search.q }}
   <button class="btn btn-outline-success" type="submit">Search</button>
 </form>

@@ -34,7 +34,9 @@
                   <a class="nav-link" href="{% url 'daily' %}" title="Daily links">Daily links</a>
                 </li>
               </ul>
+              {% if form_search %}
               {% include 'shaarpy/search.html' %}
+              {% endif %}
               <ul class="navbar-nav">
                 <li class="nav-item">
                   <a class="nav-link shaarpy-link" href="{% url 'atom' %}"><i class="fas fa-rss"></i></a>
