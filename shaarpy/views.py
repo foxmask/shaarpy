@@ -74,7 +74,6 @@ class HomeView(SettingsMixin, ListView):
 
     queryset = Links.objects.none()
     paginate_by = 10
-    ordering = ['-date_created']
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -209,7 +208,6 @@ class TagsList(SettingsMixin, ListView):
     """
     template_name = 'shaarpy/tags_list.html'
     queryset = Links.objects.all()
-    ordering = ['-date_created']
 
     def get_context_data(self, *, object_list=None, **kwargs):
 
@@ -242,7 +240,6 @@ class DailyLinks(SettingsMixin, ListView):
     """
     template_name = 'shaarpy/daily_list.html'
     queryset = Links.objects.none()
-    ordering = ['-date_created']
 
     def get_queryset(self):
         """

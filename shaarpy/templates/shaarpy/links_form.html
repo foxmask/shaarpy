@@ -56,6 +56,13 @@
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.private.errors }}</div>
           {% endif %}
       </div>
+      <div class="mb-3">
+          <label class="col-sm-9 control-label" for="id_sticky"> {% trans 'Sticky' %}</label>
+          <div class="col-sm-9">{{ form.sticky }}</div>
+          {% if form.sticky.errors %}
+          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.sticky.errors }}</div>
+          {% endif %}
+      </div>
       {% if edit %}
       <a href="{% url 'link_detail' object.id %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
       <button class="btn btn-primary">{% trans "Update link" %}</button>

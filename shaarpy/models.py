@@ -16,10 +16,11 @@ class Links(models.Model):
     image = models.TextField(null=True, blank=True)
     video = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(default=datetime.datetime.now)
+    sticky = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "Links"
-        ordering = ['-date_created']
+        ordering = ['-sticky', '-date_created']
 
     def get_absolute_url(self):
 

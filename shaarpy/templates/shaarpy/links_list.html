@@ -42,7 +42,7 @@
             </ul>
           </nav>
           {% for data in object_list %}
-          <div class="card">
+          <div class="card {% if data.sticky %}border-info{% endif %}">
               {% if data.image %}
               <img src="{{ data.image }}" class="card-img-top" style="width: 20rem;"/>
               {% endif %}
@@ -60,6 +60,9 @@
               <p class="card-text">{{ data.text | markdown |safe }}</p>
             </div>
             <div class="card-footer text-muted">
+              {% if data.sticky %}
+              <i class="fas fa-thumbtack"></i> -
+              {% endif %}
               {% if data.private %}
               <i class="fas fa-key"></i> -
               {% endif %}

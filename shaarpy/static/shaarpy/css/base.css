@@ -9,6 +9,10 @@ a:hover {
     color: #b48ead;
 }
 
+.border-info {
+    border-color: #5e81ac !important;
+}
+
 .bg-secondary {
     background-color: #bf616a !important;
 }
