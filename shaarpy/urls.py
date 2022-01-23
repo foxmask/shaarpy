@@ -20,7 +20,6 @@ from django.urls import path, re_path, include
 from shaarpy.views import (HomeView, LinksCreate, LinksDetail, LinksUpdate, link_delete, TagsList, LinksByTagList)
 from shaarpy.views import (DailyLinks, LatestLinksFeed, me, MeUpdate)
 from shaarpy import settings
-from django.utils.encoding import iri_to_uri
 
 urlpatterns = [
     # MANAGE USERS
@@ -39,7 +38,7 @@ urlpatterns = [
     path('daily/', DailyLinks.as_view(), name='daily'),
     re_path('daily/(?P<yesterday>\d\d\d\d-\d\d-\d\d)', DailyLinks.as_view(), name='daily'),
     # FEEDS
-    path('feed/', LatestLinksFeed(), name='atom'),
+    path('feed/', LatestLinksFeed(), name='feed'),
     # ADMIN
     path('admin/', admin.site.urls),
 ]

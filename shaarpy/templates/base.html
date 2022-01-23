@@ -13,7 +13,7 @@
     <meta name="description" content="{% block description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}">
     {% block keywords %}{% endblock %}
     <meta name="robots" content="{% block robots %}{{ SHAARPY_ROBOT }}{% endblock %}">
-
+    <link href="{% url 'feed' %}" type="application/atom+xml" rel="alternate"  title="{{ SHAARPY_DESCRIPTION }}"/>
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="{{ SHAARPY_NAME }}" />
     <meta property="og:locale" content="fr">
@@ -44,7 +44,7 @@
                   <a class="nav-link" href="{% url 'daily' %}" title="Daily links"><i class="fas fa-calendar-day"></i> Daily links</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link shaarpy-link" href="{% url 'atom' %}"><i class="fas fa-rss"></i></a>
+                  <a class="nav-link shaarpy-link" href="{% url 'feed' %}"><i class="fas fa-rss"></i></a>
                 </li>
               </ul>
               {% if form_search %}

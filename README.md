@@ -49,12 +49,22 @@ cp env.sample .env
 and set the following values
 
 ```ini
-SHAARPY_NAME=Home Sweet Links
-SHAARPY_DESCRIPTION=Links, tech links, life links
+# for meta
+SHAARPY_NAME=ShaarPy FoxMaSk Links
+SHAARPY_DESCRIPTION= Share thoughts, links ideas, notes
+SHAARPY_AUTHOR=FoxMaSk
+SHAARPY_ROBOT=index, follow
+# for MD generation
+SHAARPY_LOCALSTORAGE_MD=/home/foxmask/MyNotes/links
+SHAARPY_STYLE=blue
 
 SECRET=!DONTFORGETTOCHANGETHISVALUE!
 
-DEBUG=True   # or False in prod
+DEBUG=False   # for production environemnt, set it to False
+ALLOWED_HOSTS='127.0.0.1,localhost'   # for production environemnt, set it to the URL of your 'ShaarPy'
+CSRF_TRUSTED_ORIGINS=https://*.mydomain.com
+
+# for database
 DB_ENGINE='django.db.backends.sqlite3'
 DB_NAME='db.sqlite3'
 DB_USER=''
@@ -62,13 +72,12 @@ DB_PASSWORD=''
 DB_HOST=''
 DB_PORT=''
 
+# i18n/l10n
 TIME_ZONE='Europe/Paris'
 LANGUAGE_CODE='en-en'
 USE_I18N=True
 USE_L10N=True
 USE_TZ=True
-
-SECRET_KEY=!TOBEDEFINED!
 ```
 
 ## :dvd: Database
@@ -79,6 +88,7 @@ setup the database
 cd shaarpy
 python manage.py createsuperuser
 python manage.py migrate
+python manage.py loaddata shaarpy/fixtures/my_shaarpy_data.json 
 ```
 
 ## :mega: Running the Server

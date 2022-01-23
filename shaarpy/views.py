@@ -323,9 +323,9 @@ class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
 
 
 class LatestLinksFeed(Feed):
-    title = "ShaarPy " + settings.SHAARPY_NAME
+    title = settings.SHAARPY_NAME
     link = "/"
-    subtitle = settings.SHAARPY_DESCRIPTION
+    description = settings.SHAARPY_DESCRIPTION
 
     def items(self):
         return Links.objects.filter(private=False).order_by('-date_created')[:15]
@@ -336,6 +336,5 @@ class LatestLinksFeed(Feed):
     def item_description(self, item):
         return pypandoc.convert_text(item.text, 'html', format='gfm')
 
-    # item_link is only needed if NewsItem has no get_absolute_url method.
     def item_link(self, item):
         return reverse('link_detail', args=[item.pk])
