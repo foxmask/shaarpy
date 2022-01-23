@@ -13,8 +13,8 @@
 {% endblock %}
 </title>
 {% block og_title %}
-{% if tag %}{{ SHAARPY_NAME }} :: {% trans 'Links related to tag' %} {{ tag }}
-{% elif q %}{{ SHAARPY_NAME }} :: {% trans 'Links related to ' %} {{ q }}
+{% if tag %}{% trans 'Links related to tag' %} {{ tag }}
+{% elif q %}{% trans 'Links related to ' %} {{ q }}
 {% else %}{{ SHAARPY_NAME }}{% endif %}
 {% endblock %}
 {% block content %}

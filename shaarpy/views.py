@@ -61,6 +61,8 @@ class SettingsMixin:
         context = super(SettingsMixin, self).get_context_data(**kwargs)
         context['SHAARPY_NAME'] = settings.SHAARPY_NAME
         context['SHAARPY_DESCRIPTION'] = settings.SHAARPY_DESCRIPTION
+        context['SHAARPY_AUTHOR'] = settings.SHAARPY_AUTHOR
+        context['SHAARPY_ROBOT'] = settings.SHAARPY_ROBOT
 
         return context
 
@@ -150,6 +152,12 @@ class LinksDetail(SettingsMixin, DetailView):
         Link Detail
     """
     model = Links
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(LinksDetail, self).get_context_data(**kwargs)
+        context['SHAARPY_DESCRIPTION'] = self.object.title
+
+        return context
 
 
 class LinksUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):

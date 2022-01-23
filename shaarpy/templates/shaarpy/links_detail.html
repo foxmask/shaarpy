@@ -2,11 +2,24 @@
 {% load i18n %}
 {% load shaarpy_extras %}
 <title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'View' %} {{ object.title }} {% endblock %}</title>
-{% block og_title %}{{ SHAARPY_NAME }} :: {% trans 'View' %} {{ object.title }} {% endblock %}
+{% block og_title %}{{ object.title }}{% endblock %}
+{% if object.title %}
+{% block description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}
+{% block og_description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}
+{% endif %}
+{% if object.tags %}
+{% block keywords %}<meta name="keywords" content="{{ object.tags }}" />{% endblock %}
+{% endif %}
+{% if object.image %}
+{% block og_image %}<meta property="og:image" content="{{ object.image }}">{% endblock %}
+{% endif %}
 {% block content %}
 <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
 <div class="card">
   <div class="card-body">
+    {% if object.image %}
+    <img src="{{ object.image }}" class="card-img-top" style="width: 24rem;"/>
+    {% endif %}
     <h5 class="card-title">
     {% if object.url %}
       <a href="{{ object.url }}" target="_blank">{{ object.title }}</a>
