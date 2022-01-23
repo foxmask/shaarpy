@@ -115,6 +115,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/shaarpy_cache',
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -140,9 +146,9 @@ CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
 LOGOUT_REDIRECT_URL = '/'
 
-SHAARPY_AUTHOR = env.str('SHAARPY_AUTHOR')
-SHAARPY_NAME = env.str('SHAARPY_NAME', default=f"Shaarpy - {SHAARPY_AUTHOR} Links")
-SHAARPY_DESCRIPTION = env.str('SHAARPY_DESCRIPTION')
-SHAARPY_ROBOT = env.str('SHAARPY_ROBOT')
+SHAARPY_AUTHOR = env.str('SHAARPY_AUTHOR', default="FoxMaSk")
+SHAARPY_NAME = env.str('SHAARPY_NAME', default=f"ShaarPy - {SHAARPY_AUTHOR} Links")
+SHAARPY_DESCRIPTION = env.str('SHAARPY_DESCRIPTION', default="Share thoughts, links ideas, notes")
+SHAARPY_ROBOT = env.str('SHAARPY_ROBOT', default="index, follow")
 SHAARPY_LOCALSTORAGE_MD = env.str('SHAARPY_LOCALSTORAGE_MD')
 SHAARPY_STYLE = env.str('SHAARPY_STYLE', default="blue")
