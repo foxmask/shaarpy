@@ -29,9 +29,7 @@
           <h5><a href="{% url 'link_detail' data.id %}">{{ data.title }}</a></h5>
           {% endif %}
           {% if data.image %}
-          <div class="ratio ratio-4x3">
-            <img src="{{ data.image }}" class="card-img-top" />
-          </div>
+          <img src="{{ data.image }}" class="card-img-top" />
           {% endif %}
           {% if data.video %}
           <div class="ratio ratio-16x9">
