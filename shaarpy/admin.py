@@ -13,4 +13,3 @@ class LinksAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Links, LinksAdmin)
-

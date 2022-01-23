@@ -224,8 +224,8 @@ class TagsList(SettingsMixin, ListView):
             tags_dict.update({my_tag: tags.count(my_tag)})
 
         context = {
-                'object_list': queryset,
-                'tags': tags_dict
+            'object_list': queryset,
+            'tags': tags_dict
         }
 
         if context_object_name is not None:
@@ -277,10 +277,10 @@ class DailyLinks(SettingsMixin, ListView):
             next_date = next_date.date_created.date()
 
         context = {
-                'object_list': queryset,
-                'previous_date': previous_date,
-                'next_date': next_date,
-                'current_date': yesterday
+            'object_list': queryset,
+            'previous_date': previous_date,
+            'next_date': next_date,
+            'current_date': yesterday
         }
 
         if context_object_name is not None:

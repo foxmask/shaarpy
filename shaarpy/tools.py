@@ -85,9 +85,8 @@ def grab_full_article(url):
         title = r.title + ' - ' + _get_brand(url)
 
         return title, text, image, video
-    except newspaper.article.ArticleException as e:
-
-        return url, "" , "" , ""
+    except newspaper.article.ArticleException:
+        return url, "", "", ""
 
 
 """
@@ -176,7 +175,7 @@ def small_hash(text):
 
 # IMPORTING SHAARLI FILE
 
-def import_shaarli(the_file, reload_article_from_url):
+def import_shaarli(the_file, reload_article_from_url):  # noqa: C901
     private = 0
     with open(the_file, 'r') as f:
         data = f.read()
@@ -269,4 +268,3 @@ def import_shaarli(the_file, reload_article_from_url):
                             obj.save()
 
         console.print(table)
-

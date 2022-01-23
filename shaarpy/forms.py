@@ -17,7 +17,8 @@ class LinksForm(ModelForm):
         fields = ('url', 'title', 'text', 'tags', 'private', 'sticky')
         widgets = {
             'tags': TextInput(attrs={'class': 'form-control'}),
-            'url': TextInput(attrs={'class': 'form-control', 'placeholder': _('Drop an URL or leave if empty for creating a note')}),
+            'url': TextInput(attrs={'class': 'form-control',
+                                    'placeholder': _('Drop an URL or leave if empty for creating a note')}),
             'title': TextInput(attrs={'class': 'form-control', 'placeholder': _('Note:')}),
             'text': Textarea(attrs={'class': 'form-control', 'placeholder': _('content')}),
             'private': CheckboxInput(attrs={'class': 'form-check-input'}),

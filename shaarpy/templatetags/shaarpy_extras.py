@@ -21,5 +21,3 @@ def tags(value):
 def makrdown(text):
     # convert into Github_Flavor_Markdown
     return pypandoc.convert_text(text, "html", format="gfm")
-
-
