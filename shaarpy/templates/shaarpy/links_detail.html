@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load shaarpy_extras %}
-<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'View' %} {{ object.title }} {% endblock %}</title>
+<title>{% block title %}{{ SHAARPY_NAME }} :: {{ object.title }} {% endblock %}</title>
 {% block og_title %}{{ object.title }}{% endblock %}
 {% if object.title %}
 {% block description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}
@@ -14,7 +14,7 @@
 {% block og_image %}<meta property="og:image" content="{{ object.image }}">{% endblock %}
 {% endif %}
 {% block content %}
-<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
 <div class="card">
   <div class="card-body">
     {% if object.image %}

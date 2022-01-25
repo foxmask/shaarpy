@@ -23,7 +23,9 @@ from shaarpy import settings
 
 urlpatterns = [
     # MANAGE USERS
-    path('accounts/login/', auth_views.LoginView.as_view(extra_context={'SHAARPY_NAME': settings.SHAARPY_NAME}), name="login"),
+    path('accounts/login/', auth_views.LoginView.as_view(
+        extra_context={'SHAARPY_NAME': settings.SHAARPY_NAME}),
+        name="login"),
     path('accounts/profile/', me, name="me"),
     path('accounts/profile/edit/', MeUpdate.as_view(), name='edit_me'),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -31,7 +33,7 @@ urlpatterns = [
     path('', HomeView.as_view(), name="home"),
     path('new/', LinksCreate.as_view(), name='link_create'),
     path('edit/<int:pk>/', LinksUpdate.as_view(), name='link_edit'),
-    path('view/<int:pk>/', LinksDetail.as_view(), name='link_detail'),
+    path('link/<int:pk>/', LinksDetail.as_view(), name='link_detail'),
     path('delete/<int:pk>/', link_delete, name='link_delete'),
     path('tags/', TagsList.as_view(), name='tags_list'),
     re_path(r'tags/(?P<tags>\w+)$', LinksByTagList.as_view(), name='links_by_tag_list'),

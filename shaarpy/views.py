@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-   ShaarPy
+   ShaarPy :: Views
 """
 from datetime import date, datetime, timedelta
 
@@ -10,13 +10,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
 from django.contrib.syndication.views import Feed
-
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 import pypandoc
-from shaarpy.forms import LinksForm, MeForm, SearchForm
+from shaarpy.forms import LinksForm, LinksFormEdit, MeForm, SearchForm
 from shaarpy.models import Links
 from shaarpy import settings
 from shaarpy.tools import grab_full_article, rm_md_file, create_md_file
@@ -109,12 +109,45 @@ class HomeView(SettingsMixin, ListView):
         return context
 
 
+def clean_url(url):
+    """
+        drop unexpected content of the URL
+    """
+    for pattern in ('&utm_source=', '?utm_source=', '#xtor=RSS-'):
+        pos = url.find(pattern)
+        if pos > 0:
+            url = url[0:pos]
+    return url
+
+
 class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
     """
         Create Links
     """
     model = Links
     form_class = LinksForm
+
+    # to deal with the popup form trigger from a javascript bookmarklet
+    def get_context_data(self, **kwargs):
+        context = {}
+        if self.object:
+            context['object'] = self.object
+            context_object_name = self.get_context_object_name(self.object)
+            if context_object_name:
+                context[context_object_name] = self.object
+        context['add_link'] = True
+        context.update(kwargs)
+        return super().get_context_data(**context)
+
+    # to deal with the popup form trigger from a javascript bookmarklet
+    def get_initial(self):
+        initial = {}
+        if self.request.GET.get('post'):
+            url = self.request.GET.get('post')
+            url = clean_url(url)
+            initial = {'url': url,
+                       'title': self.request.GET.get('title')}
+        return initial
 
     def form_valid(self, form):
         url = form.cleaned_data['url']
@@ -143,6 +176,10 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
                            self.object.date_created, self.object.private,
                            self.object.image, self.object.video)
 
+        # to deal with the popup form trigger from a javascript bookmarklet
+        if self.request.GET.get('source') == "bookmarklet":
+            return HttpResponse('<script type="text/javascript">window.close();</script>')
+
         return super().form_valid(form)
 
 
@@ -165,7 +202,7 @@ class LinksUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
     """
 
     model = Links
-    form_class = LinksForm
+    form_class = LinksFormEdit
 
     def get_context_data(self, **kwargs):
         context = {}
@@ -174,7 +211,7 @@ class LinksUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
             context_object_name = self.get_context_object_name(self.object)
             if context_object_name:
                 context[context_object_name] = self.object
-        context['edit'] = True
+        context['edit_link'] = True
         context.update(kwargs)
         return super().get_context_data(**context)
 
@@ -188,11 +225,13 @@ class LinksByTagList(SettingsMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        tags = self.kwargs['tags']
+        tags = None if self.kwargs['tags'] == '0Tag' else self.kwargs['tags']
+        # when tags is None
+        # get the data with tags is null
         if self.request.user.is_authenticated:
-            queryset = Links.objects.filter(tags__contains=tags)
+            queryset = Links.objects.filter(tags__exact=tags)
         else:
-            queryset = Links.objects.filter(tags__contains=tags, private=False)
+            queryset = Links.objects.filter(tags__exact=tags, private=False)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -218,6 +257,8 @@ class TagsList(SettingsMixin, ListView):
             if data.tags is not None:
                 for tag in data.tags.split(','):
                     tags.append(tag)
+            else:
+                tags.append('0Tag')
         tags = sorted(tags)
         tags_dict = {}
         for my_tag in tags:

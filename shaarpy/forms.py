@@ -48,6 +48,23 @@ class LinksForm(ModelForm):
             return data.replace(' ', '')
 
 
+class LinksFormEdit(LinksForm):
+
+    class Meta:
+        model = Links
+        fields = ('url', 'title', 'text', 'tags', 'private', 'sticky', 'image')
+        widgets = {
+            'tags': TextInput(attrs={'class': 'form-control'}),
+            'url': TextInput(attrs={'class': 'form-control',
+                                    'placeholder': _('Drop an URL or leave if empty for creating a note')}),
+            'title': TextInput(attrs={'class': 'form-control', 'placeholder': _('Note:')}),
+            'image': TextInput(attrs={'class': 'form-control', 'placeholder': _('Image URL:')}),
+            'text': Textarea(attrs={'class': 'form-control', 'placeholder': _('content')}),
+            'private': CheckboxInput(attrs={'class': 'form-check-input'}),
+            'sticky': CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+
 # search engine from the nice [simple_search](https://github.com/gregplaysguitar/django-simple-search)
 # a search engine like in the admin
 SearchForm = search_form_factory(Links.objects.all(), ['^title', 'text', 'tags'])

@@ -23,5 +23,7 @@ class Links(models.Model):
         ordering = ['-sticky', '-date_created']
 
     def get_absolute_url(self):
-
+        """
+        that method returns to the following link once (Create|Update)View are saved
+        """
         return reverse('link_detail', kwargs={'pk': self.pk})

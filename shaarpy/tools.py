@@ -1,8 +1,10 @@
 # coding: utf-8
 """
-    ShaarPy :: Importing/Exporting in Netscape HTML File
-               Load article from url with image/video
-               Manage Markdown file creation
+    ShaarPy :: Tools
+
+    - Importing/Exporting in Netscape HTML File
+    - Load article from url with image/video
+    - Manage Markdown file creation
 """
 import base64
 import copy
@@ -72,12 +74,9 @@ def grab_full_article(url):
         image = ''
         # check if there is a top_image
         if r.top_image:
-            # go to check it in the article_html
-            # and grab the first one found in article_html
-            # it may happened that top_image is not the same
-            # in article_html
-            # so go pickup this one and remove it in the
-            # article_html
+            # go to check image in the article_html and grab the first one found in article_html
+            # it may happened that top_image is not the same in the content of article_html
+            # so go pickup this one and remove it in the the content of article_html
             image, article_html = drop_image_node(article_html)
         # convert into markdown
         output = Truncator(article_html).chars("400", html=True)

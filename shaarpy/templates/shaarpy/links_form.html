@@ -12,11 +12,11 @@
 </div>
 {% endif %}
 <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
-  <form action="" method="post" role="form" class="form-horizontal">
+  <form action="" method="post" role="form" name="my_form" class="form-horizontal">
     {% csrf_token %}
     <fieldset>
     {{ form.non_field_errors }}
-      {% if edit %}
+      {% if edit_link %}
       <legend> Update the link/note</legend>
       {% else %}
       <legend> Share a link/a note</legend>
@@ -35,6 +35,15 @@
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.title.errors }}</div>
           {% endif %}
       </div>
+      {% if edit_link %}
+      <div class="mb-3">
+          <label class="col-sm-9 control-label" for="id_image"> {% trans 'Image' %}</label>
+          <div class="col-sm-9">{{ form.image }}</div>
+          {% if form.image.errors %}
+          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.image.errors }}</div>
+          {% endif %}
+      </div>
+      {% endif %}
       <div class="mb-3">
           <label class="col-sm-9 control-label" for="id_text"> {% trans 'Text' %}</label>
           <div class="col-sm-9">{{ form.text }}</div>
@@ -63,7 +72,7 @@
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.sticky.errors }}</div>
           {% endif %}
       </div>
-      {% if edit %}
+      {% if edit_link %}
       <a href="{% url 'link_detail' object.id %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
       <button class="btn btn-primary">{% trans "Update link" %}</button>
       {% else %}
