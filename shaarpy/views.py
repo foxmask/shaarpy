@@ -19,7 +19,7 @@ import pypandoc
 from shaarpy.forms import LinksForm, LinksFormEdit, MeForm, SearchForm
 from shaarpy.models import Links
 from shaarpy import settings
-from shaarpy.tools import grab_full_article, rm_md_file, create_md_file
+from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host
 
 
 def search(request):
@@ -101,6 +101,8 @@ class HomeView(SettingsMixin, ListView):
         context['object_list'] = queryset
         context['form_search'] = SearchForm
         context['q'] = self.request.GET.get('q')
+        # this will be used for the URL in the bookmarklet
+        context['hostname'] = _get_host(self.request.build_absolute_uri())
 
         if context_object_name is not None:
             context[context_object_name] = queryset

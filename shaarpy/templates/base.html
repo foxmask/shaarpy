@@ -21,7 +21,6 @@
     <meta property="og:title" content="{% block og_title %}{{ SHAARPY_NAME }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}">
     {% block og_image %}{% endblock %}
-
 </head>
 <body role="document"{% if edit_link %} onload="document.my_form.id_text.focus();"{% elif add_link %} onload="document.my_form.id_url.focus();"{% endif %}>
     <nav class="navbar navbar-expand-md navbar-light sticky-top" style="background-color: #ebcb8b;">
@@ -56,13 +55,14 @@
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="far fa-user"></i>
                   </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="{% url 'me' %}" title="{% trans 'Profile' %}"><i class="far fa-user"></i></a></li>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'me' %}" title="{% trans 'Profile' %}"><i class="fas fa-user"></i> {% trans 'Profile' %}</a></li>
                     {% if user.is_staff %}
-                    <li><a class="dropdown-item" href="{% url 'admin:login' %}" title="{% trans 'Admin' %}"><i class="fas fa-user-cog"></i></a></li>
+                    <li><a class="dropdown-item" href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ hostname }}/new/?post='%20+%20encodeURIComponent(url)+'&title='%20+%20encodeURIComponent(title)+'&source=bookmarklet','_blank','menubar=no,height=390,width=600,toolbar=no,scrollbars=no,status=no,dialog=1');})();" title="{% trans 'drag this link to your bookmark bar to use the bookmarklet' %}"> <i class="fas fa-plus"></i> ShaarPy Link</a></li>
+                    <li><a class="dropdown-item" href="{% url 'admin:login' %}" title="{% trans 'Admin' %}"><i class="fas fa-user-cog"></i> {% trans 'Admin' %}</a></li>
                     <li><hr class="dropdown-divider"></li>
                     {% endif %}
-                    <li><a class="dropdown-item" href="{% url 'logout' %}"  title="{% trans 'Logout' %}"><i class="fas fa-sign-out-alt"></i></a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}"  title="{% trans 'Logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans 'Logout' %}</a></li>
                   </ul>
                   {% else %}
                   <ul class="navbar-nav">

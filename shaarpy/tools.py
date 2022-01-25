@@ -37,7 +37,12 @@ ARTICLES MANAGEMENT
 
 def _get_host(url):
     o = urlparse(url)
-    return o.scheme + '://' + o.hostname
+    hostname = o.scheme + '://' + o.hostname
+    port = ''
+    if o.port is not None and o.port != 80:
+        port = ':' + str(o.port)
+    hostname += port
+    return hostname
 
 
 def _get_brand(url):

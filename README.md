@@ -116,6 +116,13 @@ to easily find links by tags
 
 ![Daily links](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png)
 
+### Bookmarklet
+
+Drag the link you'll find under your profile, to the bookmark of the browser
+
+![Bookmarklet](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/bookmarklet.png)
+
+Now you'are able to post a new link just be clicking this bookmarklet wherever you are on the web
 
 ## Links sync on mobile
 
