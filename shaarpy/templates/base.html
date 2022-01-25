@@ -23,7 +23,7 @@
     {% block og_image %}{% endblock %}
 
 </head>
-<body role="document"{% if edit_link %}onload="document.my_form.id_text.focus();{% elif add_link %}onload="document.my_form.id_url.focus();"{% endif %}>
+<body role="document"{% if edit_link %} onload="document.my_form.id_text.focus();"{% elif add_link %} onload="document.my_form.id_url.focus();"{% endif %}>
     <nav class="navbar navbar-expand-md navbar-light sticky-top" style="background-color: #ebcb8b;">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'home' %}" title="Home">
