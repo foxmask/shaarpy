@@ -7,7 +7,6 @@ from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm, TextInput, Textarea, CheckboxInput, EmailInput, HiddenInput
 
 from shaarpy.models import Links
-from simple_search import search_form_factory
 
 
 class LinksForm(ModelForm):
@@ -68,7 +67,7 @@ class LinksFormEdit(LinksForm):
 
 # search engine from the nice [simple_search](https://github.com/gregplaysguitar/django-simple-search)
 # a search engine like in the admin
-SearchForm = search_form_factory(Links.objects.all(), ['^title', 'text', 'tags'])
+# SearchForm = search_form_factory(Links.objects.none(), ['^title', 'text', 'tags'])
 
 
 class MeForm(ModelForm):

@@ -14,12 +14,13 @@ register = template.Library()
 def tags(value):
     out = ''
     for tag in value.split(','):
-        out += '<a href="' + reverse('links_by_tag_list', args=[tag]) + '"><span class="badge rounded-pill bg-secondary">' + tag + '</span></a> '
+        out += '<a href="' + reverse('links_by_tag_list', args=[tag]) + '">' \
+               '<span class="badge rounded-pill bg-secondary">' + tag + '</span></a> '
 
     return out
 
 
 @register.filter(name='markdown')
-def makrdown(text):
+def markdown(text):
     # convert into Github_Flavor_Markdown
     return pypandoc.convert_text(text, "html", format="gfm")

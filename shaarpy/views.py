@@ -16,27 +16,11 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 import pypandoc
-from shaarpy.forms import LinksForm, LinksFormEdit, MeForm, SearchForm
+from shaarpy.forms import LinksForm, LinksFormEdit, MeForm
 from shaarpy.models import Links
 from shaarpy import settings
 from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host, small_hash
-
-
-def search(request):
-    """
-        search engine *<:o) to mimics the admin search engine
-    """
-    form = SearchForm(request.GET or {})
-    if form.is_valid():
-        results = form.get_queryset()
-    else:
-        results = Links.objects.none()
-
-    data = {
-        'form': form,
-        'object_list': results,
-    }
-    return render(request, 'search.html', data)
+from simple_search import search_form_factory
 
 
 @login_required
@@ -99,16 +83,17 @@ class HomeView(SettingsMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         queryset = object_list if object_list is not None else self.object_list
-
-        form = SearchForm(self.request.GET or {})
-        if form.is_valid():
-            queryset = form.get_queryset()
-
-        page_size = self.paginate_by
+        page_size = self.get_paginate_by(queryset)
         context_object_name = self.get_context_object_name(queryset)
 
-        context = super(HomeView, self).get_context_data(**kwargs)
+        SearchForm = search_form_factory(queryset, ['^title', 'text', 'tags'])
 
+        search_form = SearchForm(self.request.GET or {})
+        if self.request.GET.get("q"):
+            if search_form.is_valid():
+                queryset = search_form.get_queryset()
+
+        context = super(HomeView, self).get_context_data(**kwargs)
         paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
         context['paginator'] = paginator
         context['page_obj'] = page
@@ -251,12 +236,16 @@ class LinksByTagList(SettingsMixin, ListView):
             get the links with that tags
         """
         tags = None if self.kwargs['tags'] == '0Tag' else self.kwargs['tags']
+        print(tags)
         # when tags is None
         # get the data with tags is null
-        if self.request.user.is_authenticated:
-            queryset = Links.objects.filter(tags__exact=tags)
+        if tags:
+            queryset = Links.objects.filter(tags__contains=tags)
         else:
-            queryset = Links.objects.filter(tags__exact=tags, private=False)
+            queryset = Links.objects.filter(tags__exact=None)
+
+        if self.request.user.is_authenticated is False:
+            queryset = queryset.filter(private=False)
         return queryset
 
     def get_context_data(self, **kwargs):
