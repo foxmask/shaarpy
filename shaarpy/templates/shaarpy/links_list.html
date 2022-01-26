@@ -53,7 +53,7 @@
               {% if data.url %}
               <h5><a href="{{ data.url }}" target="_blank">{{ data.title }}</a></h5>
               {% else %}
-              <h5><a href="{% url 'link_detail' data.id %}">{{ data.title }}</a></h5>
+              <h5><a href="{% url 'link_detail' data.url_hashed %}">{{ data.title }}</a></h5>
               {% endif %}
               {% if data.video %}
               <div class="ratio ratio-16x9">
@@ -102,7 +102,7 @@
                 </div>
               </div>
               {% endif %}
-              <a href="{% url 'link_detail' data.id %}">Permalink</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.id %}{% endif %}
+              <a href="{% url 'link_detail' data.url_hashed %}">Permalink</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.id %}{% endif %}
               {% if data.tags %}
               - <i class="fas fa-tags"></i> {{ data.tags | tags | safe }}
               {% endif %}

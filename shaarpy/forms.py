@@ -4,7 +4,7 @@
 """
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
-from django.forms import ModelForm, TextInput, Textarea, CheckboxInput, EmailInput
+from django.forms import ModelForm, TextInput, Textarea, CheckboxInput, EmailInput, HiddenInput
 
 from shaarpy.models import Links
 from simple_search import search_form_factory
@@ -52,7 +52,7 @@ class LinksFormEdit(LinksForm):
 
     class Meta:
         model = Links
-        fields = ('url', 'title', 'text', 'tags', 'private', 'sticky', 'image')
+        fields = ('url', 'title', 'text', 'tags', 'private', 'sticky', 'image', 'url_hashed')
         widgets = {
             'tags': TextInput(attrs={'class': 'form-control'}),
             'url': TextInput(attrs={'class': 'form-control',
@@ -62,6 +62,7 @@ class LinksFormEdit(LinksForm):
             'text': Textarea(attrs={'class': 'form-control', 'placeholder': _('content')}),
             'private': CheckboxInput(attrs={'class': 'form-check-input'}),
             'sticky': CheckboxInput(attrs={'class': 'form-check-input'}),
+            'url_hashed': HiddenInput(),
         }
 
 

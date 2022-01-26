@@ -19,10 +19,13 @@ import pypandoc
 from shaarpy.forms import LinksForm, LinksFormEdit, MeForm, SearchForm
 from shaarpy.models import Links
 from shaarpy import settings
-from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host
+from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host, small_hash
 
 
 def search(request):
+    """
+        search engine *<:o) to mimics the admin search engine
+    """
     form = SearchForm(request.GET or {})
     if form.is_valid():
         results = form.get_queryset()
@@ -42,13 +45,25 @@ def link_delete(request, pk):
     if 'page' in request.GET:
         page = request.GET.get('page')
     link = Links.objects.get(pk=pk)
-    if link.title is not None:
+    if link.title is not None and settings.SHAARPY_LOCALSTORAGE_MD:
         rm_md_file(link.title)
     link.delete()
     if page:
         return redirect(reverse('home') + '?page=' + request.GET.get('page'))
     else:
         return redirect('home')
+
+
+class SuccessMixin:
+    """
+        mixin to redirect to the view page once save
+        use slug vs pk
+    """
+    def get_success_url(self):
+        """
+        that method returns to the following link once (Create|Update)View are saved
+        """
+        return reverse('link_detail', kwargs={'slug': self.object.url_hashed})
 
 
 class SettingsMixin:
@@ -113,7 +128,7 @@ class HomeView(SettingsMixin, ListView):
 
 def clean_url(url):
     """
-        drop unexpected content of the URL
+        drop unexpected content of the URL from the bookmarklet
     """
     for pattern in ('&utm_source=', '?utm_source=', '#xtor=RSS-'):
         pos = url.find(pattern)
@@ -122,7 +137,7 @@ def clean_url(url):
     return url
 
 
-class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
+class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
     """
         Create Links
     """
@@ -158,7 +173,7 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
             try:
                 # check if url already exist and then redirect to it
                 links = Links.objects.get(url=url)
-                return redirect('link_detail', **{'pk': links.id})
+                return redirect('link_detail', **{'slug': links.url_hashed})
             except Links.DoesNotExist:
                 pass
 
@@ -169,6 +184,9 @@ class LinksCreate(SettingsMixin, LoginRequiredMixin, CreateView):
             self.object = form.save()
             if self.object.title is None:
                 self.object.title = "Note:"
+
+        # generate the tiny url
+        self.object.url_hashed = small_hash(self.object.date_created.strftime("%Y%m%d_%H%M%S"))
 
         self.object = form.save()
 
@@ -190,6 +208,7 @@ class LinksDetail(SettingsMixin, DetailView):
         Link Detail
     """
     model = Links
+    slug_field = 'url_hashed'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(LinksDetail, self).get_context_data(**kwargs)
@@ -198,13 +217,14 @@ class LinksDetail(SettingsMixin, DetailView):
         return context
 
 
-class LinksUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
+class LinksUpdate(SettingsMixin, SuccessMixin, LoginRequiredMixin, UpdateView):
     """
         Link Update
     """
 
     model = Links
     form_class = LinksFormEdit
+    slug_field = 'url_hashed'
 
     def get_context_data(self, **kwargs):
         context = {}
@@ -227,6 +247,9 @@ class LinksByTagList(SettingsMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        """
+            get the links with that tags
+        """
         tags = None if self.kwargs['tags'] == '0Tag' else self.kwargs['tags']
         # when tags is None
         # get the data with tags is null
@@ -251,7 +274,9 @@ class TagsList(SettingsMixin, ListView):
     queryset = Links.objects.all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
-
+        """
+            get the tags and count of them
+        """
         queryset = object_list if object_list is not None else self.object_list
         context_object_name = self.get_context_object_name(queryset)
         tags = []
@@ -336,11 +361,17 @@ class DailyLinks(SettingsMixin, ListView):
 
 @login_required
 def logout_view(request):
+    """
+        user is logging out
+    """
     logout(request)
 
 
 @login_required()
 def me(request):
+    """
+        access to the profile page
+    """
     return render(request,
                   'me.html',
                   {'object': request.user,
@@ -349,6 +380,9 @@ def me(request):
 
 
 class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
+    """
+        Update the User profile
+    """
     model = User
     form_class = MeForm
     template_name = 'edit_me.html'
@@ -366,6 +400,9 @@ class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
 
 
 class LatestLinksFeed(Feed):
+    """
+        Generate an RSS Feed
+    """
     title = settings.SHAARPY_NAME
     link = "/"
     description = settings.SHAARPY_DESCRIPTION
@@ -380,4 +417,4 @@ class LatestLinksFeed(Feed):
         return pypandoc.convert_text(item.text, 'html', format='gfm')
 
     def item_link(self, item):
-        return reverse('link_detail', args=[item.pk])
+        return reverse('link_detail', args=[item.url_hashed])

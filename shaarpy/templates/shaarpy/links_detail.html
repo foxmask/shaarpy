@@ -24,7 +24,7 @@
     {% if object.url %}
       <a href="{{ object.url }}" target="_blank">{{ object.title }}</a>
     {% else %}
-      <a href="{% url 'link_detail' object.id %}">{{ object.title }}</a>
+      <a href="{% url 'link_detail' object.url_hashed %}">{{ object.title }}</a>
     {% endif %}
     </h5>
     <p class="card-text">{{ object.text | markdown |safe }}</p>
@@ -66,7 +66,7 @@
       </div>
     </div>
     {% endif %}
-    <a href="{% url 'link_detail' object.id %}">Permalink</a> - {% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.id %}{% endif %}
+    <a href="{% url 'link_detail' object.url_hashed %}">Permalink</a> - {% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.url_hashed %}{% endif %}
     {% if object.tags %}
     - <i class="fas fa-tags"></i> {{ object.tags | tags | safe }}
     {% endif %}

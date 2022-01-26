@@ -257,9 +257,11 @@ def import_shaarli(the_file, reload_article_from_url):  # noqa: C901
                             obj.date_created = link['date_created']
                             obj.image = link['image']
                             obj.video = link['video']
+                            obj.url_hashed = small_hash(link['date_created'].strftime("%Y%m%d_%H%M%S"))
                             obj.save()
                         except Links.DoesNotExist:
                             new_values = {'url': link['url'],
+                                          'url_hashed': small_hash(link['date_created'].strftime("%Y%m%d_%H%M%S")),
                                           'title': link['title'],
                                           'text': link['text'],
                                           'tags': link['tags'],

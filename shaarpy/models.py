@@ -4,12 +4,12 @@
 """
 import datetime
 from django.db import models
-from django.urls import reverse
 
 
 class Links(models.Model):
     tags = models.CharField(max_length=255, null=True, blank=True)
     url = models.URLField(max_length=2048, null=True, blank=True)
+    url_hashed = models.SlugField(max_length=10, null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
     text = models.TextField(null=True, blank=True)
     private = models.BooleanField(default=False)
@@ -21,9 +21,3 @@ class Links(models.Model):
     class Meta:
         verbose_name_plural = "Links"
         ordering = ['-sticky', '-date_created']
-
-    def get_absolute_url(self):
-        """
-        that method returns to the following link once (Create|Update)View are saved
-        """
-        return reverse('link_detail', kwargs={'pk': self.pk})
