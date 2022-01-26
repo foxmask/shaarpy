@@ -14,8 +14,7 @@ register = template.Library()
 def tags(value):
     out = ''
     for tag in value.split(','):
-        out += "<a href=\"" + reverse('links_by_tag_list', args=[tag]) + "\">"
-        "<span class=\"badge rounded-pill bg-secondary\">" + tag + "</span></a> "
+        out += '<a href="' + reverse('links_by_tag_list', args=[tag]) + '"><span class="badge rounded-pill bg-secondary">' + tag + '</span></a> '
 
     return out
 
