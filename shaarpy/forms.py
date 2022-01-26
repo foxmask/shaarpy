@@ -65,11 +65,6 @@ class LinksFormEdit(LinksForm):
         }
 
 
-# search engine from the nice [simple_search](https://github.com/gregplaysguitar/django-simple-search)
-# a search engine like in the admin
-# SearchForm = search_form_factory(Links.objects.none(), ['^title', 'text', 'tags'])
-
-
 class MeForm(ModelForm):
 
     """
