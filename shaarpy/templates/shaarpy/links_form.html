@@ -73,7 +73,7 @@
           {% endif %}
       </div>
       {% if edit_link %}
-      <a href="{% url 'link_detail' object.id %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
+      <a href="{% url 'link_detail' object.url_hashed %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
       <button class="btn btn-primary">{% trans "Update link" %}</button>
       {% else %}
       <a href="{% url 'home' %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
