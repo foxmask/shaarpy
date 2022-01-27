@@ -1,10 +1,83 @@
 # ShaarPy 
 
-The very nice Shaarli (https://sebsauvage.net/wiki/doku.php?id=php:shaarli) 'cloned' in Python
+🔗 🐍 share thoughts, ideas, links, notes.
 
-Save your notes and links to share ... or not ;) 
+'Shaarli cloned' in Python/Django
+
+Have a look at [https://shaarpy.foxmask.org/](https://shaarpy.foxmask.org/) for live instance
 
 ![Main page](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_home.png)
+
+## Features
+
+##### Notes
+- Create *notes* in **Markdown**
+
+##### Links
+- Drop a URL and ShaarPy will grab the article page with **image** and **video** if the source website provides ones
+<a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png" alt="article with image" width="400"/></a>
+
+##### Tags
+-  Manage tags 
+- Tag Cloud
+
+<a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png" alt="tag cloud" width="400"/></a>
+
+##### Daily links history
+- See the links of the day and navigate throw the calendar to go back to your old links
+
+<a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png" alt="daily links" width="400"/></a>
+
+##### Tools
+- for each link added, a markdown file can be create in a folder that will be sync on your mobile with the help of "[syncthing](https://syncthing.net/)"
+- Import of  **Shaarli** exported bookmark, or even **FireFox** bookmarks
+- you can export/import your data in **json** 
+
+**export**
+```
+python manage.py dumpdata --format json --indent 2 > fixtures/my_shaarpy_dump.json
+```
+
+**import**
+```
+python manage.py loaddata --format json  fixtures/my_shaarpy_dump.json
+```
+
+### Bookmarklet
+
+Drag the link you'll find under your profile, to the bookmark of the browser
+
+![Bookmarklet](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/bookmarklet.png)
+
+Now you'are able to post a new link just be clicking this bookmarklet wherever you are on the web
+
+## Links sync on mobile
+
+If you don't host ShaarPy on a dedicated server, you can run it locally and sync the links in markdown file and sync them on mobile.
+
+You're able to do that by settings the variable `SHAARPY_LOCALSTORAGE_MD` to a directory path in you `.env` file. 
+
+Then files are generated, you may found them on your mobile (thanks to syncthing for managing that task)
+
+
+### original webpage 
+
+![Link of the website](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article_website.png)
+
+### shaarpy grabbed link
+
+![Link in shaarpy](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png)
+
+### shaarpy link on mobile
+
+![Shaarpy link on mobile](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/article_mobile.png)
+
+(I use "Epsilon Notes" for that)
+
+
+
+
+
 
 ## Installation
 ## :package: Installation
@@ -100,40 +173,3 @@ python manage.py runserver localhost:8001
 
 then, access the project with your browser http://127.0.0.1:8001/
 
-## Usage
-
-### Add a new link
-
-![New links](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/new_link.png)
-
-### Tags list 
-
-![Tags list](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png)
-
-to easily find links by tags
-
-### Daily links
-
-![Daily links](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png)
-
-### Bookmarklet
-
-Drag the link you'll find under your profile, to the bookmark of the browser
-
-![Bookmarklet](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/bookmarklet.png)
-
-Now you'are able to post a new link just be clicking this bookmarklet wherever you are on the web
-
-## Links sync on mobile
-
-### original webpage 
-
-![Link of the website](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article_website.png)
-
-### shaarpy grabbed link
-
-![Link in shaarpy](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png)
-
-### shaarpy link on mobile
-
-![Shaarpy link on mobile](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/article_mobile.png)
