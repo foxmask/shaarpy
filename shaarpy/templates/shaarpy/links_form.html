@@ -22,52 +22,51 @@
       <legend> Share a link/a note</legend>
       {% endif %}
       <div class="mb-3">
-          <label class="col-sm-9 control-label" for="id_url"> URL</label>
-          <div class="col-sm-9">{{ form.url }}</div>
+          <label class="form-label" for="id_url"> URL</label>
+          <div>{{ form.url }}</div>
           {% if form.url.errors %}
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger" role="alert">{{ form.url.errors }}</div>
           {% endif %}
       </div>
       <div class="mb-3">
-          <label class="col-sm-9 control-label" for="id_title"> {% trans 'Title' %}</label>
-          <div class="col-sm-9">{{ form.title }}</div>
+          <label class="form-label" for="id_title"> {% trans 'Title' %}</label>
+          <div>{{ form.title }}</div>
           {% if form.title.errors %}
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.title.errors }}</div>
           {% endif %}
       </div>
       {% if edit_link %}
       <div class="mb-3">
-          <label class="col-sm-9 control-label" for="id_image"> {% trans 'Image' %}</label>
-          <div class="col-sm-9">{{ form.image }}</div>
+          <label class="form-label" for="id_image"> {% trans 'Image' %}</label>
+          <div>{{ form.image }}</div>
           {% if form.image.errors %}
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.image.errors }}</div>
           {% endif %}
       </div>
       {% endif %}
       <div class="mb-3">
-          <label class="col-sm-9 control-label" for="id_text"> {% trans 'Text' %}</label>
-          <div class="col-sm-9">{{ form.text }}</div>
+          <label class="form-label" for="id_text"> {% trans 'Text' %}</label>
+          <div class="">{{ form.text }}</div>
           {% if form.text.errors %}
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.text.errors }}</div>
           {% endif %}
       </div>
-      <div class="mb-3">
-          <label class="col-sm-9 control-label" for="id_tags"> {% trans 'Tags' %}</label>
-          <div class="col-sm-9">{{ form.tags }}</div>
+      <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="fas fa-tags"></i></span>{{ form.tags }}
           {% if form.tags.errors %}
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.tags.errors }}</div>
           {% endif %}
       </div>
       <div class="mb-3">
-          <label class="col-sm-9 control-label" for="id_private"> {% trans 'Private' %}</label>
-          <div class="col-sm-9">{{ form.private }}</div>
+          <label class="form-label" for="id_private"><i class="fas fa-user-secret"></i> {% trans 'Private' %}</label>
+          <div>{{ form.private }}</div>
           {% if form.private.errors %}
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.private.errors }}</div>
           {% endif %}
       </div>
       <div class="mb-3">
-          <label class="col-sm-9 control-label" for="id_sticky"> {% trans 'Sticky' %}</label>
-          <div class="col-sm-9">{{ form.sticky }}</div>
+          <label class="form-label" for="id_sticky"><i class="fas fa-thumbtack"></i> {% trans 'Sticky' %}</label>
+          <div>{{ form.sticky }}</div>
           {% if form.sticky.errors %}
           <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.sticky.errors }}</div>
           {% endif %}

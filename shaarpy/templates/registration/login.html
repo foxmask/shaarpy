@@ -11,26 +11,24 @@
     </div>
     {% endif %}
 
-    <form role="form" method="post" class="form-horizontal" action="{% url 'login' %}">
+    <form role="form" method="post" action="{% url 'login' %}">
     {% csrf_token %}
-        <div class="form-group">
-            <label class="form-label col-md-2" for="id_username">{% trans 'Login' %}</label>
-            {{ form.username }}
+        <div class="mb-3">
+            <label class="form-label col-md-2" for="id_username">{% trans 'user' %}</label>
+            <div>{{ form.username }}</div>
             {% if form.username.errors %}
                 <p class="help-block">{{ form.username.errors.as_text }}</p>
             {% endif %}
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label class="form-label col-md-2" for="id_password">{% trans 'Password' %}</label>
-            {{ form.password }}
+            <div>{{ form.password }}</div>
             {% if form.password.errors %}
                 <p class="help-block">{{ form.password.errors.as_text }}</p>
             {% endif %}
         </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary"  value="{% trans 'Log in' %}" />
-            <input type="hidden" name="next" value="{{ next }}" />
-        </div>
+        <input type="submit" class="btn btn-primary"  value="{% trans 'Log in' %}" />
+        <input type="hidden" name="next" value="{{ next }}" />
     </form>
 </div>
 {% endblock %}

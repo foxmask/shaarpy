@@ -111,6 +111,28 @@ class HomeView(SettingsMixin, ListView):
         return context
 
 
+class PublicLinks(HomeView):
+    """
+        Public Links List
+    """
+    def get_queryset(self):
+        queryset = Links.objects.none()
+        if self.request.user.is_authenticated:
+            queryset = Links.objects.filter(private=False)
+        return queryset
+
+
+class PrivateLinks(HomeView):
+    """
+        Private Links List
+    """
+    def get_queryset(self):
+        queryset = Links.objects.none()
+        if self.request.user.is_authenticated:
+            queryset = Links.objects.filter(private=True)
+        return queryset
+
+
 def clean_url(url):
     """
         drop unexpected content of the URL from the bookmarklet

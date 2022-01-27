@@ -15,7 +15,7 @@ class LinksForm(ModelForm):
         model = Links
         fields = ('url', 'title', 'text', 'tags', 'private', 'sticky')
         widgets = {
-            'tags': TextInput(attrs={'class': 'form-control'}),
+            'tags': TextInput(attrs={'class': 'form-control', 'placeholder': _('tags,tag2')}),
             'url': TextInput(attrs={'class': 'form-control',
                                     'placeholder': _('Drop an URL or leave if empty for creating a note')}),
             'title': TextInput(attrs={'class': 'form-control', 'placeholder': _('Note:')}),
@@ -53,7 +53,7 @@ class LinksFormEdit(LinksForm):
         model = Links
         fields = ('url', 'title', 'text', 'tags', 'private', 'sticky', 'image', 'url_hashed')
         widgets = {
-            'tags': TextInput(attrs={'class': 'form-control'}),
+            'tags': TextInput(attrs={'class': 'form-control', 'placeholder': _('tags,tag2')}),
             'url': TextInput(attrs={'class': 'form-control',
                                     'placeholder': _('Drop an URL or leave if empty for creating a note')}),
             'title': TextInput(attrs={'class': 'form-control', 'placeholder': _('Note:')}),

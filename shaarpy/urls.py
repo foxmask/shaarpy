@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, re_path, include
 from shaarpy.views import (HomeView, LinksCreate, LinksDetail, LinksUpdate, link_delete, TagsList, LinksByTagList)
-from shaarpy.views import (DailyLinks, LatestLinksFeed, me, MeUpdate)
+from shaarpy.views import (DailyLinks, LatestLinksFeed, me, MeUpdate, PrivateLinks, PublicLinks)
 from shaarpy import settings
 
 urlpatterns = [
@@ -38,6 +38,8 @@ urlpatterns = [
     path('tags/', TagsList.as_view(), name='tags_list'),
     re_path(r'tags/(?P<tags>\w+)$', LinksByTagList.as_view(), name='links_by_tag_list'),
     path('daily/', DailyLinks.as_view(), name='daily'),
+    path('links/private/', PrivateLinks.as_view(), name='link_private'),
+    path('links/pubic/', PublicLinks.as_view(), name='link_public'),
     re_path(r'daily/(?P<yesterday>\d\d\d\d-\d\d-\d\d)', DailyLinks.as_view(), name='daily'),
     # FEEDS
     path('feed/', LatestLinksFeed(), name='feed'),
