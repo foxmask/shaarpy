@@ -429,3 +429,18 @@ class LatestLinksFeed(Feed):
 
     def item_link(self, item):
         return reverse('link_detail', args=[item.url_hashed])
+
+
+def error_403(request, exception):
+    data = {}
+    return render(request, 'shaarpy/403.html', data)
+
+
+def error_404(request, exception):
+        data = {}
+        return render(request, 'shaarpy/404.html', data)
+
+
+def error_500(request):
+        data = {}
+        return render(request, 'shaarpy/500.html', data)

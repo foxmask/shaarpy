@@ -46,3 +46,7 @@ urlpatterns = [
     # ADMIN
     path('admin/', admin.site.urls),
 ]
+
+handler403 = 'shaarpy.views.error_403'
+handler404 = 'shaarpy.views.error_404'
+handler500 = 'shaarpy.views.error_500'
