@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -24,11 +25,11 @@
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-2 col-md-2 col-lg-2">
+            <div class="footer d-flex align-items-center justify-content-center">
+                <h1>500</h1>
             </div>
-            <div class="col-xs-10 col-md-10 col-lg-10">
-                <h1>500 Internal server error</h1>
-                <p>Opps ! Something's going wrong</p>
+            <div class="footer d-flex align-items-center justify-content-center">
+                <p>{% trans 'Server error (500)' %}</p>
             </div>
         </div>
     </div>

@@ -437,10 +437,10 @@ def error_403(request, exception):
 
 
 def error_404(request, exception):
-        data = {}
-        return render(request, 'shaarpy/404.html', data)
+    data = {}
+    return render(request, 'shaarpy/404.html', data)
 
 
 def error_500(request):
-        data = {}
-        return render(request, 'shaarpy/500.html', data)
+    data = {}
+    return render(request, 'shaarpy/500.html', data)
