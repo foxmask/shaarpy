@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm, TextInput, Textarea, CheckboxInput, EmailInput, HiddenInput
 
 from shaarpy.models import Links
+from shaarpy.tools import url_cleaning
 
 
 class LinksForm(ModelForm):
@@ -35,6 +36,14 @@ class LinksForm(ModelForm):
             self.add_error('url', msg)
             self.add_error('title', msg)
             self.add_error('text', msg)
+
+    def clean_url(self):
+        """
+            remove unwanted query parameters
+        """
+        data = self.cleaned_data['url']
+        print(data)
+        return url_cleaning(data)
 
     def clean_tags(self):
         """

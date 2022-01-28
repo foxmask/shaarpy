@@ -19,7 +19,7 @@ import pypandoc
 from shaarpy.forms import LinksForm, LinksFormEdit, MeForm
 from shaarpy.models import Links
 from shaarpy import settings
-from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host, small_hash
+from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host, small_hash, url_cleaning
 from simple_search import search_form_factory
 
 
@@ -133,17 +133,6 @@ class PrivateLinks(HomeView):
         return queryset
 
 
-def clean_url(url):
-    """
-        drop unexpected content of the URL from the bookmarklet
-    """
-    for pattern in ('&utm_source=', '?utm_source=', '#xtor=RSS-'):
-        pos = url.find(pattern)
-        if pos > 0:
-            url = url[0:pos]
-    return url
-
-
 class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
     """
         Create Links
@@ -168,14 +157,14 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
         initial = {}
         if self.request.GET.get('post'):
             url = self.request.GET.get('post')
-            url = clean_url(url)
+            url = url_cleaning(url)
             initial = {'url': url,
                        'title': self.request.GET.get('title')}
         return initial
 
     def form_valid(self, form):
         url = form.cleaned_data['url']
-
+        url = url_cleaning(url)
         if url:
             try:
                 # check if url already exist and then redirect to it
