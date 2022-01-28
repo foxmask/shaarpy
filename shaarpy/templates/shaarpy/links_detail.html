@@ -27,7 +27,7 @@
       <a href="{% url 'link_detail' object.url_hashed %}">{{ object.title }}</a>
     {% endif %}
     </h5>
-    <p class="card-text">{{ object.text | markdown |safe }}</p>
+    <div class="card-text">{{ object.text | markdown |safe }}</div>
   </div>
   <div class="card-footer text-muted">
     {% if object.private %}
@@ -66,7 +66,7 @@
       </div>
     </div>
     {% endif %}
-    <a href="{% url 'link_detail' object.url_hashed %}">Permalink</a> - {% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.url_hashed %}{% endif %}
+    <a href="{% url 'link_detail' object.url_hashed %}">{% trans 'Permalink' %}</a> - {% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.url_hashed %}{% endif %}
     {% if object.tags %}
     - <i class="fas fa-tags"></i> {{ object.tags | tags | safe }}
     {% endif %}

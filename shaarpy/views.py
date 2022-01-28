@@ -247,7 +247,6 @@ class LinksByTagList(SettingsMixin, ListView):
             get the links with that tags
         """
         tags = None if self.kwargs['tags'] == '0Tag' else self.kwargs['tags']
-        print(tags)
         # when tags is None
         # get the data with tags is null
         if tags:
@@ -421,15 +420,25 @@ class LatestLinksFeed(Feed):
 
 
 def error_403(request, exception):
-    data = {}
+    data = {'SHAARPY_AUTHOR': settings.SHAARPY_AUTHOR,
+            'SHAARPY_NAME': settings.SHAARPY_NAME,
+            'SHAARPY_DESCRIPTION': settings.SHAARPY_DESCRIPTION,
+            'SHAARPY_ROBOT': settings.SHAARPY_ROBOT}
+
     return render(request, 'shaarpy/403.html', data)
 
 
 def error_404(request, exception):
-    data = {}
+    data = {'SHAARPY_AUTHOR': settings.SHAARPY_AUTHOR,
+            'SHAARPY_NAME': settings.SHAARPY_NAME,
+            'SHAARPY_DESCRIPTION': settings.SHAARPY_DESCRIPTION,
+            'SHAARPY_ROBOT': settings.SHAARPY_ROBOT}
     return render(request, 'shaarpy/404.html', data)
 
 
 def error_500(request):
-    data = {}
+    data = {'SHAARPY_AUTHOR': settings.SHAARPY_AUTHOR,
+            'SHAARPY_NAME': settings.SHAARPY_NAME,
+            'SHAARPY_DESCRIPTION': settings.SHAARPY_DESCRIPTION,
+            'SHAARPY_ROBOT': settings.SHAARPY_ROBOT}
     return render(request, 'shaarpy/500.html', data)

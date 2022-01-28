@@ -42,7 +42,6 @@ class LinksForm(ModelForm):
             remove unwanted query parameters
         """
         data = self.cleaned_data['url']
-        print(data)
         return url_cleaning(data)
 
     def clean_tags(self):

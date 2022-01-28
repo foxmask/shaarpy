@@ -15,7 +15,7 @@ class Links(models.Model):
     private = models.BooleanField(default=False)
     image = models.TextField(null=True, blank=True)
     video = models.TextField(null=True, blank=True)
-    date_created = models.DateTimeField(default=datetime.datetime.now)
+    date_created = models.DateTimeField(auto_now_add=True)
     sticky = models.BooleanField(default=False)
 
     class Meta:

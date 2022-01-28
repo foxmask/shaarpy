@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-<title>{% block title %}{{ SHAARPY_NAME }} :: New shaarpy/note{% endblock %}</title>
+<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'New ShaarPy/note' %}{% endblock %}</title>
 {% block content %}
 {% if messages %}
 <div class="alert alert-warning">
@@ -11,15 +11,15 @@
     </ul>
 </div>
 {% endif %}
-<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2">
+<div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
   <form action="" method="post" role="form" name="my_form" class="form-horizontal">
     {% csrf_token %}
     <fieldset>
     {{ form.non_field_errors }}
       {% if edit_link %}
-      <legend> Update the link/note</legend>
+      <legend>{% trans 'Update the link/note' %}</legend>
       {% else %}
-      <legend> Share a link/a note</legend>
+      <legend>{% trans 'Share a link/a note' %}</legend>
       {% endif %}
       <div class="mb-3">
           <label class="form-label" for="id_url"> URL</label>

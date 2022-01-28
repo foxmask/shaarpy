@@ -1,6 +1,8 @@
 # ShaarPy 
 
-🔗 🐍 share thoughts, ideas, links, notes.
+<img src="https://framagit.org/foxmask/shaarpy/-/raw/main/shaarpy/static/shaarpy.png" height="179" width="200"/>
+
+Share Thoughts, Ideas, Links, Notes.
 
 'Shaarli cloned' in Python/Django
 
@@ -173,3 +175,7 @@ python manage.py runserver localhost:8001
 
 then, access the project with your browser http://127.0.0.1:8001/
 
+
+## Logo
+
+(logo, thanks to [https://pixabay.com/fr/users/clker-free-vector-images-3736/](https://pixabay.com/fr/vectors/serpent-python-vert-reptile-faune-312561/) )

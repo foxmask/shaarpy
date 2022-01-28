@@ -102,7 +102,7 @@
                 </div>
               </div>
               {% endif %}
-              <a href="{% url 'link_detail' data.url_hashed %}">Permalink</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.url_hashed %}{% endif %}
+              <a href="{% url 'link_detail' data.url_hashed %}">{% trans 'Permalink' %}</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.url_hashed %}{% endif %}
               {% if data.tags %}
               - <i class="fas fa-tags"></i> {{ data.tags | tags | safe }}
               {% endif %}
