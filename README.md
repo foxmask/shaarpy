@@ -151,7 +151,6 @@ DB_PORT=''
 TIME_ZONE='Europe/Paris'
 LANGUAGE_CODE='en-en'
 USE_I18N=True
-USE_L10N=True
 USE_TZ=True
 ```
 
@@ -174,6 +173,25 @@ python manage.py runserver localhost:8001
 ```
 
 then, access the project with your browser http://127.0.0.1:8001/
+
+### Test
+
+```bash
+python manage.py test
+```
+
+or 
+
+```bash
+pytest 
+```
+or 
+
+```bash
+coverage run --source='.' -m pytest
+coverage report -m
+```
+
 
 
 ## Logo

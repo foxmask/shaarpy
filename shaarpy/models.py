@@ -2,7 +2,6 @@
 """
     ShaarPy :: Models
 """
-import datetime
 from django.db import models
 
 

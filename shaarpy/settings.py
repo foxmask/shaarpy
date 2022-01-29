@@ -132,7 +132,6 @@ CACHE_MIDDLEWARE_SECONDS = 600
 LANGUAGE_CODE = env.str('LANGUAGE_CODE', default='en-en')
 TIME_ZONE = env.str('TIME_ZONE', default='UTC')
 USE_I18N = env.bool('USE_I18N', default=True)
-USE_L10N = env.bool('USE_L10N', default=True)
 USE_TZ = env.bool('USE_TZ', default=True)
 
 

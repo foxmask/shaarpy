@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, re_path, include
 from shaarpy.views import (HomeView, LinksCreate, LinksDetail, LinksUpdate, link_delete, TagsList, LinksByTagList)
-from shaarpy.views import (DailyLinks, LatestLinksFeed, me, MeUpdate, PrivateLinks, PublicLinks)
+from shaarpy.views import (DailyLinks, LatestLinksFeed, MeView, MeUpdate, PrivateLinks, PublicLinks)
 from shaarpy import settings
 
 urlpatterns = [
@@ -26,7 +26,7 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(
         extra_context={'SHAARPY_NAME': settings.SHAARPY_NAME}),
         name="login"),
-    path('accounts/profile/', me, name="me"),
+    path('accounts/profile/', MeView.as_view(), name="me"),
     path('accounts/profile/edit/', MeUpdate.as_view(), name='edit_me'),
     path('accounts/', include('django.contrib.auth.urls')),
     # THE APP

@@ -2,6 +2,7 @@
 coverage
 flake8
 pytest-django
-tox
+semgrep
+pipdeptree
 twine
-wheel
+tox

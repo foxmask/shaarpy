@@ -15,6 +15,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic.base import TemplateView
 import pypandoc
 from shaarpy.forms import LinksForm, LinksFormEdit, MeForm
 from shaarpy.models import Links
@@ -246,6 +247,7 @@ class LinksByTagList(SettingsMixin, ListView):
         """
             get the links with that tags
         """
+        print(self.kwargs)
         tags = None if self.kwargs['tags'] == '0Tag' else self.kwargs['tags']
         # when tags is None
         # get the data with tags is null
@@ -366,16 +368,19 @@ def logout_view(request):
     logout(request)
 
 
-@login_required()
-def me(request):
+class MeView(LoginRequiredMixin, TemplateView):
+
     """
         access to the profile page
     """
-    return render(request,
-                  'me.html',
-                  {'object': request.user,
-                   'SHAARPY_NAME': settings.SHAARPY_NAME}
-                  )
+
+    template_name = "me.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.request.user
+        context['SHAARPY_NAME'] = settings.SHAARPY_NAME
+        return context
 
 
 class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):

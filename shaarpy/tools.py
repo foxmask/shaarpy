@@ -39,10 +39,11 @@ def url_cleaning(url):
     """
         drop unexpected content of the URL from the bookmarklet
     """
-    for pattern in ('&utm_source=', '?utm_source=', '&utm_medium=', '#xtor=RSS-'):
-        pos = url.find(pattern)
-        if pos > 0:
-            url = url[0:pos]
+    if url:
+        for pattern in ('&utm_source=', '?utm_source=', '&utm_medium=', '#xtor=RSS-'):
+            pos = url.find(pattern)
+            if pos > 0:
+                url = url[0:pos]
     return url
 
 
