@@ -26,7 +26,7 @@ before_script:
 - python3.10 -V
 - pip3 install virtualenv
 #- virtualenv venv
-- python3.10 -m venv
+- python3.10 -m venv venv
 - source venv/bin/activate
 test:
   script:
