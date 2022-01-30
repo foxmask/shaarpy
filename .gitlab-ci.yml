@@ -21,7 +21,7 @@ cache:
   - venv/
 before_script:
 - apt -y update
-- apt -y install pandoc python3.10 python3-pip
+- apt -y install pandoc python3.10 python3-pip python3.10-venv
 - apt -y upgrade
 - python3.10 -V
 - pip3 install virtualenv
