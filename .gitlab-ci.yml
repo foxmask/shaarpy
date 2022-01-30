@@ -24,13 +24,13 @@ before_script:
 - apt -y install pandoc python3.10 python3-pip python3.10-venv
 - apt -y upgrade
 - python3.10 -V
-- pip3 install virtualenv
-#- virtualenv venv
+# - pip3 install virtualenv
+# - virtualenv venv
 - python3.10 -m venv venv
 - source venv/bin/activate
 test:
   script:
-  - pip install -r requirements-dev.txt
+  - pip3 install -r requirements-dev.txt
   - cp shaarpy/env.sample shaarpy/.env
   # - python -m pytest -s
   - coverage run --source='.' manage.py test
