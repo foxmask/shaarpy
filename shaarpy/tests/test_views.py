@@ -2,7 +2,7 @@
 """
     ShaarPy
 """
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import AnonymousUser, User
@@ -541,5 +541,3 @@ class MeUpdateTestCase(TestCase):
         # Check.
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.template_name[0], template)
-
-
