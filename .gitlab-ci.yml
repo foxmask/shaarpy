@@ -9,7 +9,7 @@ include:
 - template: Security/SAST.gitlab-ci.yml
 - template: Security/Dependency-Scanning.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
-image: python:3.10
+image: alpine
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   DS_EXCLUDED_ANALYZERS: bundler-audit, retire.js, gemnasium, gemnasium-maven
