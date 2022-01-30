@@ -23,7 +23,7 @@ before_script:
 - apt -y update
 - apt -y install pandoc python3.10 python3-pip
 - apt -y upgrade
-- python -V
+- python3 -V
 - pip3 install virtualenv
 - virtualenv venv
 - source venv/bin/activate
