@@ -19,9 +19,10 @@ cache:
   - venv/
 before_script:
 - apt -y update
-- apt -y install pandoc
+- apt -y install pandoc python3.10 python3-pip
+- apt -y upgrade
 - python -V
-- pip install virtualenv
+- pip3 install virtualenv
 - virtualenv venv
 - source venv/bin/activate
 test:
