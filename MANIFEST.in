@@ -1,2 +1,7 @@
-exclude manage.py
-include *.txt
+include VERSION.txt
+
+# exclude manage.py shaarpy/.env static tox.ini pytest.ini
+
+recursive-include shaarpy *.html *.png *.css *.py *.md env.sample
+
+recursive-exclude shaarpy tests
