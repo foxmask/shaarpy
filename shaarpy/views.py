@@ -8,8 +8,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-
 from django.contrib.syndication.views import Feed
+from django.core.cache import caches
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
@@ -22,6 +22,9 @@ from shaarpy.models import Links
 from shaarpy import settings
 from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host, small_hash, url_cleaning
 from simple_search import search_form_factory
+
+# call the cache
+shaarpy_cache = caches['default']
 
 
 @login_required
@@ -48,6 +51,11 @@ class SuccessMixin:
         """
         that method returns to the following link once (Create|Update)View are saved
         """
+        # clear the cache when creating/updating a note/link
+        # otherwise, the update would have to wait the time of `CACHE_MIDDLEWARE_SECONDS`
+        # to be available
+        shaarpy_cache.clear()
+        # then go back to ...
         return reverse('link_detail', kwargs={'slug': self.object.url_hashed})
 
 

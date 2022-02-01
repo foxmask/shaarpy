@@ -4,7 +4,7 @@
 
 Share Thoughts, Ideas, Links, Notes.
 
-'Shaarli cloned' in Python/Django
+a 'Shaarli cloned' in Python/Django
 
 Have a look at [https://shaarpy.foxmask.org/](https://shaarpy.foxmask.org/) for live instance
 
@@ -77,10 +77,6 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 (I use "Epsilon Notes" for that)
 
 
-
-
-
-
 ## Installation
 ## :package: Installation
 
@@ -121,22 +117,26 @@ copy the sample config file
 cp env.sample .env
 ```
 
-and set the following values
+and set the following values, for examples
 
 ```ini
 # for meta
 SHAARPY_NAME=ShaarPy FoxMaSk Links
-SHAARPY_DESCRIPTION= Share thoughts, links ideas, notes
+SHAARPY_DESCRIPTION=Share thoughts, links ideas, notes
 SHAARPY_AUTHOR=FoxMaSk
 SHAARPY_ROBOT=index, follow
-# for MD generation
-SHAARPY_LOCALSTORAGE_MD=/home/foxmask/MyNotes/links
+# for MD generation, set a path eg /home/foxmask/MesNotes/links or leave it empty to not use this feature
+SHAARPY_LOCALSTORAGE_MD=
 SHAARPY_STYLE=blue
 
 SECRET=!DONTFORGETTOCHANGETHISVALUE!
 
-DEBUG=False   # for production environemnt, set it to False
-ALLOWED_HOSTS='127.0.0.1,localhost'   # for production environemnt, set it to the URL of your 'ShaarPy'
+# for production environment, set it to the URL of your 'ShaarPy'
+# 1 set it to False
+DEBUG=False
+# 2 set it to the URL of your 'ShaarPy'
+ALLOWED_HOSTS='127.0.0.1,localhost'
+# 3 set it to your own domain hosting shaarpy
 CSRF_TRUSTED_ORIGINS=https://*.mydomain.com
 
 # for database
