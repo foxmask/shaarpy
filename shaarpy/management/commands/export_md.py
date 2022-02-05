@@ -2,15 +2,16 @@
 """
     ShaarPy :: Exporting in markdown
 """
-import os.path
-
 from django.core.management.base import BaseCommand
+import logging
+import os.path
 from rich.console import Console
 from shaarpy.models import Links
 from shaarpy.tools import create_md_file
 from slugify import slugify
 
 console = Console()
+logger = logging.getLogger("command")
 
 __author__ = 'FoxMaSk'
 
@@ -27,7 +28,9 @@ class Command(BaseCommand):
         if os.path.exists(options['folder']):
             for link in links:
                 file_name = slugify(link.title) + '.md'
-                console.print(f"Shaarpy :: Exporting md file {options['folder']}/{file_name}", style="green")
+                log = f"Shaarpy :: Exporting md file {options['folder']}/{file_name}"
+                console.print(log, style="green")
+                logger.info(log)
                 create_md_file(options['folder'],
                                link.title,
                                link.url,

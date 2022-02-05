@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.utils.text import Truncator
 import html
 from jinja2 import Environment, PackageLoader
+import logging
 from newspaper import Article
 import os
 
@@ -29,7 +30,7 @@ from slugify import slugify
 from urllib.parse import urlparse
 
 console = Console()
-
+logger = logging.getLogger('tools')
 """
     URL
 """
@@ -200,6 +201,7 @@ def import_shaarli(the_file, reload_article_from_url):  # noqa: C901
     private = 0
     with open(the_file, 'r') as f:
         data = f.read()
+        logger.debug(f"ShaarPy :: importing {the_file}")
 
     if data.startswith('<!DOCTYPE NETSCAPE-Bookmark-file-1>'):
         i = 0
@@ -275,6 +277,7 @@ def import_shaarli(the_file, reload_article_from_url):  # noqa: C901
                             obj.image = link['image']
                             obj.video = link['video']
                             obj.url_hashed = small_hash(link['date_created'].strftime("%Y%m%d_%H%M%S"))
+                            logger.debug(f"ShaarPy :: updating {obj.url}")
                             obj.save()
                         except Links.DoesNotExist:
                             new_values = {'url': link['url'],
@@ -289,5 +292,6 @@ def import_shaarli(the_file, reload_article_from_url):  # noqa: C901
                                           }
                             obj = Links(**new_values)
                             obj.save()
+                            logger.debug(f"ShaarPy :: creating {obj.url}")
 
         console.print(table)

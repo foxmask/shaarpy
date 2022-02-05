@@ -112,3 +112,4 @@ venv.bak/
 *.sqlite*
 
 static
+settings_debug.py

@@ -160,8 +160,8 @@ setup the database
 
 ```bash
 cd shaarpy
-python manage.py createsuperuser
 python manage.py migrate
+python manage.py createsuperuser
 python manage.py loaddata shaarpy/fixtures/my_shaarpy_data.json 
 ```
 

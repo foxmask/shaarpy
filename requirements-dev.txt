@@ -6,4 +6,4 @@ pytest-django
 semgrep
 pipdeptree
 twine
-tox
+django-debug-toolbar

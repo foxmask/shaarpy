@@ -23,54 +23,60 @@
       {% endif %}
       <div class="mb-3">
           <label class="form-label" for="id_url"> URL</label>
-          <div>{{ form.url }}</div>
-          {% if form.url.errors %}
-          <div class="col-sm-offset-2 col-sm-8 alert alert-danger" role="alert">{{ form.url.errors }}</div>
-          {% endif %}
+          {{ form.url }}
       </div>
+      {% if form.url.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.url.errors }}</div>
+      {% endif %}
       <div class="mb-3">
           <label class="form-label" for="id_title"> {% trans 'Title' %}</label>
-          <div>{{ form.title }}</div>
-          {% if form.title.errors %}
-          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.title.errors }}</div>
-          {% endif %}
+          {{ form.title }}
       </div>
+      {% if form.title.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.title.errors }}</div>
+      {% endif %}
       {% if edit_link %}
       <div class="mb-3">
           <label class="form-label" for="id_image"> {% trans 'Image' %}</label>
-          <div>{{ form.image }}</div>
-          {% if form.image.errors %}
-          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.image.errors }}</div>
-          {% endif %}
+          {{ form.image }}
       </div>
+      {% if form.image.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.image.errors }}</div>
+      {% endif %}
       {% endif %}
       <div class="mb-3">
           <label class="form-label" for="id_text"> {% trans 'Text' %}</label>
-          <div class="">{{ form.text }}</div>
-          {% if form.text.errors %}
-          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.text.errors }}</div>
-          {% endif %}
+          {{ form.text }}
       </div>
+      {% if form.text.errors %}
+      <div class="alert alert-danger" role="alert">{{ form.text.errors }}</div>
+      {% endif %}
       <div class="input-group input-group-sm mb-3">
           <span class="input-group-text" id="basic-addon1"><i class="fas fa-tags"></i></span>{{ form.tags }}
-          {% if form.tags.errors %}
-          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.tags.errors }}</div>
-          {% endif %}
       </div>
+      {% if form.tags.errors %}
+      <div class="alert alert-danger" role="alert">
+         {{ form.tags.errors }}
+      </div>
+      {% endif %}
       <div class="mb-3">
           <label class="form-label" for="id_private"><i class="fas fa-user-secret"></i> {% trans 'Private' %}</label>
-          <div>{{ form.private }}</div>
-          {% if form.private.errors %}
-          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.private.errors }}</div>
-          {% endif %}
+          {{ form.private }}
       </div>
+      {% if form.private.errors %}
+      <div class="alert alert-danger" role="alert">
+        {{ form.private.errors }}
+      </div>
+      {% endif %}
       <div class="mb-3">
           <label class="form-label" for="id_sticky"><i class="fas fa-thumbtack"></i> {% trans 'Sticky' %}</label>
-          <div>{{ form.sticky }}</div>
-          {% if form.sticky.errors %}
-          <div class="col-sm-offset-2 col-sm-8 alert alert-danger">{{ form.sticky.errors }}</div>
-          {% endif %}
+          {{ form.sticky }}
       </div>
+      {% if form.sticky.errors %}
+      <div class="alert alert-danger" role="alert">
+        {{ form.sticky.errors }}
+      </div>
+      {% endif %}
       {% if edit_link %}
       <a href="{% url 'link_detail' object.url_hashed %}" class="btn btn-success"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
       <button class="btn btn-primary">{% trans "Update link" %}</button>

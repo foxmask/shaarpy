@@ -5,7 +5,6 @@
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm, TextInput, Textarea, CheckboxInput, EmailInput, HiddenInput
-
 from shaarpy.models import Links
 from shaarpy.tools import url_cleaning
 
@@ -48,8 +47,13 @@ class LinksForm(ModelForm):
         """
             remove extra space
         """
+        unwanted_chars = '?./:;!#&@{}[]|`\\^~*+=-_'
         data = self.cleaned_data['tags']
         if data:
+            if any(s in unwanted_chars for s in data):
+                msg = _(f"characters {unwanted_chars} not allowed.")
+                self.add_error('tags', msg)
+
             if data.endswith(','):
                 data = data[:-1]
             return data.replace(' ', '')

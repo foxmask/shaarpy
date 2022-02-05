@@ -16,6 +16,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.views.generic.base import TemplateView
+import logging
 import pypandoc
 from shaarpy.forms import LinksForm, LinksFormEdit, MeForm
 from shaarpy.models import Links
@@ -26,6 +27,8 @@ from simple_search import search_form_factory
 # call the cache
 shaarpy_cache = caches['default']
 
+logger = logging.getLogger("views")
+
 
 @login_required
 def link_delete(request, pk):
@@ -33,6 +36,7 @@ def link_delete(request, pk):
     if 'page' in request.GET:
         page = request.GET.get('page')
     link = Links.objects.get(pk=pk)
+    logger.info(f'ShaarPy :: delete ShaarPy {pk}')
     if link.title is not None and settings.SHAARPY_LOCALSTORAGE_MD:
         rm_md_file(link.title)
     link.delete()
@@ -54,6 +58,7 @@ class SuccessMixin:
         # clear the cache when creating/updating a note/link
         # otherwise, the update would have to wait the time of `CACHE_MIDDLEWARE_SECONDS`
         # to be available
+        logger.debug('ShaarPy :: clear application cache')
         shaarpy_cache.clear()
         # then go back to ...
         return reverse('link_detail', kwargs={'slug': self.object.url_hashed})
@@ -178,6 +183,7 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
             try:
                 # check if url already exist and then redirect to it
                 links = Links.objects.get(url=url)
+                logger.debug(f"ShaarPy :: link already exists {url}")
                 return redirect('link_detail', **{'slug': links.url_hashed})
             except Links.DoesNotExist:
                 pass
@@ -194,7 +200,7 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
         self.object.url_hashed = small_hash(self.object.date_created.strftime("%Y%m%d_%H%M%S"))
 
         self.object = form.save()
-
+        logger.debug(f"ShaarPy :: create {self.object.url} {self.object.title} {self.object.tags}")
         if settings.SHAARPY_LOCALSTORAGE_MD:
             create_md_file(settings.SHAARPY_LOCALSTORAGE_MD,
                            self.object.title, self.object.url, self.object.text, self.object.tags,

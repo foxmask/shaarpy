@@ -47,6 +47,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+"""
+if settings.DEBUG:
+    urlpatterns += [
+
+        path('__debug__/', include('debug_toolbar.urls')),
+    ]
+"""
 handler403 = 'shaarpy.views.error_403'
 handler404 = 'shaarpy.views.error_404'
 handler500 = 'shaarpy.views.error_500'

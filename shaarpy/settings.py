@@ -10,10 +10,10 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
-from pathlib import Path
+from django.urls import reverse_lazy
 import environ
 import os
+from pathlib import Path
 
 env = environ.Env()
 
@@ -117,6 +117,67 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format':
+                '%(asctime)s %(levelname)s %(module)s %(process)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'shaarpy.log',
+            'maxBytes': 61280,
+            'backupCount': 3,
+            'formatter': 'verbose',
+
+        },
+    },
+    'loggers':
+    {
+        'django.request': {
+            'handlers': ['mail_admins', 'file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'shaarpy.views': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+        'shaarpy.command': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+        'shaarpy.tools': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+        },
+    }
+}
+
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
@@ -148,7 +209,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = reverse_lazy('base')
+LOGOUT_REDIRECT_URL = reverse_lazy('base')
 
 SHAARPY_AUTHOR = env.str('SHAARPY_AUTHOR', default="FoxMaSk")
 SHAARPY_NAME = env.str('SHAARPY_NAME', default=f"ShaarPy - {SHAARPY_AUTHOR} Links")
