@@ -13,6 +13,7 @@ Have a look at [https://shaarpy.foxmask.org/](https://shaarpy.foxmask.org/) for 
 ## Features
 
 ##### Notes
+
 - Create *notes* in **Markdown**
 
 ##### Links
@@ -20,7 +21,7 @@ Have a look at [https://shaarpy.foxmask.org/](https://shaarpy.foxmask.org/) for 
 <a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png" alt="article with image" width="400"/></a>
 
 ##### Tags
--  Manage tags 
+- Manage tags 
 - Tag Cloud
 
 <a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png" alt="tag cloud" width="400"/></a>
@@ -78,6 +79,7 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 
 
 ## Installation
+
 ## :package: Installation
 
 ### Requirements 
@@ -166,6 +168,7 @@ python manage.py loaddata shaarpy/fixtures/my_shaarpy_data.json
 ```
 
 ## :mega: Running the Server
+
 ### start the project
 
 ```bash
@@ -191,7 +194,6 @@ or
 coverage run --source='.' -m pytest
 coverage report -m
 ```
-
 
 
 ## Logo
