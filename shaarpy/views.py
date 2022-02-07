@@ -379,6 +379,7 @@ def logout_view(request):
     """
         user is logging out
     """
+    shaarpy_cache.clear()
     logout(request)
 
 

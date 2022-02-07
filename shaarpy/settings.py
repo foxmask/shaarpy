@@ -209,8 +209,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
-LOGIN_REDIRECT_URL = reverse_lazy('base')
-LOGOUT_REDIRECT_URL = reverse_lazy('base')
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
 SHAARPY_AUTHOR = env.str('SHAARPY_AUTHOR', default="FoxMaSk")
 SHAARPY_NAME = env.str('SHAARPY_NAME', default=f"ShaarPy - {SHAARPY_AUTHOR} Links")
