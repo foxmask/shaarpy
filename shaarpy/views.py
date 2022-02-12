@@ -14,6 +14,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.http import condition
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.views.generic.base import TemplateView
 import logging
@@ -28,6 +30,14 @@ from simple_search import search_form_factory
 shaarpy_cache = caches['default']
 
 logger = logging.getLogger("views")
+
+
+def latest_entry(request, **kw):
+    """
+    used by @condition decorator to retrieve the most recent data to the client browser
+    if it already get all of them
+    """
+    return Links.objects.filter().latest("date_created").date_created
 
 
 @login_required
@@ -87,6 +97,14 @@ class HomeView(SettingsMixin, ListView):
 
     queryset = Links.objects.none()
     paginate_by = 10
+
+    """
+    used by @condition decorator to retrieve the most recent data to the client browser
+    if it already get all of them
+    """
+    @method_decorator(condition(last_modified_func=latest_entry))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -257,6 +275,14 @@ class LinksByTagList(SettingsMixin, ListView):
     queryset = Links.objects.none()
     paginate_by = 10
 
+    """
+    used by @condition decorator to retrieve the most recent data to the client browser
+    if it already get all of them
+    """
+    @method_decorator(condition(last_modified_func=latest_entry))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
     def get_queryset(self):
         """
             get the links with that tags
@@ -287,6 +313,14 @@ class TagsList(SettingsMixin, ListView):
     """
     template_name = 'shaarpy/tags_list.html'
     queryset = Links.objects.all()
+
+    """
+    used by @condition decorator to retrieve the most recent data to the client browser
+    if it already get all of them
+    """
+    @method_decorator(condition(last_modified_func=latest_entry))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         """
