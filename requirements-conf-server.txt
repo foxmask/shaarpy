@@ -1,2 +1,3 @@
+-r requirements.txt
 gunicorn
-eventlet==0.30.02
+eventlet==0.30.2
