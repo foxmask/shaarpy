@@ -14,7 +14,7 @@ class SettingsTestCase(TestCase):
     """
 
     def test_env_file(self):
-        assert os.path.isfile('shaarpy/.env')
+        assert os.path.isfile('shaarpy/.env'), True
 
     def test_get_config_service(self):
         self.assertIs(type(settings.SHAARPY_NAME), str)

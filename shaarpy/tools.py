@@ -26,7 +26,7 @@ from rich.table import Table
 from shaarpy import settings
 from shaarpy.models import Links
 from slugify import slugify
-
+from typing import NoReturn
 from urllib.parse import urlparse
 
 console = Console()
@@ -36,10 +36,14 @@ logger = logging.getLogger('tools')
 """
 
 
-def url_cleaning(url):
+def url_cleaning(url: str) -> str:
     """
-        drop unexpected content of the URL from the bookmarklet
+    drop unexpected content of the URL from the bookmarklet
+
+    param url: url of the website
+    :return string url
     """
+
     if url:
         for pattern in ('&utm_source=', '?utm_source=', '&utm_medium=', '#xtor=RSS-'):
             pos = url.find(pattern)
@@ -53,7 +57,14 @@ ARTICLES MANAGEMENT
 """
 
 
-def _get_host(url):
+def _get_host(url: str) -> str:
+    """
+    go to get the schema and hostname and port related to the given url
+
+    param url: url of the website
+    :return string 'hostname'
+    """
+
     o = urlparse(url)
     hostname = o.scheme + '://' + o.hostname
     port = ''
@@ -63,14 +74,20 @@ def _get_host(url):
     return hostname
 
 
-def _get_brand(url):
-    brand = newspaper.build(_get_host(url))
+def _get_brand(url: str) -> str:
+    """
+    go to get the brand name related to the given url
+
+    param url: url of the website
+    :return string of the Brand
+    """
+    brand = newspaper.build(url=_get_host(url))
     brand.download()
     brand.parse()
     return brand.brand
 
 
-def drop_image_node(content):
+def drop_image_node(content: str) -> tuple:
     my_image = ''
     soup = BeautifulSoup(content, 'html.parser')
     if soup.find_all('img', src=True):
@@ -83,7 +100,7 @@ def drop_image_node(content):
     return my_image, soup
 
 
-def grab_full_article(url):
+def grab_full_article(url: str) -> tuple:
     """
         get the complete article page from the URL
     """
@@ -116,7 +133,7 @@ MARKDOWN MANAGEMENT
 """
 
 
-def rm_md_file(title):
+def rm_md_file(title: str) -> NoReturn:
     """
         rm a markdown file
     """
@@ -126,7 +143,8 @@ def rm_md_file(title):
         os.remove(file_md)
 
 
-def create_md_file(storage, title, url, text, tags, date_created, private, image, video):
+def create_md_file(storage: str, title: str, url: str, text: str,
+                   tags: str, date_created: str, private: bool, image: str, video: str) -> NoReturn:
     """
         create a markdown file
     """
@@ -156,7 +174,7 @@ def create_md_file(storage, title, url, text, tags, date_created, private, image
 # CRC Stuff
 
 
-def crc_that(string):
+def crc_that(string: str) -> int:
     """
     the PHP's hash(crc32) in Python :P
 
@@ -175,7 +193,7 @@ def crc_that(string):
     return int.from_bytes(crc.to_bytes(4, 'big'), 'little')
 
 
-def small_hash(text):
+def small_hash(text: str) -> str:
     """
     Returns the small hash of a string, using RFC 4648 base64url format
    eg. smallHash('20111006_131924') --> yZH23w
@@ -197,7 +215,7 @@ def small_hash(text):
 
 # IMPORTING SHAARLI FILE
 
-def import_shaarli(the_file, reload_article_from_url):  # noqa: C901
+def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # noqa: C901
     private = 0
     with open(the_file, 'r') as f:
         data = f.read()

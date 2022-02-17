@@ -8,6 +8,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import AnonymousUser, User
 from django.urls import reverse
 
+from shaarpy import settings
 from shaarpy.forms import LinksForm
 from shaarpy.models import Links
 from shaarpy.views import HomeView, LinksCreate, LinksDetail, PrivateLinks, PublicLinks, LinksUpdate
@@ -234,8 +235,8 @@ class CreateLinksTestCase(CommonStuffTestCase):
     def test_create2(self):
         # create an entry into the model
         self.create_links()
-
-        url = 'https://foxmask.org/'
+        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp/'
+        url = 'https://foxmask.org:443/?utm_source=foo&utm_source=bar'
         title = 'Le Free de la passion'
         text = '# Le Free de la Passion'
         private = False
@@ -258,8 +259,40 @@ class CreateLinksTestCase(CommonStuffTestCase):
         # Check.
         self.assertEqual(response.status_code, 302)
 
+    def test_create3_drop_image(self):
+        # create an entry into the model
+        self.create_links()
+
+        url = 'http://world.kbs.co.kr/service/index.htm?lang=e'
+        title = 'KBS World'
+        text = '# KBS World'
+        private = False
+        sticky = True
+        tags = 'Korea'
+        data = {
+            'url': url,
+            'title': title,
+            'text': text,
+            'private': private,
+            'sticky': sticky,
+            'tags': tags,
+        }
+        # try to create an entry from the form but with same URL
+        request = RequestFactory().post(reverse('link_create'), data=data)
+        request.user = self.user
+        view = LinksCreate.as_view()
+        # Run.
+        response = view(request)
+        # Check.
+        self.assertEqual(response.status_code, 302)
+
     def test_form_valid(self):
         data = {'url': 'https://foxmask.org/', 'tags': 'home,sweet,'}
+        form = LinksForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_form_valid_url_cleaning(self):
+        data = {'url': 'https://foxmask.org/?utm_source=foo&utm_source=bar', 'tags': 'home,sweet,'}
         form = LinksForm(data=data)
         self.assertTrue(form.is_valid())
 
@@ -270,6 +303,11 @@ class CreateLinksTestCase(CommonStuffTestCase):
 
     def test_form_invalid(self):
         data = {'url': '', 'title': '', 'text': ''}
+        form = LinksForm(data=data)
+        self.assertFalse(form.is_valid())
+
+    def test_form_invalid2(self):
+        data = {'title': 'My note', 'text': 'note text', 'tags': '@toto'}
         form = LinksForm(data=data)
         self.assertFalse(form.is_valid())
 
