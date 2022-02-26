@@ -18,6 +18,7 @@ cache:
   - ".cache/pip"
   - venv/
 before_script:
+- sudo apt-get update -q && apt-get install -qy pandoc && rm -rf /var/lib/apt/lists/*
 - python -V
 - pip install virtualenv
 - virtualenv venv
@@ -34,7 +35,7 @@ deploy:
   - rm -rf dist
   - python setup.py sdist bdist_wheel
   - twine check dist/*
-  - twine upload dist/*.tar.gz 
+  - twine upload dist/*.tar.gz
   only:
   - tags
 stages:
