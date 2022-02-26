@@ -50,6 +50,7 @@ class ViewFunction(CommonStuffTestCase):
         # Setup request and view.
         request = RequestFactory().get('/', {"page": "1"})
         request.user = self.user
+        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
         response = link_delete(request=request, pk=link.id)
         # Check.
         self.assertEqual(response.status_code, 302)
@@ -165,7 +166,8 @@ class CreateLinksTestCase(CommonStuffTestCase):
         # Setup request and view.
         url_to_create = 'https://foxmask.org/feeds/all.rss.xml'
         title = 'Le Free de la passion'
-        request = RequestFactory().get(reverse('link_create') + '?post=' + url_to_create + '&title=' + title)
+        url_data = f"?post={url_to_create}&title={title}&source=bookmarklet"
+        request = RequestFactory().get(reverse('link_create') + url_data)
         request.user = self.user
         view = LinksCreate.as_view(template_name=template)
         # Run.
