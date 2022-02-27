@@ -178,10 +178,11 @@ LOGGING = {
 }
 
 
+SHAARPY_CACHE_DIR = env.str('SHAARPY_CACHE_DIR', default='/tmp')
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/tmp/shaarpy_cache',
+        'LOCATION': SHAARPY_CACHE_DIR,
     }
 }
 
