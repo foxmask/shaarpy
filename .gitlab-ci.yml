@@ -40,10 +40,10 @@ deploy:
   - tags
 stages:
   - test
-sast:
-  variables:
-    SAST_EXCLUDED_ANALYZERS: bandit, brakeman, eslint, flawfinder, gosec, kubesec,
-      nodejs-scan, phpcs-security-audit, pmd-apex, security-code-scan, sobelow, spotbugs
-    SAST_EXCLUDED_PATHS: venv
-    SAST_SEMGREP_METRICS: 'false'
-  stage: test
+#sast:
+#  variables:
+#    SAST_EXCLUDED_ANALYZERS: bandit, brakeman, eslint, flawfinder, gosec, kubesec,
+#      nodejs-scan, phpcs-security-audit, pmd-apex, security-code-scan, sobelow, spotbugs
+#    SAST_EXCLUDED_PATHS: venv
+#    SAST_SEMGREP_METRICS: 'false'
+#  stage: test
