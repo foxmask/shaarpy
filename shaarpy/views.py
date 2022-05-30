@@ -472,6 +472,9 @@ class LatestLinksFeed(Feed):
     def item_link(self, item):
         return reverse('link_detail', args=[item.url_hashed])
 
+    def item_pubdate(self, item):
+        return item.date_created
+
 
 def error_403(request, exception):
     data = {'SHAARPY_AUTHOR': settings.SHAARPY_AUTHOR,
