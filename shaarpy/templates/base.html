@@ -23,37 +23,40 @@
     {% block og_image %}{% endblock %}
 </head>
 <body role="document"{% if edit_link %} onload="document.my_form.id_text.focus();"{% elif add_link %} onload="document.my_form.id_url.focus();"{% endif %}>
-    <nav class="navbar navbar-expand-md navbar-light sticky-top" style="background-color: #ebcb8b;">
+    <nav class="navbar navbar-expand-md navbar-light sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}" title="Home">
-                <img src="{% static 'shaarpy.png' %}" alt="ShaarPy Snake" width="48" height="43"/> <span class="menu-collapsed">{{ SHAARPY_NAME }}</span>
-            </a>
+            <img src="{% static 'shaarpy.png' %}" alt="ShaarPy Snake" width="48" height="43"/>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% if user.is_authenticated %}
                 <li class="nav-item">
-                  <a class="nav-link shaarpy-link" href="{% url 'link_create' %}" title="{% trans 'Add a thought, a link, an idea, a note' %}"><i class="fab fa-python"></i> ShaarPy</a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'tags_list' %}" title="{% trans 'Tags Cloud' %}"><i class="fas fa-tags"></i> {% trans 'Tags Cloud' %}</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'daily' %}" title="{% trans 'Daily links' %}"><i class="fas fa-calendar-day"></i> {% trans 'Daily links' %}</a>
+                <a class="navbar-brand" href="{% url 'home' %}" title="Home">
+                  <span class="menu-collapsed">{{ SHAARPY_NAME }}</span>
+                </a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'link_private' %}" title="{% trans 'Privates Links' %}"><i class="fas fa-user-secret"></i> {% trans 'Privates Links' %}</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'link_public' %}" title="{% trans 'Publics Links' %}"><i class="fas fa-universal-access"></i> {% trans 'Publics Links' %}</a>
+                  <a class="nav-link fab fa-python" href="{% url 'link_create' %}" title="{% trans 'Add a thought, a link, an idea, a note' %}">ShaarPy</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link shaarpy-link" href="{% url 'feed' %}"><i class="fas fa-rss"></i> Feeds</a>
+                  <a class="nav-link fas fa-tags" href="{% url 'tags_list' %}" title="{% trans 'Tags Cloud' %}"> {% trans 'Tags Cloud' %}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link fas fa-calendar-day" href="{% url 'daily' %}" title="{% trans 'Daily links' %}"> {% trans 'Daily links' %}</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link fas fa-user-secret" href="{% url 'link_private' %}" title="{% trans 'Privates Links' %}"> {% trans 'Privates Links' %}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link fas fa-universal-access" href="{% url 'link_public' %}" title="{% trans 'Publics Links' %}"> {% trans 'Publics Links' %}</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                  <a class="nav-link fas fa-rss" href="{% url 'feed' %}"> Feeds</a>
                 </li>
               </ul>
               {% if form_search %}
@@ -62,26 +65,22 @@
               <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="far fa-user"></i>
-                  </a>
+                  <a class="nav-link dropdown-toggle far fa-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="{% url 'me' %}" title="{% trans 'Profile' %}"><i class="fas fa-user"></i> {% trans 'Profile' %}</a></li>
+                    <li><a class="dropdown-item fas fa-user" href="{% url 'me' %}" title="{% trans 'Profile' %}"> {% trans 'Profile' %}</a></li>
                     {% if user.is_staff %}
-                    <li><a class="dropdown-item" href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ hostname }}/new/?post='%20+%20encodeURIComponent(url)+'&title='%20+%20encodeURIComponent(title)+'&source=bookmarklet','_blank','menubar=no,height=390,width=600,toolbar=no,scrollbars=no,status=no,dialog=1');})();" title="{% trans 'drag this link to your bookmark bar to use the bookmarklet' %}"> <i class="fas fa-plus"></i> ShaarPy Link</a></li>
-                    <li><a class="dropdown-item" href="{% url 'admin:login' %}" title="{% trans 'Admin' %}"><i class="fas fa-user-cog"></i> {% trans 'Admin' %}</a></li>
+                    <li><a class="dropdown-item fas fa-plus" href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ hostname }}/new/?post='%20+%20encodeURIComponent(url)+'&title='%20+%20encodeURIComponent(title)+'&source=bookmarklet','_blank','menubar=no,height=390,width=600,toolbar=no,scrollbars=no,status=no,dialog=1');})();" title="{% trans 'drag this link to your bookmark bar to use the bookmarklet' %}"> ShaarPy Link</a></li>
+                    <li><a class="dropdown-item fas fa-user-cog" href="{% url 'admin:login' %}" title="{% trans 'Open the admin panel' %}"> {% trans 'Admin' %}</a></li>
                     <li><hr class="dropdown-divider"></li>
                     {% endif %}
-                    <li><a class="dropdown-item" href="{% url 'logout' %}"  title="{% trans 'Logout' %}"><i class="fas fa-sign-out-alt"></i> {% trans 'Logout' %}</a></li>
+                    <li><a class="dropdown-item fas fa-sign-out-alt" href="{% url 'logout' %}"  title="{% trans 'Logout' %}"> {% trans 'Logout' %}</a></li>
                   </ul>
-                  {% else %}
-                  <ul class="navbar-nav">
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'me' %}"><i class="far fa-user"></i></a>
-                    </li>
-                  </ul>
-                  {% endif %}
                 </li>
+                  {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'me' %}"><i class="far fa-user"> {% trans 'Login' %}</i></a>
+                  </li>
+                  {% endif %}
               </ul>
             </div>
         </div>
@@ -97,7 +96,7 @@
     <hr/>
     <div class="footer d-flex align-items-center justify-content-center">
       {% block footer %}
-      <p class="fs-6"> <a href="https://python.org/" title="Python powered"><i class="fab fa-python"></i></a> <a href="https://framagit.org/foxmask/shaarpy" title="{% trans 'ShaarPy project homepage' %}" target="_blank">ShaarPy</a> - share thoughts, ideas, links, notes - <a title="Shaarpy Documentation" href="https://framagit.org/foxmask/shaarpy/-/blob/main/README.md" target="_blank">{% trans 'documentation' %}</a></p>
+      <p class="fs-6"> <a class="fab fa-python" href="https://framagit.org/foxmask/shaarpy" title="{% trans 'ShaarPy project homepage' %}"> ShaarPy</a> - share thoughts, ideas, links, notes - <a title="Shaarpy Documentation" href="https://framagit.org/foxmask/shaarpy/-/blob/main/README.md">{% trans 'documentation' %}</a></p>
       {% endblock %}
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

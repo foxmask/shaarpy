@@ -8,7 +8,7 @@
   <h1><i class="fas fa-tags"></i> {% trans "Tags Cloud" %}</h1>
 {% for key, value in tags.items %}
     {% if key %}
-    <a href="{% url 'links_by_tag_list' key %}" type="button" class="p-3 m-2 btn btn-dark position-relative">
+    <a href="{% url 'links_by_tag_list' key %}" type="button" class="p-3 m-2 btn btn-outline-dark position-relative">
       {{ key }}
       <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
         {{ value }}

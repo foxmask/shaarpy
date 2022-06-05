@@ -1,6 +1,6 @@
 {% load i18n %}
-              <form class="d-flex mr-4 ml-4" method="get">
+              <form class="d-flex mr-4 ml-4" action="#" role="search" method="get">
                 {% csrf_token %}
                 {{ form_search.q }}
-                <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+                <button class="btn btn-outline-success" type="submit"><i class="fas fa-search">{% trans 'Search' %}</i></button>
               </form>

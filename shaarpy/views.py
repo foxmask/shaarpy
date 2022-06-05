@@ -287,7 +287,6 @@ class LinksByTagList(SettingsMixin, ListView):
         """
             get the links with that tags
         """
-        print(self.kwargs)
         tags = None if self.kwargs['tags'] == '0Tag' else self.kwargs['tags']
         # when tags is None
         # get the data with tags is null

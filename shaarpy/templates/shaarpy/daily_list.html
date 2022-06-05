@@ -5,17 +5,19 @@
 {% block og_title %}{% trans 'Daily Links' %}{% endblock %}
 {% block content %}
 <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
-  <h1><i class="fas fa-calendar-day"></i> {% trans 'Daily Links' %}</h1>
-  <h3 class="col-xs-8 col-md-8 col-lg-8 offset-xs-4 offset-md-4 offset-lg-4 mt-3 mb-3"><i class="far fa-calendar-alt"></i> {% trans 'list of the links of the day' %}</h3>
+  <h1><i class="fas fa-calendar-day"> {% trans 'Daily Links' %}</i></h1>
+  <h3 class="col-xs-8 col-md-8 col-lg-8 offset-xs-4 offset-md-4 offset-lg-4 mt-3 mb-3">
+    <i class="far fa-calendar-alt"> {% trans 'list of the links of the day' %}</i>
+  </h3>
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col mb-3">
-    {% if previous_date %}<a href="{% url 'daily' previous_date|date:'Y-m-d' %}"><i class="fas fa-long-arrow-alt-left"></i> <i class="far fa-clock"></i>{{ previous_date }}</a>{% endif %}&nbsp;
+    {% if previous_date %}<a href="{% url 'daily' previous_date|date:'Y-m-d' %}"><i class="fas fa-long-arrow-alt-left"> </i> <i class="far fa-clock"> {{ previous_date }}</i></a>{% endif %}&nbsp;
     </div>
     <div class="col mb-3">
     <h6>{{ current_date|date:"DATE_FORMAT" }}</h6>
     </div>
     <div class="col mb-3">
-    {% if next_date %}<a href="{% url 'daily' next_date|date:'Y-m-d' %}"><i class="far fa-clock"></i> {{ next_date }} <i class="fas fa-long-arrow-alt-right"></i> </a>{% endif %}
+    {% if next_date %}<a href="{% url 'daily' next_date|date:'Y-m-d' %}"><i class="far fa-clock"> {{ next_date }}</i>  <i class="fas fa-long-arrow-alt-right"> </i> </a>{% endif %}
     </div>
   </div>
   <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -24,7 +26,7 @@
       <div class="card">
         <div class="card-body">
           {% if data.url %}
-          <h5 class="card-title"><a href="{{ data.url }}" target="_blank">{{ data.title }}</a></h5>
+          <h5 class="card-title"><a href="{{ data.url }}">{{ data.title }}</a></h5>
           {% else %} {# it is a note #}
           <h5><a href="{% url 'link_detail' data.url_hashed %}">{{ data.title }}</a></h5>
           {% endif %}
@@ -36,15 +38,17 @@
             <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
           </div>
           {% endif %}
-          <p class="card-text">{{ data.text | markdown |safe }}</p>
+          <p class="card-text">
+            {{ data.text | markdown |safe }}
+          </p>
         </div>
         <div class="card-footer text-muted">
           {% if data.private %}
           <i class="fas fa-key"></i> -
           {% endif %}
-          <i class="far fa-clock"></i> {{ data.date_created }}
+          <i class="far fa-clock"> {{ data.date_created }}</i>
           {% if data.tags %}
-          - <i class="fas fa-tags"></i> {{ data.tags | tags | safe }}
+          - <i class="fas fa-tags"> {{ data.tags | tags | safe }}</i>
           {% endif %}
         </div>
       </div>
