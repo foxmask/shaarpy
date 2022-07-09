@@ -7,8 +7,8 @@ from shaarpy.models import Links
 
 
 class ShaarpySitemap(Sitemap):
-    changefreq = "always"
-    #priority = 0.5
+    changefreq = "weekly"
+    priority = 0.5
 
     def items(self):
         return Links.objects.filter(private=False).order_by('-date_created')[:15]
