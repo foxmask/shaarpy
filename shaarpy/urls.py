@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, re_path, include
+from shaarpy import settings
+from shaarpy.sitemaps import ShaarpySitemap
 from shaarpy.views import (HomeView, LinksCreate, LinksDetail, LinksUpdate, link_delete, TagsList, LinksByTagList)
 from shaarpy.views import (DailyLinks, LatestLinksFeed, MeView, MeUpdate, PrivateLinks, PublicLinks)
-from shaarpy import settings
 
 urlpatterns = [
     # MANAGE USERS
@@ -45,15 +47,16 @@ urlpatterns = [
     path('feed/', LatestLinksFeed(), name='feed'),
     # ADMIN
     path('admin/', admin.site.urls),
+    path('sitemap.xml', sitemap,
+         {'sitemaps': {'shaarpy': ShaarpySitemap}},
+         name='django.contrib.sitemaps.views.sitemap'),
 ]
 
-"""
 if settings.DEBUG:
     urlpatterns += [
 
         path('__debug__/', include('debug_toolbar.urls')),
     ]
-"""
 handler403 = 'shaarpy.views.error_403'
 handler404 = 'shaarpy.views.error_404'
 handler500 = 'shaarpy.views.error_500'
