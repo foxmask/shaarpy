@@ -19,6 +19,7 @@ from newspaper import Article
 import os
 
 import newspaper
+from pathlib import Path
 import pypandoc
 import re
 from rich.console import Console
@@ -313,3 +314,96 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # 
                             logger.debug(f"ShaarPy :: creating {obj.url}")
 
         console.print(table)
+
+# IMPORTING PELICAN FILE
+
+
+def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
+    """
+    Headers are :
+
+    Title: Home Sweet Home
+    Date: 2021-09-27
+    Author: foxmask
+    Category: Korea
+    Tags: hosting, Korea
+    Slug: home-sweet-home
+    Status: published
+    Summary: text
+
+    body content
+    """
+    private = 0
+    title = ''
+    date_created = ''
+    slug = ''
+    tags = ''
+    url_hashed = ''
+    text = ''
+    status = ''
+    summary = ''
+    author = ''
+
+    with open(the_file, 'r') as f:
+        data = f.readlines()
+        logger.debug(f"ShaarPy :: importing {the_file}")
+
+        for line in data:
+            if line.startswith('Author:'):
+                author = line.split('Author: ')[1].strip()
+                author = f"</br>By {author}"
+            if line.startswith("Status: "):
+                status = line.split('Status: ')[1].strip()
+            if line.startswith("Title: "):
+                title = line.split('Title: ')[1].strip()
+            if line.startswith("Date: "):
+                date_created = line.split('Date: ')[1].strip()
+                if len(date_created) == 10:
+                    # date without hours minutes secondes
+                    date_created += ' 00:00:00'
+                elif len(date_created) == 16:
+                    # date with hours minutes
+                    date_created += ':00'
+                date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S")
+
+            if line.startswith("Tags: "):
+                tags = line.split('Tags: ')[1].strip()
+
+                unwanted_chars = '?./:;!#&@{}[]|`\\^~*+=-_'
+
+                if any(s in unwanted_chars for s in tags):
+                    tags = ''
+
+                if tags.endswith(','):
+                    tags = tags[:-1]
+                tags = tags.replace(' ', '')
+
+            if line.startswith("Slug: "):
+                slug = line.split('Slug: ')[1].strip()
+            if line.startswith("Summary: "):
+                summary = '# ' + line.split('Summary: ')[1] + "\n\n"
+            if status == 'published':
+                url_hashed = small_hash(date_created.strftime("%Y%m%d_%H%M%S"))
+            if not line.startswith(("Status:", "Title:", "Date:", "Tags:", "Slug", 'Status:', 'Summary:')):
+                text += summary + line + author
+    if status == 'published':
+
+        try:
+            if Links.objects.get(url=slug):
+                console.print(f"Shaarpy :: {title} already exists", style="yellow")
+        except Links.DoesNotExist:
+            Links.objects.create(
+                title=title,
+                tags=tags,
+                url='',
+                url_hashed=url_hashed,
+                text=text,
+                date_created=date_created,
+                private=private)
+            console.print(f"Shaarpy :: {title} added", style="magenta")
+
+
+def import_pelican_folder(folder: str) -> NoReturn:
+
+    for p in Path(folder).glob('*.md'):
+        import_pelican(folder + "/" + p.name)

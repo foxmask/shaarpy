@@ -24,7 +24,7 @@ class Command(BaseCommand):
     help = 'Import HTML Shaarli export file'
 
     def add_arguments(self, parser):
-        parser.add_argument("file", help="provide the path to the HTM file to import", type=str)
+        parser.add_argument("file", help="provide the path to the HTML file to import", type=str)
         parser.add_argument("--reload", help="if you want to reload the article from the website", action='store_true')
 
     def handle(self, *args, **options):
