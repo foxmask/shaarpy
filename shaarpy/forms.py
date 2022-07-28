@@ -47,7 +47,7 @@ class LinksForm(ModelForm):
         """
             remove extra space
         """
-        unwanted_chars = '?./:;!#&@{}[]|`\\^~*+=-_'
+        unwanted_chars = '?./:;!#&@{}[]|$`\\^~*+=-_'
         data = self.cleaned_data['tags']
         if data:
             if any(s in unwanted_chars for s in data):
