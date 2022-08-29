@@ -2,7 +2,7 @@
 """
    ShaarPy :: Views
 """
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,6 @@ from django.core.cache import caches
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import condition
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
