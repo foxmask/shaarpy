@@ -42,15 +42,26 @@ def latest_entry(request, **kw):
 @login_required
 def link_delete(request, pk):
     page = None
+    audience = None
     if 'page' in request.GET:
         page = request.GET.get('page')
+    if 'audience' in request.GET:
+        audience = request.GET.get('audience')
     link = Links.objects.get(pk=pk)
     logger.info(f'ShaarPy :: delete ShaarPy {pk}')
     if link.title is not None and settings.SHAARPY_LOCALSTORAGE_MD:
         rm_md_file(link.title)
     link.delete()
+
     if page:
-        return redirect(reverse('home') + '?page=' + request.GET.get('page'))
+        if audience == 'private':
+            return redirect(reverse('link_private') + '?page=' + request.GET.get('page') + '&audience=private')
+        elif audience == 'public':
+            return redirect(reverse('link_private') + '?page=' + request.GET.get('page') + '&audience=public')
+        else:
+            return redirect(reverse('home') + '?page=' + request.GET.get('page'))
+    elif audience:
+        return redirect(reverse('link_private') + '?audience=' + request.GET.get('audience'))
     else:
         return redirect('home')
 
@@ -152,6 +163,24 @@ class PublicLinks(HomeView):
             queryset = Links.objects.filter(private=False)
         return queryset
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        queryset = object_list if object_list is not None else self.object_list
+        page_size = self.get_paginate_by(queryset)
+        context_object_name = self.get_context_object_name(queryset)
+        context = super(PublicLinks, self).get_context_data(**kwargs)
+        paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
+        context['paginator'] = paginator
+        context['page_obj'] = page
+        context['is_paginated'] = is_paginated
+        context['object_list'] = queryset
+        context['audience'] = 'public'
+
+        if context_object_name is not None:
+            context[context_object_name] = queryset
+        context.update(kwargs)
+
+        return context
+
 
 class PrivateLinks(HomeView):
     """
@@ -162,6 +191,24 @@ class PrivateLinks(HomeView):
         if self.request.user.is_authenticated:
             queryset = Links.objects.filter(private=True)
         return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        queryset = object_list if object_list is not None else self.object_list
+        page_size = self.get_paginate_by(queryset)
+        context_object_name = self.get_context_object_name(queryset)
+        context = super(PrivateLinks, self).get_context_data(**kwargs)
+        paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
+        context['paginator'] = paginator
+        context['page_obj'] = page
+        context['is_paginated'] = is_paginated
+        context['object_list'] = queryset
+        context['audience'] = 'private'
+
+        if context_object_name is not None:
+            context[context_object_name] = queryset
+        context.update(kwargs)
+
+        return context
 
 
 class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
