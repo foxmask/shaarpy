@@ -1,6 +1,6 @@
 # ShaarPy 
 
-<img src="https://framagit.org/foxmask/shaarpy/-/raw/main/shaarpy/static/shaarpy.png" height="179" width="200"/>
+<img src="https://git.afpy.org/foxmask/shaarpy/raw/main/shaarpy/static/shaarpy.png" height="179" width="200"/>
 
 Share Thoughts, Ideas, Links, Notes.
 
@@ -8,7 +8,7 @@ a 'Shaarli cloned' in Python/Django
 
 Have a look at [https://shaarpy.foxmask.org/](https://shaarpy.foxmask.org/) for live instance
 
-![Main page](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_home.png)
+![Main page](https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_home.png)
 
 ## Features
 
@@ -18,18 +18,18 @@ Have a look at [https://shaarpy.foxmask.org/](https://shaarpy.foxmask.org/) for 
 
 ##### Links
 - Drop a URL and ShaarPy will grab the article page with **image** and **video** if the source website provides ones
-<a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png" alt="article with image" width="400"/></a>
+<a href="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_article.png"><img src="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_article.png" alt="article with image" width="400"/></a>
 
 ##### Tags
 - Manage tags 
 - Tag Cloud
 
-<a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/tags_list.png" alt="tag cloud" width="400"/></a>
+<a href="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/tags_list.png"><img src="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/tags_list.png" alt="tag cloud" width="400"/></a>
 
 ##### Daily links history
 - See the links of the day and navigate throw the calendar to go back to your old links
 
-<a href="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png"><img src="https://framagit.org/foxmask/shaarpy/-/raw/main/docs/daily.png" alt="daily links" width="400"/></a>
+<a href="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/daily.png"><img src="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/daily.png" alt="daily links" width="400"/></a>
 
 ##### Tools
 - for each link added, a markdown file can be create in a folder that will be sync on your mobile with the help of "[syncthing](https://syncthing.net/)"
@@ -50,7 +50,7 @@ python manage.py loaddata --format json  fixtures/my_shaarpy_dump.json
 
 Drag the link you'll find under your profile, to the bookmark of the browser
 
-![Bookmarklet](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/bookmarklet.png)
+![Bookmarklet](https://git.afpy.org/foxmask/shaarpy/raw/main/docs/bookmarklet.png)
 
 Now you'are able to post a new link just be clicking this bookmarklet wherever you are on the web
 
@@ -65,15 +65,15 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 
 ### original webpage 
 
-![Link of the website](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article_website.png)
+![Link of the website](https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_article_website.png)
 
 ### shaarpy grabbed link
 
-![Link in shaarpy](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/shaarpy_article.png)
+![Link in shaarpy](https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_article.png)
 
 ### shaarpy link on mobile
 
-![Shaarpy link on mobile](https://framagit.org/foxmask/shaarpy/-/raw/main/docs/article_mobile.png)
+![Shaarpy link on mobile](https://git.afpy.org/foxmask/shaarpy/raw/main/docs/article_mobile.png)
 
 (I use "Epsilon Notes" for that)
 
@@ -107,7 +107,7 @@ source bin/activate
 install the project
 
 ```bash
-git clone https://framagit.org/foxmask/shaarpy
+git clone https://git.afpy.org/foxmask/shaarpy
 cd shaarpy
 ```
 
