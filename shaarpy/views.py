@@ -242,6 +242,8 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         url = form.cleaned_data['url']
+        title = form.cleaned_data['title']
+        text = form.cleaned_data['text']
         url = url_cleaning(url)
         if url:
             try:
@@ -252,13 +254,18 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
             except Links.DoesNotExist:
                 pass
 
-            self.object = form.save()
-            self.object.title, self.object.text, self.object.image, self.object.video = grab_full_article(url)
+            # when you just want to save the URL and keep the title and body you entered
+            # do not go to grab the article content at all
+            if title is False and text is False:
+                self.object = form.save()
+                self.object.title, self.object.text, self.object.image, self.object.video = grab_full_article(url)
 
         else:
             self.object = form.save()
             if self.object.title is None:
                 self.object.title = "Note:"
+
+        self.object = form.save()
 
         # generate the tiny url
         self.object.url_hashed = small_hash(self.object.date_created.strftime("%Y%m%d_%H%M%S"))

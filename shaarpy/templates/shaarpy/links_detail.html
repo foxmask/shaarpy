@@ -22,7 +22,7 @@
     {% endif %}
     <h5 class="card-title">
     {% if object.url %}
-      <a href="{{ object.url }}">{{ object.title }}</a>
+      <a href="{{ object.url }}">{% if object.title %}{{ object.title }}{% else %}{{ object.url }}{% endif %}</a>
     {% else %}
       <a href="{% url 'link_detail' object.url_hashed %}">{{ object.title }}</a>
     {% endif %}
