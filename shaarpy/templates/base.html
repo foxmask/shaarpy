@@ -23,7 +23,7 @@
     <meta property="og:description" content="{% block og_description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}">
     {% block og_image %}{% endblock %}
 </head>
-<body role="document"{% if edit_link %} onload="document.my_form.id_text.focus();"{% elif add_link %} onload="document.my_form.id_url.focus();"{% endif %}>
+<body {% if edit_link %} onload="document.my_form.id_text.focus();"{% elif add_link %} onload="document.my_form.id_url.focus();"{% endif %}>
     <nav class="navbar navbar-expand-md navbar-light sticky-top">
         <div class="container-fluid">
             <img src="{% static 'shaarpy.png' %}" alt="ShaarPy Snake" width="48" height="43">
@@ -94,7 +94,7 @@
         <!--/.container-->
         </div>
     </div>
-    <hr/>
+    <hr>
     <div class="footer d-flex align-items-center justify-content-center">
       {% block footer %}
       <p class="fs-6"> <a class="fab fa-python" href="https://git.afpy.org/foxmask/shaarpy" title="{% trans 'ShaarPy project homepage' %}"> ShaarPy</a> - share thoughts, ideas, links, notes - <a title="Shaarpy Documentation" href="https://git.afpy.org/foxmask/shaarpy/src/branch/main/README.md">{% trans 'documentation' %}</a></p>
