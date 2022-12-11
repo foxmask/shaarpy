@@ -38,9 +38,9 @@
             <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
           </div>
           {% endif %}
-          <p class="card-text">
+          <div class="card-text">
             {{ data.text | markdown |safe }}
-          </p>
+          </div>
         </div>
         <div class="card-footer text-muted">
           {% if data.private %}

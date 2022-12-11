@@ -8,7 +8,7 @@
 {% block og_description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}
 {% endif %}
 {% if object.tags %}
-{% block keywords %}<meta name="keywords" content="{{ object.tags }}" />{% endblock %}
+{% block keywords %}<meta name="keywords" content="{{ object.tags }}">{% endblock %}
 {% endif %}
 {% if object.image %}
 {% block og_image %}<meta property="og:image" content="{{ object.image }}">{% endblock %}
@@ -27,7 +27,8 @@
       <a href="{% url 'link_detail' object.url_hashed %}">{{ object.title }}</a>
     {% endif %}
     </h5>
-    <div class="card-text">{{ object.text | markdown |safe }}</div>
+    <div class="card-text">{{ object.text | markdown |safe }}
+    </div>
   </div>
   <div class="card-footer text-muted">
     {% if object.private %}

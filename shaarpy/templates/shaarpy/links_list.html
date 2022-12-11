@@ -19,110 +19,110 @@
 {% else %}{{ SHAARPY_NAME }}{% endif %}
 {% endspaceless %}{% endblock %}
 {% block content %}
-        <div class="row">
-          <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
-            {% if q %}
-            <h1><i class="fas fa-search"></i> {% trans 'Links related to' %} {{ q }}</h1>
-            {% endif %}
-            {% if tag == '0Tag' %}
-            <h1><i class="fas fa-tags"></i> {% trans 'Links without any tag' %}</h1>
-            {% elif tag %}
-            <h1><i class="fas fa-tags"></i> {% trans 'Links related to tag' %} {{ tag }}</h1>
-            {% endif %}
-          <nav aria-label="Page navigation" class="mt-3">
-            <ul class="pagination">
-              {% if page_obj.has_previous %}
-              <li class="page-item"><a title="{% trans 'First page' %}" class="page-link fas fa-angle-double-left" href="?page=1{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              {% endif %}
-              <li class="page-item active" aria-current="page">
-                <span class="page-link fas">{{ page_obj.number }}{% trans " of " %}{{ page_obj.paginator.num_pages }}</span>
-              </li>
-              {% if page_obj.has_next %}
-              <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link fas fa-angle-right" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link fas fa-angle-double-right" href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              {% endif %}
-            </ul>
-          </nav>
-          {% for data in object_list %}
-          <div class="card {% if data.sticky %}border-info{% endif %}">
-              {% if data.image %}
-              <img src="{{ data.image }}" class="card-img-top" style="width: 20rem;"/>
-              {% endif %}
-            <div class="card-body">
-              {% if data.url %}
-              <h5><a href="{{ data.url }}">{{ data.title }}</a></h5>
-              {% else %}
-              <h5><a href="{% url 'link_detail' data.url_hashed %}">{{ data.title }}</a></h5>
-              {% endif %}
-              {% if data.video %}
-              <div class="ratio ratio-16x9">
-                <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
-              </div>
-              {% endif %}
-              <p class="card-text">{{ data.text | markdown |safe }}</p>
-            </div>
-            <div class="card-footer text-muted">
-              {% if data.sticky %}
-              <i class="fas fa-thumbtack"></i> -
-              {% endif %}
-              {% if data.private %}
-              <i class="fas fa-user-secret"> {% trans 'Private' %}</i> -
-              {% endif %}
-              <i class="far fa-clock"> {{ data.date_created }} </i> -
-              {% if user.is_authenticated %}
-              <a type="button" href="{% url 'link_edit' data.id %}" class="btn btn-outline-primary btn-sm">
-                <i class="far fa-edit"> {% trans 'edit' %}</i>
-              </a>
-              <a type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ data.id }}">
-                <i class="far fa-trash-alt"> {% trans 'delete' %}</i>
-              </a> -
-              <!-- Modal -->
-              <div class="modal fade" id="deleteModal{{ data.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ data.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="deleteModalLabel{{ data.id }}">{% trans 'Deletion of your link' %}</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
+                {% if q %}
+                <h1><i class="fas fa-search"></i> {% trans 'Links related to' %} {{ q }}</h1>
+                {% endif %}
+                {% if tag == '0Tag' %}
+                <h1><i class="fas fa-tags"></i> {% trans 'Links without any tag' %}</h1>
+                {% elif tag %}
+                <h1><i class="fas fa-tags"></i> {% trans 'Links related to tag' %} {{ tag }}</h1>
+                {% endif %}
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination">
+                      {% if page_obj.has_previous %}
+                      <li class="page-item"><a title="{% trans 'First page' %}" class="page-link fas fa-angle-double-left" href="?page=1{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                      <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                      {% endif %}
+                      <li class="page-item active" aria-current="page">
+                        <span class="page-link fas">{{ page_obj.number }}{% trans " of " %}{{ page_obj.paginator.num_pages }}</span>
+                      </li>
+                      {% if page_obj.has_next %}
+                      <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link fas fa-angle-right" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                      <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link fas fa-angle-double-right" href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                      {% endif %}
+                    </ul>
+                </nav>
+                {% for data in object_list %}
+                <div class="card {% if data.sticky %}border-info{% endif %}">
+                    {% if data.image %}
+                    <img src="{{ data.image }}" class="card-img-top" style="width: 20rem;">
+                    {% endif %}
+                    <div class="card-body">
+                      {% if data.url %}
+                      <h5><a href="{{ data.url }}">{{ data.title }}</a></h5>
+                      {% else %}
+                      <h5><a href="{% url 'link_detail' data.url_hashed %}">{{ data.title }}</a></h5>
+                      {% endif %}
+                      {% if data.video %}
+                      <div class="ratio ratio-16x9">
+                        <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
+                      </div>
+                      {% endif %}
+                      <div class="card-text">{{ data.text | markdown |safe }}
+                      </div>
                     </div>
-                    <div class="modal-body">
-                      {% blocktrans %}
-                          Are you sure you want to remove this link ?
-                      {% endblocktrans %}
-                      <p>
-                      {% if data.link %}{{ data.link }}{% endif %}
-                      {% if data.title %}{{ data.title }}{% endif %}
-                      </p>
+                    <div class="card-footer text-muted">
+                      {% if data.sticky %}
+                      <i class="fas fa-thumbtack"></i> -
+                      {% endif %}
+                      {% if data.private %}
+                      <i class="fas fa-user-secret"> {% trans 'Private' %}</i> -
+                      {% endif %}
+                      <i class="far fa-clock"> {{ data.date_created }} </i> -
+                      {% if user.is_authenticated %}
+                      <a type="button" href="{% url 'link_edit' data.id %}" class="btn btn-outline-primary btn-sm">
+                        <i class="far fa-edit"> {% trans 'edit' %}</i>
+                      </a>
+                      <a type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ data.id }}">
+                        <i class="far fa-trash-alt"> {% trans 'delete' %}</i>
+                      </a> -
+                      <!-- Modal -->
+                      <div class="modal fade" id="deleteModal{{ data.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ data.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabel{{ data.id }}">{% trans 'Deletion of your link' %}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              {% blocktrans %}
+                                  Are you sure you want to remove this link ?
+                              {% endblocktrans %}
+                              <p>
+                              {% if data.link %}{{ data.link }}{% endif %}
+                              {% if data.title %}{{ data.title }}{% endif %}
+                              </p>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                              <a href="{% url 'link_delete' data.id %}{% if page_obj.number %}?page={{ page_obj.number }}{% endif %}{% if audience %}&audience={{ audience }}{% endif %}" type="button" class="btn btn-danger">Yes</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      <a href="{% url 'link_detail' data.url_hashed %}">{% trans 'Permalink' %}</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.url_hashed %}{% endif %}
+                      {% if data.tags %}
+                      - <i class="fas fa-tags"> {{ data.tags | tags | safe }}</i>
+                      {% endif %}
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
-                      <a href="{% url 'link_delete' data.id %}{% if page_obj.number %}?page={{ page_obj.number }}{% endif %}{% if audience %}&audience={{ audience }}{% endif %}" type="button" class="btn btn-danger">Yes</a>
-                    </div>
-                  </div>
                 </div>
-              </div>
-              {% endif %}
-              <a href="{% url 'link_detail' data.url_hashed %}">{% trans 'Permalink' %}</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.url_hashed %}{% endif %}
-              {% if data.tags %}
-              - <i class="fas fa-tags"> {{ data.tags | tags | safe }}</i>
-              {% endif %}
-            </div>
-          </div>
-          {% endfor %}
-          <nav aria-label="Page navigation" class="mt-3">
-            <ul class="pagination">
-              {% if page_obj.has_previous %}
-              <li class="page-item"><a title="{% trans 'First page' %}" class="page-link fas fa-angle-double-left" href="?page=1{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              {% endif %}
-              <li class="page-item active" aria-current="page">
-                <span class="page-link fas">{{ page_obj.number }}{% trans " of " %}{{ page_obj.paginator.num_pages }}</span>
-              </li>
-              {% if page_obj.has_next %}
-              <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link fas fa-angle-right" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link fas fa-angle-double-right" href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
-              {% endif %}
-            </ul>
-          </nav>
-          </div>
+                {% endfor %}
+                <nav aria-label="Page navigation" class="mt-3">
+                  <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a title="{% trans 'First page' %}" class="page-link fas fa-angle-double-left" href="?page=1{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                    <li class="page-item"><a title="{% trans 'Previous page' %}" class="page-link fas fa-angle-left" href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                    {% endif %}
+                    <li class="page-item active" aria-current="page">
+                      <span class="page-link fas">{{ page_obj.number }}{% trans " of " %}{{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a title="{% trans 'Next page' %}" class="page-link fas fa-angle-right" href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                    <li class="page-item"><a title="{% trans 'Last page' %}" class="page-link fas fa-angle-double-right" href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}"> </a></li>
+                    {% endif %}
+                  </ul>
+                </nav>
+           </div> <!-- col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3 -->
 {% endblock %}
