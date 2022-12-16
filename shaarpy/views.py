@@ -256,7 +256,7 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
 
             # when you just want to save the URL and keep the title and body you entered
             # do not go to grab the article content at all
-            if title is False and text is False:
+            if title is None and text == '':
                 self.object = form.save()
                 self.object.title, self.object.text, self.object.image, self.object.video = grab_full_article(url)
 

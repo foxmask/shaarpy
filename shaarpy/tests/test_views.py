@@ -182,8 +182,8 @@ class CreateLinksTestCase(CommonStuffTestCase):
         url_to_create = 'https://foxmask.org/feeds/all.rss.xml'
         data = {
             'url': url_to_create,
-            'title': False,
-            'text': False,
+            #'title': None,
+            'text': '',
             'tags': 'home,sweet,',
         }
         request = RequestFactory().post(reverse('link_create'), data=data)
@@ -217,6 +217,7 @@ class CreateLinksTestCase(CommonStuffTestCase):
         # Setup request and view.
         text = '# Le Free de la passion'
         data = {
+            #'title': None,
             'text': text,
         }
         request = RequestFactory().post(reverse('link_create'), data=data)
