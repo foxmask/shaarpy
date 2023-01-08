@@ -181,17 +181,18 @@ LOGGING = {
     }
 }
 
-
-SHAARPY_CACHE_DIR = env.str('SHAARPY_CACHE_DIR', default='/tmp')
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': SHAARPY_CACHE_DIR,
+SHAARPY_CACHE = env.bool('SHAARPY_CACHE', default=True)
+if SHAARPY_CACHE:
+    SHAARPY_CACHE_DIR = env.str('SHAARPY_CACHE_DIR', default='/tmp')
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': SHAARPY_CACHE_DIR,
+        }
     }
-}
 
-CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 600
+    CACHE_MIDDLEWARE_ALIAS = 'default'
+    CACHE_MIDDLEWARE_SECONDS = 600
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
