@@ -1,19 +1,17 @@
----
-title: {{ data['title'] }}
-date: {{ data['date'] }}
+Title: {{ data['title'] }}
+Date: {{ data['date'] }}
+Author: {{ data['author'] }} 
 {% if data['tags'] %}
 tags: {{ data['tags'] }}
 {% endif %}
-private: {{ data['private'] }}
-toc: Contents
-Style: {{ data['style'] }} 
-...
+Status: published
+
+
+{% if data['image'] %}![{{ data['image'] }}]({{ data['image'] }}){% endif %}
+{% if data['video'] %}{{ data['video'] }}{% endif %}
 
 # {{ data['title'] }}
 
 [{{ data['title'] }}]({{ data['url'] }})
-
-{% if data['image'] %}![{{ data['image'] }}]({{ data['image'] }}){% endif %}
-{% if data['video'] %}{{ data['video'] }}{% endif %}
 
 {{ data['text'] }}

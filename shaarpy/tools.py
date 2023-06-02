@@ -158,6 +158,7 @@ def create_md_file(storage: str, title: str, url: str, text: str,
             'tags': tags,
             'image': image,
             'video': video,
+            'author': settings.SHAARPY_AUTHOR,
             'style': settings.SHAARPY_STYLE}
 
     env = Environment(

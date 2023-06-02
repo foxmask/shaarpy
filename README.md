@@ -84,8 +84,8 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 
 ### Requirements 
 
-* Python from 3.8 to 3.10
-* Django from 4.0 to 4.1
+* Python from 3.8 to 3.11
+* Django from 4.0 to 4.2
 * pandoc
 
 ### Installation
