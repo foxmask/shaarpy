@@ -23,7 +23,9 @@ class SettingsTestCase(TestCase):
         self.assertIs(type(settings.SHAARPY_ROBOT), str)
         self.assertIs(type(settings.SHAARPY_LOCALSTORAGE_MD), str)
         self.assertIs(type(settings.SHAARPY_STYLE), str)
-        self.assertIs(type(settings.SHAARPY_CACHE_DIR), str)
+        self.assertIs(type(settings.SHAARPY_CACHE), bool)
+        if settings.SHAARPY_CACHE:
+            self.assertIs(type(settings.SHAARPY_CACHE_DIR), str)
         self.assertIs(type(settings.LANGUAGE_CODE), str)
         self.assertIs(type(settings.TIME_ZONE), str)
         self.assertIs(type(settings.USE_TZ), bool)

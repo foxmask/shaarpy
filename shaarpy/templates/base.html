@@ -7,10 +7,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{{ SHAARPY_NAME }}{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'shaarpy/css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'shaarpy/css/theme.css' %}">
     <meta name="author" content="{% block author %}{{ SHAARPY_AUTHOR }}{% endblock %}">
     <meta name="description" content="{% block description %}{{ SHAARPY_DESCRIPTION }}{% endblock %}">
     {% block keywords %}{% endblock %}
@@ -25,7 +23,7 @@
     {% block og_image %}{% endblock %}
 </head>
 <body {% if edit_link %} onload="document.my_form.id_text.focus();"{% elif add_link %} onload="document.my_form.id_url.focus();"{% endif %}>
-    <nav class="navbar navbar-expand-md navbar-light sticky-top">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <img src="{% static 'shaarpy.png' %}" alt="ShaarPy Snake" width="48" height="43">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,14 +38,14 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                  <a class="nav-link fab fa-python" href="{% url 'link_create' %}" title="{% trans 'Add a thought, a link, an idea, a note' %}">ShaarPy</a>
+                  <a class="nav-link fab fa-python link-opacity-50-hover" href="{% url 'link_create' %}" title="{% trans 'Add a thought, a link, an idea, a note' %}">ShaarPy</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link fas fa-tags" href="{% url 'tags_list' %}" title="{% trans 'Tags Cloud' %}"> {% trans 'Tags Cloud' %}</a>
+                  <a class="nav-link fas fa-tags link-opacity-50-hover" href="{% url 'tags_list' %}" title="{% trans 'Tags Cloud' %}"> {% trans 'Tags Cloud' %}</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link fas fa-calendar-day" href="{% url 'daily' %}" title="{% trans 'Daily links' %}"> {% trans 'Daily links' %}</a>
+                  <a class="nav-link fas fa-calendar-day link-opacity-50-hover" href="{% url 'daily' %}" title="{% trans 'Daily links' %}"> {% trans 'Daily links' %}</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
@@ -101,6 +99,6 @@
       <p class="fs-6"> <a class="fab fa-python" href="https://git.afpy.org/foxmask/shaarpy" title="{% trans 'ShaarPy project homepage' %}"> ShaarPy</a> - share thoughts, ideas, links, notes - <a title="Shaarpy Documentation" href="https://git.afpy.org/foxmask/shaarpy/src/branch/main/README.md">{% trans 'documentation' %}</a></p>
       {% endblock %}
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

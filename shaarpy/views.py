@@ -34,7 +34,7 @@ logger = logging.getLogger("views")
 def latest_entry(request, **kw):
     """
     used by @condition decorator to retrieve the most recent data to the client browser
-    if it already get all of them
+    if it already gets all of them
     """
     return Links.objects.filter().latest("date_created").date_created
 
