@@ -3,7 +3,7 @@
    ShaarPy :: Views
 """
 from datetime import date, datetime, timedelta, timezone
-
+import logging
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,13 +17,12 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.http import condition
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.views.generic.base import TemplateView
-import logging
 import pypandoc
+from simple_search import search_form_factory
 from shaarpy.forms import LinksForm, LinksFormEdit, MeForm
 from shaarpy.models import Links
 from shaarpy import settings
 from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host, small_hash, url_cleaning
-from simple_search import search_form_factory
 
 # call the cache
 shaarpy_cache = caches['default']
@@ -41,6 +40,10 @@ def latest_entry(request, **kw):
 
 @login_required
 def link_delete(request, pk):
+    """
+    request: current http request
+    pk: link id
+    """
     page = None
     audience = None
     if 'page' in request.GET:
@@ -48,20 +51,21 @@ def link_delete(request, pk):
     if 'audience' in request.GET:
         audience = request.GET.get('audience')
     link = Links.objects.get(pk=pk)
-    logger.info(f'ShaarPy :: delete ShaarPy {pk}')
+    msg = f'ShaarPy :: delete ShaarPy {pk}'
+    logger.info(msg)
     if link.title is not None and settings.SHAARPY_LOCALSTORAGE_MD:
         rm_md_file(link.title)
     link.delete()
 
     if page:
         if audience == 'private':
-            return redirect(reverse('link_private') + '?page=' + request.GET.get('page') + '&audience=private')
+            return redirect(reverse('link_private') + '?page=' + page + '&audience=private')
         elif audience == 'public':
-            return redirect(reverse('link_private') + '?page=' + request.GET.get('page') + '&audience=public')
+            return redirect(reverse('link_private') + '?page=' + page + '&audience=public')
         else:
-            return redirect(reverse('home') + '?page=' + request.GET.get('page'))
+            return redirect(reverse('home') + '?page=' + page)
     elif audience:
-        return redirect(reverse('link_private') + '?audience=' + request.GET.get('audience'))
+        return redirect(reverse('link_private') + '?audience=' + audience)
     else:
         return redirect('home')
 
@@ -249,7 +253,8 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
             try:
                 # check if url already exist and then redirect to it
                 links = Links.objects.get(url=url)
-                logger.debug(f"ShaarPy :: link already exists {url}")
+                msg = f"ShaarPy :: link already exists {url}"
+                logger.debug(msg)
                 return redirect('link_detail', **{'slug': links.url_hashed})
             except Links.DoesNotExist:
                 pass
@@ -271,7 +276,8 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
         self.object.url_hashed = small_hash(self.object.date_created.strftime("%Y%m%d_%H%M%S"))
 
         self.object = form.save()
-        logger.debug(f"ShaarPy :: create {self.object.url} {self.object.title} {self.object.tags}")
+        msg = f"ShaarPy :: create {self.object.url} {self.object.title} {self.object.tags}"
+        logger.debug(msg)
         if settings.SHAARPY_LOCALSTORAGE_MD:
             create_md_file(settings.SHAARPY_LOCALSTORAGE_MD,
                            self.object.title, self.object.url, self.object.text, self.object.tags,
@@ -507,6 +513,7 @@ class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
 class LatestLinksFeed(Feed):
     """
         Generate an RSS Feed
+        https://docs.djangoproject.com/en/4.2/ref/contrib/syndication/
     """
     title = settings.SHAARPY_NAME
     link = "/"
@@ -526,6 +533,10 @@ class LatestLinksFeed(Feed):
 
     def item_pubdate(self, item):
         return item.date_created
+
+
+# error pages :
+#    https://docs.djangoproject.com/en/4.2/topics/http/views/#customizing-error-views
 
 
 def error_403(request, exception):

@@ -2,9 +2,9 @@
 """
     ShaarPy
 """
+import os
 from django.conf import settings
 from django.test import TestCase
-import os
 
 
 class SettingsTestCase(TestCase):
@@ -14,9 +14,15 @@ class SettingsTestCase(TestCase):
     """
 
     def test_env_file(self):
+        """
+        check existing .env file
+        """
         assert os.path.isfile('shaarpy/.env'), True
 
     def test_get_config_service(self):
+        """
+        check expecting config
+        """
         self.assertIs(type(settings.SHAARPY_NAME), str)
         self.assertIs(type(settings.SHAARPY_DESCRIPTION), str)
         self.assertIs(type(settings.SHAARPY_AUTHOR), str)

@@ -13,6 +13,9 @@ alphanum_hangul = RegexValidator(
 
 
 class Links(models.Model):
+    """
+    Links model
+    """
     tags = models.CharField(max_length=255, null=True, blank=True, validators=[alphanum_hangul])
     url = models.URLField(max_length=2048, null=True, blank=True)
     url_hashed = models.SlugField(max_length=10, null=True, blank=True)
@@ -25,8 +28,8 @@ class Links(models.Model):
     sticky = models.BooleanField(default=False)
 
     class Meta:
+        """
+        Meta
+        """
         verbose_name_plural = "Links"
         ordering = ['-sticky', '-date_created']
-
-    def __str__(self):
-        return self.title

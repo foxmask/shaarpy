@@ -8,27 +8,28 @@
 """
 import base64
 import copy
-from bs4 import BeautifulSoup
 from datetime import datetime
+import html
+import logging
+import os
+from pathlib import Path
+import re
+from typing import NoReturn
+from urllib.parse import urlparse
+from slugify import slugify
+
+from bs4 import BeautifulSoup
 from django.utils import timezone
 from django.utils.text import Truncator
-import html
 from jinja2 import Environment, PackageLoader
-import logging
 from newspaper import Article
-import os
 
 import newspaper
-from pathlib import Path
 import pypandoc
-import re
 from rich.console import Console
 from rich.table import Table
 from shaarpy import settings
 from shaarpy.models import Links
-from slugify import slugify
-from typing import NoReturn
-from urllib.parse import urlparse
 
 console = Console()
 logger = logging.getLogger('tools')
@@ -53,9 +54,7 @@ def url_cleaning(url: str) -> str:
     return url
 
 
-"""
-ARTICLES MANAGEMENT
-"""
+# ARTICLES MANAGEMENT
 
 
 def _get_host(url: str) -> str:
@@ -79,7 +78,7 @@ def _get_brand(url: str) -> str:
     """
     go to get the brand name related to the given url
 
-    param url: url of the website
+    url: url of the website
     :return string of the Brand
     """
     brand = newspaper.build(url=_get_host(url))
@@ -89,6 +88,12 @@ def _get_brand(url: str) -> str:
 
 
 def drop_image_node(content: str) -> tuple:
+    """
+    drop the image node if found
+
+    content: content of the html possibly containing the img
+    return the first found image and the content
+    """
     my_image = ''
     soup = BeautifulSoup(content, 'html.parser')
     if soup.find_all('img', src=True):
@@ -104,6 +109,8 @@ def drop_image_node(content: str) -> tuple:
 def grab_full_article(url: str) -> tuple:
     """
         get the complete article page from the URL
+    url: URL of the article to get
+    return title text image video or the URL in case of ArticleException
     """
     # get the complete article
     r = Article(url, keep_article_html=True)
@@ -129,14 +136,13 @@ def grab_full_article(url: str) -> tuple:
         return url, "", "", ""
 
 
-"""
-MARKDOWN MANAGEMENT
-"""
+# MARKDOWN MANAGEMENT
 
 
 def rm_md_file(title: str) -> NoReturn:
     """
         rm a markdown file
+    title: the name of the file to remove
     """
     file_name = slugify(title) + '.md'
     file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
@@ -148,6 +154,15 @@ def create_md_file(storage: str, title: str, url: str, text: str,
                    tags: str, date_created: str, private: bool, image: str, video: str) -> NoReturn:
     """
         create a markdown file
+    storage: path of the folder where to store the file
+    title: title of the file
+    url: url of the article
+    text: text of the article
+    tags: tags if provided
+    date_created: creation date
+    private: boolean true/false
+    image: the main image if any
+    video: the main video if any
     """
 
     data = {'title': title,
@@ -218,10 +233,15 @@ def small_hash(text: str) -> str:
 # IMPORTING SHAARLI FILE
 
 def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # noqa: C901
+    """
+    the_file: name of the file to import
+    reload_article_from_url: article url
+    """
     private = 0
     with open(the_file, 'r') as f:
         data = f.read()
-        logger.debug(f"ShaarPy :: importing {the_file}")
+        msg = f"ShaarPy :: importing {the_file}"
+        logger.debug(msg)
 
     if data.startswith('<!DOCTYPE NETSCAPE-Bookmark-file-1>'):
         i = 0
@@ -297,7 +317,8 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # 
                             obj.image = link['image']
                             obj.video = link['video']
                             obj.url_hashed = small_hash(link['date_created'].strftime("%Y%m%d_%H%M%S"))
-                            logger.debug(f"ShaarPy :: updating {obj.url}")
+                            msg = f"ShaarPy :: updating {obj.url}"
+                            logger.debug(msg)
                             obj.save()
                         except Links.DoesNotExist:
                             new_values = {'url': link['url'],
@@ -312,7 +333,8 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # 
                                           }
                             obj = Links(**new_values)
                             obj.save()
-                            logger.debug(f"ShaarPy :: creating {obj.url}")
+                            msg = f"ShaarPy :: creating {obj.url}"
+                            logger.debug(msg)
 
         console.print(table)
 
@@ -333,6 +355,8 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
     Summary: text
 
     body content
+
+    the_file: path of the file to create
     """
     private = 0
     title = ''
@@ -347,7 +371,8 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
 
     with open(the_file, 'r') as f:
         data = f.readlines()
-        logger.debug(f"ShaarPy :: importing {the_file}")
+        msg = f"ShaarPy :: importing {the_file}"
+        logger.debug(msg)
 
         for line in data:
             if line.startswith('Author:'):
@@ -405,6 +430,9 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
 
 
 def import_pelican_folder(folder: str) -> NoReturn:
+    """
+    folder: folder path where to find md file to import
+    """
 
     for p in Path(folder).glob('*.md'):
         import_pelican(folder + "/" + p.name)

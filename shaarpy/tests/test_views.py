@@ -17,8 +17,14 @@ from shaarpy.views import link_delete
 
 
 class CommonStuffTestCase(TestCase):
+    """
+    Common fixtures
+    """
 
     def create_link(self):
+        """
+        create a link
+        """
         url = 'https://foxmask.org/'
         title = 'Le Free de la passion'
         text = '# Le Free de la Passion'
@@ -55,11 +61,66 @@ class ViewFunction(CommonStuffTestCase):
         # Check.
         self.assertEqual(response.status_code, 302)
 
+    def test_link_delete_with_private_audience_with_page(self):
+        """
+        delete a link based on the private audiance and page
+        """
+        link = self.create_link()
+        # Setup request and view.
+        request = RequestFactory().get('/', {"page": "1", "audience": "private"})
+        request.user = self.user
+        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
+        response = link_delete(request=request, pk=link.id)
+        # Check.
+        self.assertEqual(response.status_code, 302)
+
+    def test_link_delete_with_public_audience_with_page(self):
+        """
+        delete a link based on the public audiance and page
+        """
+        link = self.create_link()
+        # Setup request and view.
+        request = RequestFactory().get('/', {"page": "1", "audience": "public"})
+        request.user = self.user
+        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
+        response = link_delete(request=request, pk=link.id)
+        # Check.
+        self.assertEqual(response.status_code, 302)
+
+    def test_link_delete_with_private_audience(self):
+        """
+        delete a link based on the private audiance
+        """
+        link = self.create_link()
+        # Setup request and view.
+        request = RequestFactory().get('/', {"audience": "private"})
+        request.user = self.user
+        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
+        response = link_delete(request=request, pk=link.id)
+        # Check.
+        self.assertEqual(response.status_code, 302)
+
+    def test_link_delete_with_public_audience(self):
+        """
+        delete a link based on the public audiance
+        """
+        link = self.create_link()
+        # Setup request and view.
+        request = RequestFactory().get('/', {"audience": "public"})
+        request.user = self.user
+        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
+        response = link_delete(request=request, pk=link.id)
+        # Check.
+        self.assertEqual(response.status_code, 302)
+
 
 # CBV
 
 
 class HomeViewTestCase(CommonStuffTestCase):
+    """
+    Home View for the current user
+    """
 
     def test_all_links_list(self):
         self.create_link()
@@ -105,6 +166,9 @@ class HomeViewTestCase(CommonStuffTestCase):
 
 
 class HomeViewAnonymousTestCase(CommonStuffTestCase):
+    """
+    Home View for anonymous user
+    """
 
     def setUp(self):
         super(HomeViewAnonymousTestCase, self).setUp()
@@ -126,6 +190,9 @@ class HomeViewAnonymousTestCase(CommonStuffTestCase):
 
 
 class PrivateLinksTestCase(CommonStuffTestCase):
+    """
+    Private Links for the current user
+    """
 
     def test_private_links_list(self):
         self.create_link()
@@ -143,6 +210,9 @@ class PrivateLinksTestCase(CommonStuffTestCase):
 
 
 class PublicLinksTestCase(CommonStuffTestCase):
+    """
+    Public Links for the current user
+    """
 
     def test_public_links_list(self):
         self.create_link()
@@ -160,11 +230,14 @@ class PublicLinksTestCase(CommonStuffTestCase):
 
 
 class CreateLinksTestCase(CommonStuffTestCase):
+    """
+    Create Links from the form
+    """
 
     def test_get_the_form(self):
         template = "link_form.html"
         # Setup request and view.
-        url_to_create = 'https://foxmask.org/feeds/all.rss.xml'
+        url_to_create = 'https://foxmask.eu.org/feeds/all.rss.xml'
         title = 'Le Free de la passion'
         url_data = f"?post={url_to_create}&title={title}&source=bookmarklet"
         request = RequestFactory().get(reverse('link_create') + url_data)
@@ -179,10 +252,10 @@ class CreateLinksTestCase(CommonStuffTestCase):
 
     def test_create(self):
         # Setup request and view.
-        url_to_create = 'https://foxmask.org/feeds/all.rss.xml'
+        url_to_create = 'https://foxmask.eu.org/a-propos.html#a-propos'
         data = {
             'url': url_to_create,
-            #'title': None,
+            'title': '',
             'text': '',
             'tags': 'home,sweet,',
         }
@@ -196,7 +269,7 @@ class CreateLinksTestCase(CommonStuffTestCase):
 
     def test_create_note(self):
         # Setup request and view.
-        url_to_create = 'https://foxmask.org/feeds/all.rss.xml'
+        url_to_create = 'https://foxmask.eu.org/'
         title = 'Le Free de la passion'
         text = '# Le Free de la passion'
         data = {
@@ -229,7 +302,7 @@ class CreateLinksTestCase(CommonStuffTestCase):
         self.assertEqual(response.status_code, 302)
 
     def create_links(self):
-        url = 'https://foxmask.org/'
+        url = 'https://foxmask.eu.org/'
         title = 'Le Free de la passion'
         text = '# Le Free de la Passion'
         private = False
@@ -292,12 +365,12 @@ class CreateLinksTestCase(CommonStuffTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_form_valid(self):
-        data = {'url': 'https://foxmask.org/', 'tags': 'home,sweet,'}
+        data = {'url': 'https://foxmask.eu.org/', 'tags': 'home,sweet,'}
         form = LinksForm(data=data)
         self.assertTrue(form.is_valid())
 
     def test_form_valid_url_cleaning(self):
-        data = {'url': 'https://foxmask.org/?utm_source=foo&utm_source=bar', 'tags': 'home,sweet,'}
+        data = {'url': 'https://foxmask.eu.org/?utm_source=foo&utm_source=bar', 'tags': 'home,sweet,'}
         form = LinksForm(data=data)
         self.assertTrue(form.is_valid())
 
@@ -493,6 +566,9 @@ class DailyLinksTestCase(TestCase):
 
 
 class MeTestCase(TestCase):
+    """
+    test Me view
+    """
 
     def setUp(self):
         super(MeTestCase, self).setUp()
@@ -500,6 +576,9 @@ class MeTestCase(TestCase):
         self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
 
     def test_me(self):
+        """
+        test /me
+        """
         template = "me.html"
         # Setup request and view.
         request = RequestFactory().get(reverse('me'))
@@ -513,6 +592,9 @@ class MeTestCase(TestCase):
 
 
 class MeUpdateTestCase(TestCase):
+    """
+    test Me Update
+    """
 
     def setUp(self):
         super(MeUpdateTestCase, self).setUp()
@@ -520,6 +602,9 @@ class MeUpdateTestCase(TestCase):
         self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
 
     def test_me(self):
+        """
+        me view
+        """
         template = "edit_me.html"
         # Setup request and view.
         request = RequestFactory().get(reverse('edit_me'))
