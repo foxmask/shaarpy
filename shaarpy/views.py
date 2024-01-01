@@ -3,98 +3,47 @@
    ShaarPy :: Views
 """
 from datetime import date, datetime, timedelta, timezone
-import logging
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.syndication.views import Feed
-from django.core.cache import caches
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators.http import condition
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import (ListView, CreateView, UpdateView, DetailView, DeleteView)
 from django.views.generic.base import TemplateView
+
+import logging
 import pypandoc
-from simple_search import search_form_factory
-from shaarpy.forms import LinksForm, LinksFormEdit, MeForm
-from shaarpy.models import Links
+
 from shaarpy import settings
-from shaarpy.tools import grab_full_article, rm_md_file, create_md_file, _get_host, small_hash, url_cleaning
+from shaarpy.forms import LinksForm, MeForm
+from shaarpy.models import Links
+from shaarpy.tools import (grab_full_article, small_hash, url_cleaning, _get_host)
+from simple_search import search_form_factory
 
-# call the cache
-shaarpy_cache = caches['default']
-
-logger = logging.getLogger("views")
-
-
-def latest_entry(request, **kw):
-    """
-    used by @condition decorator to retrieve the most recent data to the client browser
-    if it already gets all of them
-    """
-    return Links.objects.filter().latest("date_created").date_created
-
-
-@login_required
-def link_delete(request, pk):
-    """
-    request: current http request
-    pk: link id
-    """
-    page = None
-    audience = None
-    if 'page' in request.GET:
-        page = request.GET.get('page')
-    if 'audience' in request.GET:
-        audience = request.GET.get('audience')
-    link = Links.objects.get(pk=pk)
-    msg = f'ShaarPy :: delete ShaarPy {pk}'
-    logger.info(msg)
-    if link.title is not None and settings.SHAARPY_LOCALSTORAGE_MD:
-        rm_md_file(link.title)
-    link.delete()
-
-    if page:
-        if audience == 'private':
-            return redirect(reverse('link_private') + '?page=' + page + '&audience=private')
-        elif audience == 'public':
-            return redirect(reverse('link_private') + '?page=' + page + '&audience=public')
-        else:
-            return redirect(reverse('home') + '?page=' + page)
-    elif audience:
-        return redirect(reverse('link_private') + '?audience=' + audience)
-    else:
-        return redirect('home')
+logger = logging.getLogger("shaarpy.views")
 
 
 class SuccessMixin:
     """
-        mixin to redirect to the view page once save
-        use slug vs pk
+    back to detail
     """
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         """
-        that method returns to the following link once (Create|Update)View are saved
+        redirect to the Detail object page
         """
-        # clear the cache when creating/updating a note/link
-        # otherwise, the update would have to wait the time of `CACHE_MIDDLEWARE_SECONDS`
-        # to be available
-        logger.debug('ShaarPy :: clear application cache')
-        shaarpy_cache.clear()
-        # then go back to ...
         return reverse('link_detail', kwargs={'slug': self.object.url_hashed})
 
 
 class SettingsMixin:
     """
-        mixin to add settings data to the templates
+        mixin to add settings related app data to the templates
     """
-
     def get_context_data(self, *, object_list=None, **kwargs):
-        # get only the unread articles of the folders
+        """
+        return settings
+        """
         context = super(SettingsMixin, self).get_context_data(**kwargs)
         context['SHAARPY_NAME'] = settings.SHAARPY_NAME
         context['SHAARPY_DESCRIPTION'] = settings.SHAARPY_DESCRIPTION
@@ -104,21 +53,13 @@ class SettingsMixin:
         return context
 
 
-class HomeView(SettingsMixin, ListView):
+class LinksList(SettingsMixin, ListView):
     """
-        Links List
+    home page
     """
 
     queryset = Links.objects.none()
     paginate_by = 10
-
-    """
-    used by @condition decorator to retrieve the most recent data to the client browser
-    if it already get all of them
-    """
-    @method_decorator(condition(last_modified_func=latest_entry))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -139,7 +80,7 @@ class HomeView(SettingsMixin, ListView):
             if search_form.is_valid():
                 queryset = search_form.get_queryset()
 
-        context = super(HomeView, self).get_context_data(**kwargs)
+        context = super(LinksList, self).get_context_data(**kwargs)
         paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
         context['paginator'] = paginator
         context['page_obj'] = page
@@ -157,73 +98,15 @@ class HomeView(SettingsMixin, ListView):
         return context
 
 
-class PublicLinks(HomeView):
+class LinksCreate(SuccessMixin, SettingsMixin, CreateView):
     """
-        Public Links List
-    """
-    def get_queryset(self):
-        queryset = Links.objects.none()
-        if self.request.user.is_authenticated:
-            queryset = Links.objects.filter(private=False)
-        return queryset
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        queryset = object_list if object_list is not None else self.object_list
-        page_size = self.get_paginate_by(queryset)
-        context_object_name = self.get_context_object_name(queryset)
-        context = super(PublicLinks, self).get_context_data(**kwargs)
-        paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
-        context['paginator'] = paginator
-        context['page_obj'] = page
-        context['is_paginated'] = is_paginated
-        context['object_list'] = queryset
-        context['audience'] = 'public'
-
-        if context_object_name is not None:
-            context[context_object_name] = queryset
-        context.update(kwargs)
-
-        return context
-
-
-class PrivateLinks(HomeView):
-    """
-        Private Links List
-    """
-    def get_queryset(self):
-        queryset = Links.objects.none()
-        if self.request.user.is_authenticated:
-            queryset = Links.objects.filter(private=True)
-        return queryset
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        queryset = object_list if object_list is not None else self.object_list
-        page_size = self.get_paginate_by(queryset)
-        context_object_name = self.get_context_object_name(queryset)
-        context = super(PrivateLinks, self).get_context_data(**kwargs)
-        paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
-        context['paginator'] = paginator
-        context['page_obj'] = page
-        context['is_paginated'] = is_paginated
-        context['object_list'] = queryset
-        context['audience'] = 'private'
-
-        if context_object_name is not None:
-            context[context_object_name] = queryset
-        context.update(kwargs)
-
-        return context
-
-
-class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
-    """
-        Create Links
+    add a link / note
     """
     model = Links
     form_class = LinksForm
 
     # to deal with the popup form trigger from a javascript bookmarklet
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = {}
         if self.object:
             context['object'] = self.object
@@ -235,7 +118,8 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
         return super().get_context_data(**context)
 
     # to deal with the popup form trigger from a javascript bookmarklet
-    def get_initial(self):
+
+    def get_initial(self) -> dict[str, Any]:
         initial = {}
         if self.request.GET.get('post'):
             url = self.request.GET.get('post')
@@ -276,13 +160,6 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
         self.object.url_hashed = small_hash(self.object.date_created.strftime("%Y%m%d_%H%M%S"))
 
         self.object = form.save()
-        msg = f"ShaarPy :: create {self.object.url} {self.object.title} {self.object.tags}"
-        logger.debug(msg)
-        if settings.SHAARPY_LOCALSTORAGE_MD:
-            create_md_file(settings.SHAARPY_LOCALSTORAGE_MD,
-                           self.object.title, self.object.url, self.object.text, self.object.tags,
-                           self.object.date_created, self.object.private,
-                           self.object.image, self.object.video)
 
         # to deal with the popup form trigger from a javascript bookmarklet
         if self.request.GET.get('source') == "bookmarklet":
@@ -291,30 +168,16 @@ class LinksCreate(SettingsMixin, SuccessMixin, LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class LinksDetail(SettingsMixin, DetailView):
+class LinksUpdate(SuccessMixin, SettingsMixin, UpdateView):
     """
-        Link Detail
+    update a link / note
     """
+
     model = Links
+    form_class = LinksForm
     slug_field = 'url_hashed'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(LinksDetail, self).get_context_data(**kwargs)
-        context['SHAARPY_DESCRIPTION'] = self.object.title
-
-        return context
-
-
-class LinksUpdate(SettingsMixin, SuccessMixin, LoginRequiredMixin, UpdateView):
-    """
-        Link Update
-    """
-
-    model = Links
-    form_class = LinksFormEdit
-    slug_field = 'url_hashed'
-
-    def get_context_data(self, **kwargs):
         context = {}
         if self.object:
             context['object'] = self.object
@@ -326,21 +189,88 @@ class LinksUpdate(SettingsMixin, SuccessMixin, LoginRequiredMixin, UpdateView):
         return super().get_context_data(**context)
 
 
+class LinksDelete(SettingsMixin, DeleteView):
+    """
+    delete a link / note
+    """
+
+    model = Links
+    success_url = reverse_lazy("home")
+
+
+class LinksDetail(SettingsMixin, DetailView):
+    """
+    view a link / note
+    """
+
+    model = Links
+    slug_field = 'url_hashed'
+
+
+class PublicLinks(SettingsMixin, ListView):
+    """
+        Public Links List
+    """
+    def get_queryset(self):
+        queryset = Links.objects.none()
+        if self.request.user.is_authenticated:
+            queryset = Links.objects.filter(private=False)
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        queryset = object_list if object_list is not None else self.object_list
+        page_size = self.get_paginate_by(queryset)
+        context_object_name = self.get_context_object_name(queryset)
+        context = super(PublicLinks, self).get_context_data(**kwargs)
+        paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size or 1)
+        context['paginator'] = paginator
+        context['page_obj'] = page
+        context['is_paginated'] = is_paginated
+        context['object_list'] = queryset
+        context['audience'] = 'public'
+
+        if context_object_name is not None:
+            context[context_object_name] = queryset
+        context.update(kwargs)
+
+        return context
+
+
+class PrivateLinks(SettingsMixin, ListView):
+    """
+        Private Links List
+    """
+    def get_queryset(self):
+        queryset = Links.objects.none()
+        if self.request.user.is_authenticated:
+            queryset = Links.objects.filter(private=True)
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        queryset = object_list if object_list is not None else self.object_list
+        page_size = self.get_paginate_by(queryset)
+        context_object_name = self.get_context_object_name(queryset)
+        context = super(PrivateLinks, self).get_context_data(**kwargs)
+        paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size or 1)
+        context['paginator'] = paginator
+        context['page_obj'] = page
+        context['is_paginated'] = is_paginated
+        context['object_list'] = queryset
+        context['audience'] = 'private'
+
+        if context_object_name is not None:
+            context[context_object_name] = queryset
+        context.update(kwargs)
+
+        return context
+
+
 class LinksByTagList(SettingsMixin, ListView):
     """
         LinksByTag List
     """
-
     queryset = Links.objects.none()
     paginate_by = 10
-
-    """
-    used by @condition decorator to retrieve the most recent data to the client browser
-    if it already get all of them
-    """
-    @method_decorator(condition(last_modified_func=latest_entry))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self):
         """
@@ -354,11 +284,12 @@ class LinksByTagList(SettingsMixin, ListView):
         else:
             queryset = Links.objects.filter(tags__exact=None)
 
+        # to not return private links, reduce the queryset to public links only
         if self.request.user.is_authenticated is False:
             queryset = queryset.filter(private=False)
         return queryset
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super(LinksByTagList, self).get_context_data(**kwargs)
         context['tag'] = self.kwargs['tags']
         context.update(kwargs)
@@ -372,18 +303,7 @@ class TagsList(SettingsMixin, ListView):
     template_name = 'shaarpy/tags_list.html'
     queryset = Links.objects.all()
 
-    """
-    used by @condition decorator to retrieve the most recent data to the client browser
-    if it already get all of them
-    """
-    @method_decorator(condition(last_modified_func=latest_entry))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
     def get_context_data(self, *, object_list=None, **kwargs):
-        """
-            get the tags and count of them
-        """
         queryset = object_list if object_list is not None else self.object_list
         context_object_name = self.get_context_object_name(queryset)
         tags = []
@@ -425,8 +345,12 @@ class DailyLinks(SettingsMixin, ListView):
 
         if 'yesterday' in self.kwargs:
             yesterday = self.kwargs['yesterday']
-        queryset = Links.objects.filter(date_created__date=yesterday)
 
+        # do not return private links
+        if self.request.user.is_authenticated is False:
+            queryset = Links.objects.filter(date_created__date=yesterday, private=False)
+        else:
+            queryset = Links.objects.filter(date_created__date=yesterday)
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -443,11 +367,22 @@ class DailyLinks(SettingsMixin, ListView):
         queryset = object_list if object_list is not None else self.object_list
         context_object_name = self.get_context_object_name(queryset)
 
-        previous_date = Links.objects.filter(date_created__lte=yesterday).order_by("-date_created").first()
+        # do not return private links
+        if self.request.user.is_authenticated is False:
+            previous_date = Links.objects.filter(date_created__lte=yesterday,
+                                                 private=False).order_by("-date_created").first()
+        else:
+            previous_date = Links.objects.filter(date_created__lte=yesterday).order_by("-date_created").first()
+
         if previous_date:
             previous_date = previous_date.date_created.date()
 
-        next_date = Links.objects.filter(date_created__date__gt=yesterday).order_by("date_created").first()
+        # do not return private links
+        if self.request.user.is_authenticated is False:
+            next_date = Links.objects.filter(date_created__date__gt=yesterday,
+                                             private=False).order_by("date_created").first()
+        else:
+            next_date = Links.objects.filter(date_created__date__gt=yesterday).order_by("date_created").first()
         if next_date:
             next_date = next_date.date_created.date()
 
@@ -463,19 +398,9 @@ class DailyLinks(SettingsMixin, ListView):
         context.update(kwargs)
         return super().get_context_data(**context)
 
-# USERS
 
-
-@login_required
-def logout_view(request):
-    """
-        user is logging out
-    """
-    shaarpy_cache.clear()
-    logout(request)
-
-
-class MeView(LoginRequiredMixin, TemplateView):
+# the user
+class Me(SettingsMixin, LoginRequiredMixin, TemplateView):
 
     """
         access to the profile page
@@ -483,10 +408,9 @@ class MeView(LoginRequiredMixin, TemplateView):
 
     template_name = "me.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['object'] = self.request.user
-        context['SHAARPY_NAME'] = settings.SHAARPY_NAME
         return context
 
 
@@ -497,7 +421,7 @@ class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
     model = User
     form_class = MeForm
     template_name = 'edit_me.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('me')
 
     def get_object(self, queryset=None):
         """
@@ -507,13 +431,12 @@ class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
         """
         return User.objects.get(id=self.request.user.id)
 
-# FEEDS
 
-
-class LatestLinksFeed(Feed):
+# the feeds
+class LatestLinksFeed(SettingsMixin, Feed):
     """
         Generate an RSS Feed
-        https://docs.djangoproject.com/en/4.2/ref/contrib/syndication/
+        https://docs.djangoproject.com/en/5.0/ref/contrib/syndication/
     """
     title = settings.SHAARPY_NAME
     link = "/"
@@ -533,10 +456,6 @@ class LatestLinksFeed(Feed):
 
     def item_pubdate(self, item):
         return item.date_created
-
-
-# error pages :
-#    https://docs.djangoproject.com/en/4.2/topics/http/views/#customizing-error-views
 
 
 def error_403(request, exception):

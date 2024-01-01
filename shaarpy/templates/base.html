@@ -73,7 +73,12 @@
                     <li><a class="dropdown-item fas fa-user-cog" href="{% url 'admin:login' %}" title="{% trans 'Open the admin panel' %}"> {% trans 'Admin' %}</a></li>
                     <li><hr class="dropdown-divider"></li>
                     {% endif %}
-                    <li><a class="dropdown-item fas fa-sign-out-alt" href="{% url 'logout' %}"  title="{% trans 'Logout' %}"> {% trans 'Logout' %}</a></li>
+                    <li>
+                      <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+                        {% csrf_token %}
+                        <button class="dropdown-item fas fa-sign-out-alt" type="submit">{% translate "Log out" %}</button>
+                      </form>
+                    </li>
                   </ul>
                 </li>
                   {% else %}

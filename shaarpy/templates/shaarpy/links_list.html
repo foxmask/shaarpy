@@ -74,11 +74,14 @@
                       <a role="button" href="{% url 'link_edit' data.id %}" class="btn btn-outline-primary btn-sm">
                         <i class="far fa-edit"> {% trans 'edit' %}</i>
                       </a>
-                      <a role="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ data.id }}">
+                      <a role="button" href="{% url 'link_delete' data.id %}" class="btn btn-outline-danger btn-sm">
                         <i class="far fa-trash-alt"> {% trans 'delete' %}</i>
-                      </a> -
+                      </a>
+                      <!-- a role="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ data.id }}">
+                        <i class="far fa-trash-alt"> {% trans 'delete' %}</i>
+                      </a--> -
                       <!-- Modal -->
-                      <div class="modal fade" id="deleteModal{{ data.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ data.id }}" aria-hidden="true">
+                      <!-- div class="modal fade" id="deleteModal{{ data.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ data.id }}" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">
                             <div class="modal-header">
@@ -100,7 +103,7 @@
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div-->
                       {% endif %}
                       <a href="{% url 'link_detail' data.url_hashed %}">{% trans 'Permalink' %}</a> - {% if data.url %}{{ data.url }}{% else %}{% url 'link_detail' data.url_hashed %}{% endif %}
                       {% if data.tags %}

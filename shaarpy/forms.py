@@ -10,18 +10,24 @@ from shaarpy.tools import url_cleaning
 
 
 class LinksForm(ModelForm):
+    """
+        form to create / edit a note / link
+    """
 
     class Meta:
+
         model = Links
-        fields = ('url', 'title', 'text', 'tags', 'private', 'sticky')
+        fields = ('url', 'title', 'image', 'text', 'tags', 'private', 'sticky')
         widgets = {
             'tags': TextInput(attrs={'class': 'form-control', 'placeholder': _('tags,tag2')}),
             'url': TextInput(attrs={'class': 'form-control',
                                     'placeholder': _('Drop an URL or leave if empty for creating a note')}),
             'title': TextInput(attrs={'class': 'form-control', 'placeholder': _('Note:')}),
+            'image': TextInput(attrs={'class': 'form-control', 'placeholder': _('Image URL:')}),
             'text': Textarea(attrs={'class': 'form-control', 'placeholder': _('content')}),
             'private': CheckboxInput(attrs={'class': 'form-check-input'}),
             'sticky': CheckboxInput(attrs={'class': 'form-check-input'}),
+            'url_hashed': HiddenInput(),
         }
 
     def clean(self):
@@ -31,7 +37,7 @@ class LinksForm(ModelForm):
         text = cleaned_data.get("text")
 
         if url is None and title is None and text == '':
-            msg = "You need to enter something in one of those fields 'URL' or 'Title' or 'Text'"
+            msg = _("You need to enter something in one of those fields 'URL' or 'Title' or 'Text'")
             self.add_error('url', msg)
             self.add_error('title', msg)
             self.add_error('text', msg)
@@ -59,28 +65,10 @@ class LinksForm(ModelForm):
             return data.replace(' ', '')
 
 
-class LinksFormEdit(LinksForm):
-
-    class Meta:
-        model = Links
-        fields = ('url', 'title', 'text', 'tags', 'private', 'sticky', 'image', 'url_hashed')
-        widgets = {
-            'tags': TextInput(attrs={'class': 'form-control', 'placeholder': _('tags,tag2')}),
-            'url': TextInput(attrs={'class': 'form-control',
-                                    'placeholder': _('Drop an URL or leave if empty for creating a note')}),
-            'title': TextInput(attrs={'class': 'form-control', 'placeholder': _('Note:')}),
-            'image': TextInput(attrs={'class': 'form-control', 'placeholder': _('Image URL:')}),
-            'text': Textarea(attrs={'class': 'form-control', 'placeholder': _('content')}),
-            'private': CheckboxInput(attrs={'class': 'form-check-input'}),
-            'sticky': CheckboxInput(attrs={'class': 'form-check-input'}),
-            'url_hashed': HiddenInput(),
-        }
-
-
 class MeForm(ModelForm):
 
     """
-        form to edit its profile
+        form to edit the user's profile
     """
 
     class Meta:

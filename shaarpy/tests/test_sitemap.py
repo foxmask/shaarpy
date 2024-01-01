@@ -24,7 +24,7 @@ class ShaarpySitemapTestCase(TestCase):
         response['Headers'] = 'Last-Modified'
         # Check.
         self.assertEqual(response.status_code, 200)
-       
+
         # @TODO triggering
         # - lastmod
         # - location

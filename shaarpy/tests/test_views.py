@@ -8,12 +8,10 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import AnonymousUser, User
 from django.urls import reverse
 
-from shaarpy import settings
 from shaarpy.forms import LinksForm
 from shaarpy.models import Links
-from shaarpy.views import HomeView, LinksCreate, LinksDetail, PrivateLinks, PublicLinks, LinksUpdate
-from shaarpy.views import DailyLinks, TagsList, LinksByTagList, MeView, MeUpdate
-from shaarpy.views import link_delete
+from shaarpy.views import LinksList, LinksCreate, LinksDelete, LinksDetail, LinksUpdate
+from shaarpy.views import DailyLinks, TagsList, LinksByTagList, PrivateLinks, PublicLinks
 
 
 class CommonStuffTestCase(TestCase):
@@ -25,7 +23,7 @@ class CommonStuffTestCase(TestCase):
         """
         create a link
         """
-        url = 'https://foxmask.org/'
+        url = 'https://foxmask.eu.org/'
         title = 'Le Free de la passion'
         text = '# Le Free de la Passion'
         private = False
@@ -40,84 +38,24 @@ class CommonStuffTestCase(TestCase):
         self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
 
 
-class ViewFunction(CommonStuffTestCase):
+class LinksDeleteTestCase(CommonStuffTestCase):
 
-    def test_link_delete(self):
+    def test_delete(self):
         link = self.create_link()
+        template = "shaarpy/links_confirm_delete.html"
         # Setup request and view.
-        request = RequestFactory().get('/')
+        request = RequestFactory().get(f'delete/{link.id}')
         request.user = self.user
-        response = link_delete(request=request, pk=link.id)
+
+        view = LinksDelete.as_view(template_name=template)
+        # Run.
+        response = view(request, user=request.user, pk=link.id)
         # Check.
-        self.assertEqual(response.status_code, 302)
-
-    def test_link_delete_with_page(self):
-        link = self.create_link()
-        # Setup request and view.
-        request = RequestFactory().get('/', {"page": "1"})
-        request.user = self.user
-        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
-        response = link_delete(request=request, pk=link.id)
-        # Check.
-        self.assertEqual(response.status_code, 302)
-
-    def test_link_delete_with_private_audience_with_page(self):
-        """
-        delete a link based on the private audiance and page
-        """
-        link = self.create_link()
-        # Setup request and view.
-        request = RequestFactory().get('/', {"page": "1", "audience": "private"})
-        request.user = self.user
-        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
-        response = link_delete(request=request, pk=link.id)
-        # Check.
-        self.assertEqual(response.status_code, 302)
-
-    def test_link_delete_with_public_audience_with_page(self):
-        """
-        delete a link based on the public audiance and page
-        """
-        link = self.create_link()
-        # Setup request and view.
-        request = RequestFactory().get('/', {"page": "1", "audience": "public"})
-        request.user = self.user
-        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
-        response = link_delete(request=request, pk=link.id)
-        # Check.
-        self.assertEqual(response.status_code, 302)
-
-    def test_link_delete_with_private_audience(self):
-        """
-        delete a link based on the private audiance
-        """
-        link = self.create_link()
-        # Setup request and view.
-        request = RequestFactory().get('/', {"audience": "private"})
-        request.user = self.user
-        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
-        response = link_delete(request=request, pk=link.id)
-        # Check.
-        self.assertEqual(response.status_code, 302)
-
-    def test_link_delete_with_public_audience(self):
-        """
-        delete a link based on the public audiance
-        """
-        link = self.create_link()
-        # Setup request and view.
-        request = RequestFactory().get('/', {"audience": "public"})
-        request.user = self.user
-        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp'
-        response = link_delete(request=request, pk=link.id)
-        # Check.
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.template_name[0], template)
 
 
-# CBV
-
-
-class HomeViewTestCase(CommonStuffTestCase):
+class LinksListTestCase(CommonStuffTestCase):
     """
     Home View for the current user
     """
@@ -129,7 +67,7 @@ class HomeViewTestCase(CommonStuffTestCase):
         request = RequestFactory().get('/')
         request.user = self.user
 
-        view = HomeView.as_view(template_name=template)
+        view = LinksList.as_view(template_name=template)
         # Run.
         response = view(request)
         # Check.
@@ -143,7 +81,7 @@ class HomeViewTestCase(CommonStuffTestCase):
         request = RequestFactory().get('/?q=foobar')
         request.user = self.user
 
-        view = HomeView.as_view(template_name=template)
+        view = LinksList.as_view(template_name=template)
         # Run.
         response = view(request)
         # Check.
@@ -157,7 +95,7 @@ class HomeViewTestCase(CommonStuffTestCase):
         request = RequestFactory().get('/?source=bookmarklet')
         request.user = self.user
 
-        view = HomeView.as_view(template_name=template)
+        view = LinksList.as_view(template_name=template)
         # Run.
         response = view(request)
         # Check.
@@ -165,13 +103,13 @@ class HomeViewTestCase(CommonStuffTestCase):
         self.assertEqual(response.template_name[0], template)
 
 
-class HomeViewAnonymousTestCase(CommonStuffTestCase):
+class LinksListAnonymousTestCase(CommonStuffTestCase):
     """
     Home View for anonymous user
     """
 
     def setUp(self):
-        super(HomeViewAnonymousTestCase, self).setUp()
+        super(LinksListAnonymousTestCase, self).setUp()
         self.factory = RequestFactory()
 
     def test_all_links_list(self):
@@ -181,7 +119,7 @@ class HomeViewAnonymousTestCase(CommonStuffTestCase):
         request = RequestFactory().get('/')
         request.user = AnonymousUser()
 
-        view = HomeView.as_view(template_name=template)
+        view = LinksList.as_view(template_name=template)
         # Run.
         response = view(request)
         # Check.
@@ -233,6 +171,23 @@ class CreateLinksTestCase(CommonStuffTestCase):
     """
     Create Links from the form
     """
+    def setUp(self):
+        super(CommonStuffTestCase, self).setUp()
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
+
+    def create_link(self):
+        """
+        create a link
+        """
+        url = 'https://foxmask.eu.org/'
+        title = 'Le Free de la passion'
+        text = '# Le Free de la Passion'
+        private = False
+        sticky = True
+        tags = 'home,sweet,'
+
+        return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags)
 
     def test_get_the_form(self):
         template = "link_form.html"
@@ -250,14 +205,32 @@ class CreateLinksTestCase(CommonStuffTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.template_name[0], template)
 
-    def test_create(self):
-        # Setup request and view.
+    def test_create_link(self):
         url_to_create = 'https://foxmask.eu.org/a-propos.html#a-propos'
         data = {
             'url': url_to_create,
             'title': '',
             'text': '',
             'tags': 'home,sweet,',
+        }
+        request = RequestFactory().post(reverse('link_create'), data=data)
+        request.user = self.user
+        view = LinksCreate.as_view()
+        # Run.
+        response = view(request)
+        # Check.
+        self.assertEqual(response.status_code, 302)
+
+    def test_create_link_duplicate(self):
+        # check to avoid creating duplicate of the same URL
+        self.create_link()
+        data = {
+            'url': 'https://foxmask.eu.org/',
+            'title': 'Le Free de la passion',
+            'text': '# Le Free de la Passion',
+            'private': False,
+            'sticky': True,
+            'tags': 'home,sweet,'
         }
         request = RequestFactory().post(reverse('link_create'), data=data)
         request.user = self.user
@@ -290,7 +263,7 @@ class CreateLinksTestCase(CommonStuffTestCase):
         # Setup request and view.
         text = '# Le Free de la passion'
         data = {
-            #'title': None,
+            'title': '',
             'text': text,
         }
         request = RequestFactory().post(reverse('link_create'), data=data)
@@ -309,33 +282,6 @@ class CreateLinksTestCase(CommonStuffTestCase):
         sticky = True
         tags = 'home,sweet,'
         return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags)
-
-    def test_create2(self):
-        # create an entry into the model
-        self.create_links()
-        settings.SHAARPY_LOCALSTORAGE_MD = '/tmp/'
-        url = 'https://foxmask.org:443/?utm_source=foo&utm_source=bar'
-        title = 'Le Free de la passion'
-        text = '# Le Free de la Passion'
-        private = False
-        sticky = True
-        tags = 'home'
-        data = {
-            'url': url,
-            'title': title,
-            'text': text,
-            'private': private,
-            'sticky': sticky,
-            'tags': tags,
-        }
-        # try to create an entry from the form but with same URL
-        request = RequestFactory().post(reverse('link_create'), data=data)
-        request.user = self.user
-        view = LinksCreate.as_view()
-        # Run.
-        response = view(request)
-        # Check.
-        self.assertEqual(response.status_code, 302)
 
     def test_create3_drop_image(self):
         # create an entry into the model
@@ -474,6 +420,11 @@ class LinksByTagListTestCase(CommonStuffTestCase):
 
 class TagsListTestCase(TestCase):
 
+    def setUp(self):
+        super(TagsListTestCase, self).setUp()
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
+
     def create_links(self):
         url = 'https://foxmask.org/'
         title = 'Le Free de la passion'
@@ -491,11 +442,6 @@ class TagsListTestCase(TestCase):
         sticky = True
         return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky)
 
-    def setUp(self):
-        super(TagsListTestCase, self).setUp()
-        self.factory = RequestFactory()
-        self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
-
     def test_tag_index(self):
         self.create_links()
         self.create_links_no_tags()
@@ -511,7 +457,14 @@ class TagsListTestCase(TestCase):
         self.assertEqual(response.template_name[0], template)
 
 
-class DailyLinksTestCase(TestCase):
+class DailyListAnonymousTestCase(CommonStuffTestCase):
+    """
+    Home View for anonymous user
+    """
+
+    def setUp(self):
+        super(DailyListAnonymousTestCase, self).setUp()
+        self.factory = RequestFactory()
 
     def create_links(self):
         url = 'https://foxmask.org/'
@@ -529,16 +482,13 @@ class DailyLinksTestCase(TestCase):
         return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
                                     date_created=today)
 
-    def setUp(self):
-        super(DailyLinksTestCase, self).setUp()
-        self.factory = RequestFactory()
-
     def test_daily(self):
         self.create_links()
         template = "daily_list.html"
         # Setup request and view.
         request = RequestFactory().get(reverse('daily'))
         view = DailyLinks.as_view(template_name=template)
+        request.user = AnonymousUser()
         # Run.
         response = view(request)
         # Check.
@@ -555,6 +505,7 @@ class DailyLinksTestCase(TestCase):
         # Setup request and view.
         request = RequestFactory().get(reverse('daily'), kwargs={'yesterday': str(yesterday)})
         view = DailyLinks.as_view(template_name=template)
+        request.user = AnonymousUser()
         # Run.
         response = view(request, yesterday=str(yesterday))
         # Check.
@@ -562,56 +513,55 @@ class DailyLinksTestCase(TestCase):
         self.assertEqual(response.template_name[0], template)
 
 
-# PROFILE
-
-
-class MeTestCase(TestCase):
-    """
-    test Me view
-    """
+class DailyLinksTestCase(TestCase):
 
     def setUp(self):
-        super(MeTestCase, self).setUp()
+        super(DailyLinksTestCase, self).setUp()
         self.factory = RequestFactory()
         self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
 
-    def test_me(self):
-        """
-        test /me
-        """
-        template = "me.html"
+    def create_links(self):
+        url = 'https://foxmask.org/'
+        title = 'Le Free de la passion'
+        text = '# Le Free de la Passion'
+        private = False
+        sticky = True
+        tags = 'home'
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+
+        Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
+                             date_created=yesterday)
+
+        return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
+                                    date_created=today)
+
+    def test_daily(self):
+        self.create_links()
+        template = "daily_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('me'))
+        request = RequestFactory().get(reverse('daily'))
+        view = DailyLinks.as_view(template_name=template)
         request.user = self.user
-        view = MeView.as_view(template_name=template)
         # Run.
         response = view(request)
         # Check.
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.template_name[0], template)
 
-
-class MeUpdateTestCase(TestCase):
-    """
-    test Me Update
-    """
-
-    def setUp(self):
-        super(MeUpdateTestCase, self).setUp()
-        self.factory = RequestFactory()
-        self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
-
-    def test_me(self):
-        """
-        me view
-        """
-        template = "edit_me.html"
+    def test_previous(self):
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+        link = self.create_links()
+        link.date_created = yesterday
+        link.save()
+        template = "daily_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('edit_me'))
+        request = RequestFactory().get(reverse('daily'), kwargs={'yesterday': str(yesterday)})
+        view = DailyLinks.as_view(template_name=template)
         request.user = self.user
-        view = MeUpdate.as_view(template_name=template)
         # Run.
-        response = view(request)
+        response = view(request, yesterday=str(yesterday))
         # Check.
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.template_name[0], template)

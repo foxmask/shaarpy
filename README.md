@@ -1,4 +1,4 @@
-# ShaarPy 
+# ShaarPy
 
 <img src="https://git.afpy.org/foxmask/shaarpy/raw/main/shaarpy/static/shaarpy.png" height="179" width="200"/>
 
@@ -12,37 +12,48 @@ Have a look at [https://shaarpy.foxmask.org/](https://shaarpy.foxmask.org/) for 
 
 ## Features
 
-##### Notes
+
+* microblogging
+* Load Pelican blog markdown files
+
+### Notes
 
 - Create *notes* in **Markdown**
 
-##### Links
+### Links
+
 - Drop a URL and ShaarPy will grab the article page with **image** and **video** if the source website provides ones
 <a href="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_article.png"><img src="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_article.png" alt="article with image" width="400"/></a>
 
-##### Tags
-- Manage tags 
+### Tags
+
+- Manage tags
 - Tag Cloud
 
 <a href="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/tags_list.png"><img src="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/tags_list.png" alt="tag cloud" width="400"/></a>
 
-##### Daily links history
+### Daily links history
+
 - See the links of the day and navigate throw the calendar to go back to your old links
 
 <a href="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/daily.png"><img src="https://git.afpy.org/foxmask/shaarpy/raw/main/docs/daily.png" alt="daily links" width="400"/></a>
 
-##### Tools
+### Tools
+
 - for each link added, a markdown file can be create in a folder that will be sync on your mobile with the help of "[syncthing](https://syncthing.net/)"
 - Import of  **Shaarli** exported bookmark, or even **FireFox** bookmarks
-- you can export/import your data in **json** 
+- you can export/import your data in **json**
+- Import your Pelican blog markdown files
 
 **export**
-```
+
+```bash
 python manage.py dumpdata --format json --indent 2 > fixtures/my_shaarpy_dump.json
 ```
 
 **import**
-```
+
+```bash
 python manage.py loaddata --format json  fixtures/my_shaarpy_dump.json
 ```
 
@@ -58,12 +69,10 @@ Now you'are able to post a new link just be clicking this bookmarklet wherever y
 
 If you don't host ShaarPy on a dedicated server, you can run it locally and sync the links in markdown file and sync them on mobile.
 
-You're able to do that by settings the variable `SHAARPY_LOCALSTORAGE_MD` to a directory path in you `.env` file. 
-
 Then files are generated, you may found them on your mobile (thanks to syncthing for managing that task)
 
 
-### original webpage 
+### original webpage
 
 ![Link of the website](https://git.afpy.org/foxmask/shaarpy/raw/main/docs/shaarpy_article_website.png)
 
@@ -82,10 +91,10 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 
 ## :package: Installation
 
-### Requirements 
+### Requirements
 
-* Python from 3.8 to 3.11
-* Django from 4.0 to 4.2
+* Python from 3.10 3.11 3.12
+* Django from 5.0
 * pandoc
 
 ### Installation
@@ -123,7 +132,7 @@ and set the following values, for examples
 
 ```ini
 # for meta
-SHAARPY_NAME=ShaarPy FoxMaSk Links
+SHAARPY_NAME=Shaarpy
 SHAARPY_DESCRIPTION=Share thoughts, links ideas, notes
 SHAARPY_AUTHOR=FoxMaSk
 SHAARPY_ROBOT=index, follow
@@ -164,7 +173,7 @@ setup the database
 cd shaarpy
 python manage.py migrate
 python manage.py createsuperuser
-python manage.py loaddata shaarpy/fixtures/my_shaarpy_data.json 
+python manage.py loaddata shaarpy/fixtures/my_shaarpy_data.json
 ```
 
 ## :mega: Running the Server
@@ -183,12 +192,12 @@ then, access the project with your browser http://127.0.0.1:8001/
 python manage.py test
 ```
 
-or 
+or
 
 ```bash
-pytest 
+pytest
 ```
-or 
+or
 
 ```bash
 coverage run --source='.' -m pytest

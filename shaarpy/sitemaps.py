@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    Sitemap - https://docs.djangoproject.com/en/4.2/ref/contrib/sitemaps/
+    Sitemap - https://docs.djangoproject.com/en/5.0/ref/contrib/sitemaps/
 """
 
 from django.contrib.sitemaps import Sitemap

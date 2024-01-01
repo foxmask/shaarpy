@@ -14,7 +14,7 @@
     <form role="form" method="post" action="{% url 'login' %}">
     {% csrf_token %}
         <div class="mb-3">
-            <label class="form-label col-md-2" for="id_username">{% trans 'user' %}</label>
+            <label class="form-label col-md-2" for="id_username">{% trans 'Username' %}</label>
             <div>{{ form.username }}</div>
             {% if form.username.errors %}
                 <p class="help-block">{{ form.username.errors.as_text }}</p>

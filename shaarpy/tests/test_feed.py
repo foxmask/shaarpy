@@ -27,7 +27,7 @@ class LatestLinksFeedTestCase(TestCase):
 
     def test_linksfeed(self):
         """
-        lets test the link feed        
+        lets test the link feed
         """
         # Setup request and view.
         self.create_links()
