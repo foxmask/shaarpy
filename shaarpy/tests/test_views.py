@@ -2,7 +2,7 @@
 """
     ShaarPy
 """
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, timezone
 
 from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import AnonymousUser, User
@@ -39,6 +39,9 @@ class CommonStuffTestCase(TestCase):
 
 
 class LinksDeleteTestCase(CommonStuffTestCase):
+    """
+    Deal with deletion
+    """
 
     def test_delete(self):
         link = self.create_link()
@@ -337,6 +340,9 @@ class CreateLinksTestCase(CommonStuffTestCase):
 
 
 class LinksDetailTestCase(CommonStuffTestCase):
+    """
+    Deal with Links detail page
+    """
 
     def test_link_detail(self):
         link = self.create_link()
@@ -352,6 +358,9 @@ class LinksDetailTestCase(CommonStuffTestCase):
 
 
 class LinksUpdateTestCase(CommonStuffTestCase):
+    """
+    Deal with Link updating
+    """
 
     def test_link_update(self):
         link = self.create_link()
@@ -368,6 +377,9 @@ class LinksUpdateTestCase(CommonStuffTestCase):
 
 
 class LinksByTagListTestCase(CommonStuffTestCase):
+    """
+    Deal with displaying Links for a given tag
+    """
 
     def test_one_tag(self):
         self.create_link()
@@ -419,6 +431,9 @@ class LinksByTagListTestCase(CommonStuffTestCase):
 
 
 class TagsListTestCase(TestCase):
+    """
+    display the list of tags
+    """
 
     def setUp(self):
         super(TagsListTestCase, self).setUp()
@@ -466,24 +481,31 @@ class DailyListAnonymousTestCase(CommonStuffTestCase):
         super(DailyListAnonymousTestCase, self).setUp()
         self.factory = RequestFactory()
 
-    def create_links(self):
+    def create_links_yesterday(self):
         url = 'https://foxmask.org/'
         title = 'Le Free de la passion'
         text = '# Le Free de la Passion'
         private = False
         sticky = True
         tags = 'home'
-        today = date.today()
+        today = datetime.now(timezone.utc).astimezone()
         yesterday = today - timedelta(days=1)
-
         Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
                              date_created=yesterday)
 
-        return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
-                                    date_created=today)
+    def create_links_today(self):
+        url = 'https://foxmask.org/'
+        title = 'Le Free de la passion'
+        text = '# Le Free de la Passion'
+        private = False
+        sticky = True
+        tags = 'home'
+        today = datetime.now(timezone.utc).astimezone()
+        Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
+                             date_created=today)
 
     def test_daily(self):
-        self.create_links()
+        self.create_links_today()
         template = "daily_list.html"
         # Setup request and view.
         request = RequestFactory().get(reverse('daily'))
@@ -496,11 +518,9 @@ class DailyListAnonymousTestCase(CommonStuffTestCase):
         self.assertEqual(response.template_name[0], template)
 
     def test_previous(self):
+        self.create_links_yesterday()
         today = date.today()
         yesterday = today - timedelta(days=1)
-        link = self.create_links()
-        link.date_created = yesterday
-        link.save()
         template = "daily_list.html"
         # Setup request and view.
         request = RequestFactory().get(reverse('daily'), kwargs={'yesterday': str(yesterday)})
@@ -514,30 +534,40 @@ class DailyListAnonymousTestCase(CommonStuffTestCase):
 
 
 class DailyLinksTestCase(TestCase):
+    """
+    Deal with Daily links
+    """
 
     def setUp(self):
         super(DailyLinksTestCase, self).setUp()
         self.factory = RequestFactory()
         self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
 
-    def create_links(self):
+    def create_links_yesterday(self):
         url = 'https://foxmask.org/'
         title = 'Le Free de la passion'
         text = '# Le Free de la Passion'
         private = False
         sticky = True
         tags = 'home'
-        today = date.today()
+        today = datetime.now(timezone.utc).astimezone()
         yesterday = today - timedelta(days=1)
-
         Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
                              date_created=yesterday)
 
-        return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
-                                    date_created=today)
+    def create_links_today(self):
+        url = 'https://foxmask.org/'
+        title = 'Le Free de la passion'
+        text = '# Le Free de la Passion'
+        private = False
+        sticky = True
+        tags = 'home'
+        today = datetime.now(timezone.utc).astimezone()
+        Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags,
+                             date_created=today)
 
     def test_daily(self):
-        self.create_links()
+        self.create_links_today()
         template = "daily_list.html"
         # Setup request and view.
         request = RequestFactory().get(reverse('daily'))
@@ -550,11 +580,9 @@ class DailyLinksTestCase(TestCase):
         self.assertEqual(response.template_name[0], template)
 
     def test_previous(self):
+        self.create_links_yesterday()
         today = date.today()
         yesterday = today - timedelta(days=1)
-        link = self.create_links()
-        link.date_created = yesterday
-        link.save()
         template = "daily_list.html"
         # Setup request and view.
         request = RequestFactory().get(reverse('daily'), kwargs={'yesterday': str(yesterday)})
