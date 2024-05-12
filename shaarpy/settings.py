@@ -29,13 +29,15 @@ env.read_env(env_file)
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6tbg5l_^u_j18h8w-o&(_7l(_&9*hep)1n4kxh$8&8r(@ql4_m'
 SECRET_KEY = env.str('SECRET_KEY', default='!DONTFORGETTOCHANGETHISVALUE!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)  # set to False when using in production
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 
 # Application definition

@@ -4,21 +4,24 @@
 
     - Importing/Exporting in Netscape HTML File
     - Load article from url with image/video
-
+    - Manage Markdown file creation
 """
 import base64
 import copy
 from datetime import datetime
 import html
 import logging
+import os
 from pathlib import Path
 import re
 from typing import NoReturn
 from urllib.parse import urlparse
+from slugify import slugify
 
 from bs4 import BeautifulSoup
 from django.utils import timezone
 from django.utils.text import Truncator
+from jinja2 import Environment, PackageLoader
 from newspaper import Article
 
 import newspaper
@@ -130,6 +133,59 @@ def grab_full_article(url: str) -> tuple:
         return title, text, image, video
     except newspaper.article.ArticleException:
         return url, "", "", ""
+
+
+# MARKDOWN MANAGEMENT
+
+
+def rm_md_file(title: str) -> NoReturn:
+    """
+        rm a markdown file
+    title: the name of the file to remove
+    """
+    file_name = slugify(title) + '.md'
+    file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
+    if os.path.exists(file_md):
+        os.remove(file_md)
+
+
+def create_md_file(storage: str, title: str, url: str, text: str,
+                   tags: str, date_created: str, private: bool, image: str, video: str) -> NoReturn:
+    """
+        create a markdown file
+    storage: path of the folder where to store the file
+    title: title of the file
+    url: url of the article
+    text: text of the article
+    tags: tags if provided
+    date_created: creation date
+    private: boolean true/false
+    image: the main image if any
+    video: the main video if any
+    """
+
+    data = {'title': title,
+            'url': url,
+            'text': text,
+            'date': date_created,
+            'private': private,
+            'tags': tags,
+            'image': image,
+            'video': video,
+            'author': settings.SHAARPY_AUTHOR,
+            'style': settings.SHAARPY_STYLE}
+
+    env = Environment(
+        loader=PackageLoader('shaarpy', 'templates'), autoescape=True
+    )
+    template = env.get_template('shaarpy/shaarpy_markdown.md')
+    output = template.render(data=data)
+    file_name = slugify(title) + '.md'
+    file_md = f'{storage}/{file_name}'
+    # overwrite existing file with same slug name
+    with open(file_md, 'w') as ls:
+        ls.write(output)
+
 
 # CRC Stuff
 
@@ -378,4 +434,4 @@ def import_pelican_folder(folder: str) -> NoReturn:
     """
 
     for p in Path(folder).glob('*.md'):
-        import_pelican(folder + p.name)
+        import_pelican(folder + "/" + p.name)

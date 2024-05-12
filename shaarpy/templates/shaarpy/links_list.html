@@ -59,8 +59,7 @@
                         <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
                       </div>
                       {% endif %}
-                      <div class="card-text">{{ data.text | markdown |safe }}
-                      </div>
+                      <div class="card-text">{{ data.text | markdown | safe }}</div>
                     </div>
                     <div class="card-footer text-muted">
                       {% if data.sticky %}
