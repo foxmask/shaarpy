@@ -1,0 +1,11 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    image: shaarpy
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000

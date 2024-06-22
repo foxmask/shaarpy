@@ -29,6 +29,7 @@ import pypandoc
 from rich.console import Console
 from rich.table import Table
 from shaarpy.models import Links
+from shaarpy import settings
 
 console = Console()
 logger = logging.getLogger('tools')

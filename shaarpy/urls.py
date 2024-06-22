@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
-from django.urls import path, re_path, include
+from django.urls import path, re_path
 from shaarpy import settings
 from shaarpy.sitemaps import ShaarpySitemap
 from shaarpy.views import Me, MeUpdate

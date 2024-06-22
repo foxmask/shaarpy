@@ -1,0 +1,15 @@
+# .dockerignore
+.git
+.gitignore
+db.sqlite3*
+*.log
+*.log.*
+*.egg-info
+dist
+compose
+backup
+static_
+tox.ini
+requirements-dev.txt
+env.sample
+.coverage

@@ -203,6 +203,22 @@ coverage report -m
 ```
 
 
+## DOCKER
+
+build the image and run the container
+
+```bash
+sudo docker compose up --build -d
+```
+
+then, the first installation, do:
+
+```bash
+sudo docker compose exec web python manage.py migrate --noinput
+sudo docker compose exec web python manage.py createsuperuser
+```
+
+
 ## Logo
 
 (logo, thanks to [https://pixabay.com/fr/users/clker-free-vector-images-3736/](https://pixabay.com/fr/vectors/serpent-python-vert-reptile-faune-312561/) )

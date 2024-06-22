@@ -4,4 +4,8 @@ django-simple-search==1.0.2
 newspaper3k==0.2.8
 pypandoc==1.13
 rich==13.7.1
-
+pytz
+python-slugify
+Jinja2
+psycopg2[binary]
+lxml[html_clean]

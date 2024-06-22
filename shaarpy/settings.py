@@ -198,7 +198,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=['https://*.mydomain.com'])
 
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
@@ -206,5 +206,5 @@ SHAARPY_AUTHOR = env.str('SHAARPY_AUTHOR', default="FoxMaSk")
 SHAARPY_NAME = env.str('SHAARPY_NAME', default=f"ShaarPy - {SHAARPY_AUTHOR} Links")
 SHAARPY_DESCRIPTION = env.str('SHAARPY_DESCRIPTION', default="Share thoughts, links ideas, notes")
 SHAARPY_ROBOT = env.str('SHAARPY_ROBOT', default="index, follow")
-SHAARPY_LOCALSTORAGE_MD = env.str('SHAARPY_LOCALSTORAGE_MD')
+SHAARPY_LOCALSTORAGE_MD = env.str('SHAARPY_LOCALSTORAGE_MD', default="")
 SHAARPY_STYLE = env.str('SHAARPY_STYLE', default="blue")
