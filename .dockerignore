@@ -1,7 +1,7 @@
 # .dockerignore
 .git
 .gitignore
-db.sqlite3*
+db.sqlite3
 *.log
 *.log.*
 *.egg-info
@@ -13,3 +13,4 @@ tox.ini
 requirements-dev.txt
 env.sample
 .coverage
+__pycache__
