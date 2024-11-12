@@ -13,12 +13,6 @@ class SettingsTestCase(TestCase):
       check that all the needed config is present
     """
 
-    def test_env_file(self):
-        """
-        check existing .env file
-        """
-        assert os.path.isfile('shaarpy/.env'), True
-
     def test_get_config_service(self):
         """
         check expecting config

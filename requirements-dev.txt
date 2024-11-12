@@ -3,7 +3,10 @@ wheel
 coverage
 flake8
 pytest-django
-semgrep
+#semgrep
 pipdeptree
 twine
 django-debug-toolbar
+bandit
+hypothesis
+pip-audit

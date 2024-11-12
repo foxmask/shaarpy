@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load shaarpy_extras %}
-<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'Daily Links' %}{% endblock %}</title>
-{% block og_title %}{% trans 'Daily Links' %}{% endblock %}
+<title>{% block title %}{{ SHAARPY_NAME }} :: {% translate 'Daily Links' %}{% endblock %}</title>
+{% block og_title %}{% translate 'Daily Links' %}{% endblock %}
 {% block content %}
 <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
-  <h1><i class="fas fa-calendar-day"> {% trans 'Daily Links' %}</i></h1>
+  <h1><i class="fas fa-calendar-day"> {% translate 'Daily Links' %}</i></h1>
   <h3 class="col-xs-8 col-md-8 col-lg-8 offset-xs-4 offset-md-4 offset-lg-4 mt-3 mb-3">
-    <i class="far fa-calendar-alt"> {% trans 'list of the links of the day' %}</i>
+    <i class="far fa-calendar-alt"> {% translate 'list of the links of the day' %}</i>
   </h3>
   <div class="row row-cols-1 row-cols-md-3 g-4">
     <div class="col mb-3">

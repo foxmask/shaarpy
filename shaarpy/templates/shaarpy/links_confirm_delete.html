@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'Delete a ShaarPy/note' %}{% endblock %}</title>
+<title>{% block title %}{{ SHAARPY_NAME }} :: {% translate 'Delete a ShaarPy/note' %}{% endblock %}</title>
 {% block content %}
 <div class="col-xs-8 col-md-8 col-lg-8 offset-xs-2 offset-md-2 offset-lg-2 mt-3">
   <h2>Deletion</h2>
@@ -8,8 +8,8 @@
     {% csrf_token %}
     <p>Are you sure you want to delete "{{ object.title }}"?</p>
     {{ form }}
-    <a role="button" class="btn btn-success" href="{% url 'home' %}"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
-    <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i> {% trans "Confirm" %}</button>
+    <a role="button" class="btn btn-success" href="{% url 'home' %}"><i class="fas fa-long-arrow-alt-left"></i> {% translate "Back" %}</a>
+    <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i> {% translate "Confirm" %}</button>
   </form>
 </div>
 {% endblock %}

@@ -4,7 +4,7 @@
 
 Share Thoughts, Ideas, Links, Notes.
 
-a 'Shaarli cloned' in Python/Django
+a 'Shaarli cloned' in Python made with Django
 
 ![Main page](https://github.com/foxmask/shaarpy/blob/main/docs/shaarpy_home.png)
 
@@ -92,7 +92,7 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 ### Requirements
 
 * Python from 3.10 3.11 3.12
-* Django from 5.0
+* Django from 5.0+
 * pandoc
 
 ### Installation

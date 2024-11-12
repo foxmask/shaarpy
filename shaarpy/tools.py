@@ -33,6 +33,18 @@ from shaarpy import settings
 
 console = Console()
 logger = logging.getLogger('tools')
+
+
+def is_valid_date(date_str, date_format):
+    try:
+        # Try to parse the date string with the given format
+        datetime.strptime(date_str, date_format)
+        return True
+    except ValueError:
+        # If parsing fails, it's not a valid date
+        return False
+
+
 """
     URL
 """
@@ -384,13 +396,18 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
                 title = line.split('Title: ')[1].strip()
             if line.startswith("Date: "):
                 date_created = line.split('Date: ')[1].strip()
+
                 if len(date_created) == 10:
                     # date without hours minutes secondes
                     date_created += ' 00:00:00'
                 elif len(date_created) == 16:
                     # date with hours minutes
                     date_created += ':00'
-                date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S")
+
+                if is_valid_date(date_created, "%Y-%m-%d %H:%M:%S%z"):
+                    date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S%z")
+                elif is_valid_date(date_created, "%Y-%m-%d %H:%M:%S.%f%z"):
+                    date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S.%f%z")
 
             if line.startswith("Tags: "):
                 tags = line.split('Tags: ')[1].strip()

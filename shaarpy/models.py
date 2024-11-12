@@ -5,7 +5,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils import timezone
-import pytz
 
 # Regex to match latin and 한글 (hangul) chars
 alphanum_hangul = RegexValidator(

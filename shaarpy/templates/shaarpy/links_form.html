@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-<title>{% block title %}{{ SHAARPY_NAME }} :: {% trans 'New ShaarPy/note' %}{% endblock %}</title>
+<title>{% block title %}{{ SHAARPY_NAME }} :: {% translate "New ShaarPy/note" %}{% endblock %}</title>
 {% block content %}
 {% if messages %}
 <div class="alert alert-warning">
@@ -17,9 +17,9 @@
     <fieldset>
     {{ form.non_field_errors }}
       {% if edit_link %}
-      <legend>{% trans 'Update the link/note' %}</legend>
+      <legend>{% translate 'Update the link/note' %}</legend>
       {% else %}
-      <legend>{% trans 'Share a link/a note' %}</legend>
+      <legend>{% translate 'Share a link/a note' %}</legend>
       {% endif %}
       <div class="mb-3">
           <label class="form-label" for="id_url"> URL</label>
@@ -29,7 +29,7 @@
       <div class="alert alert-danger" role="alert">{{ form.url.errors }}</div>
       {% endif %}
       <div class="mb-3">
-          <label class="form-label" for="id_title"> {% trans 'Title' %}</label>
+          <label class="form-label" for="id_title"> {% translate 'Title' %}</label>
           {{ form.title }}
       </div>
       {% if form.title.errors %}
@@ -37,7 +37,7 @@
       {% endif %}
       {% if edit_link %}
       <div class="mb-3">
-          <label class="form-label" for="id_image"> {% trans 'Image' %}</label>
+          <label class="form-label" for="id_image"> {% translate 'Image' %}</label>
           {{ form.image }}
       </div>
       {% if form.image.errors %}
@@ -45,7 +45,7 @@
       {% endif %}
       {% endif %}
       <div class="mb-3">
-          <label class="form-label" for="id_text"> {% trans 'Text' %}</label>
+          <label class="form-label" for="id_text"> {% translate 'Text' %}</label>
           {{ form.text }}
       </div>
       {% if form.text.errors %}
@@ -60,7 +60,7 @@
       </div>
       {% endif %}
       <div class="mb-3">
-          <label class="form-label" for="id_private"><i class="fas fa-user-secret"></i> {% trans 'Private' %}</label>
+          <label class="form-label" for="id_private"><i class="fas fa-user-secret"></i> {% translate 'Private' %}</label>
           {{ form.private }}
       </div>
       {% if form.private.errors %}
@@ -69,7 +69,7 @@
       </div>
       {% endif %}
       <div class="mb-3">
-          <label class="form-label" for="id_sticky"><i class="fas fa-thumbtack"></i> {% trans 'Sticky' %}</label>
+          <label class="form-label" for="id_sticky"><i class="fas fa-thumbtack"></i> {% translate 'Sticky' %}</label>
           {{ form.sticky }}
       </div>
       {% if form.sticky.errors %}
@@ -78,11 +78,11 @@
       </div>
       {% endif %}
       {% if edit_link %}
-      <a type="role" class="btn btn-success" href="{% url 'link_detail' object.url_hashed %}"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
-      <button type="submit" class="btn btn-primary">{% trans "Update link" %}</button>
+      <a type="role" class="btn btn-success" href="{% url 'link_detail' object.url_hashed %}"><i class="fas fa-long-arrow-alt-left"></i> {% translate "Back" %}</a>
+      <button type="submit" class="btn btn-primary">{% translate "Update link" %}</button>
       {% else %}
-      <a role="button" class="btn btn-success" href="{% url 'home' %}"><i class="fas fa-long-arrow-alt-left"></i> {% trans "Back" %}</a>
-      <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> {% trans "Add link" %}</button>
+      <a role="button" class="btn btn-success" href="{% url 'home' %}"><i class="fas fa-long-arrow-alt-left"></i> {% translate "Back" %}</a>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> {% translate "Add link" %}</button>
       {% endif %}
 {% for hidden in form.hidden_fields %}
 {{ hidden }}

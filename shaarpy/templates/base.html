@@ -38,21 +38,21 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                  <a class="nav-link fab fa-python link-opacity-50-hover" href="{% url 'link_create' %}" title="{% trans 'Add a thought, a link, an idea, a note' %}">ShaarPy</a>
+                  <a class="nav-link fab fa-python link-opacity-50-hover" href="{% url 'link_create' %}" title="{% translate 'Add a thought, a link, an idea, a note' %}">ShaarPy</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link fas fa-tags link-opacity-50-hover" href="{% url 'tags_list' %}" title="{% trans 'Tags Cloud' %}"> {% trans 'Tags Cloud' %}</a>
+                  <a class="nav-link fas fa-tags link-opacity-50-hover" href="{% url 'tags_list' %}" title="{% translate 'Tags Cloud' %}"> {% translate 'Tags Cloud' %}</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link fas fa-calendar-day link-opacity-50-hover" href="{% url 'daily' %}" title="{% trans 'Daily links' %}"> {% trans 'Daily links' %}</a>
+                  <a class="nav-link fas fa-calendar-day link-opacity-50-hover" href="{% url 'daily' %}" title="{% translate 'Daily links' %}"> {% translate 'Daily links' %}</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                  <a class="nav-link fas fa-user-secret" href="{% url 'link_private' %}" title="{% trans 'Privates Links' %}"> {% trans 'Privates Links' %}</a>
+                  <a class="nav-link fas fa-user-secret" href="{% url 'link_private' %}" title="{% translate 'Privates Links' %}"> {% translate 'Privates Links' %}</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link fas fa-universal-access" href="{% url 'link_public' %}" title="{% trans 'Publics Links' %}"> {% trans 'Publics Links' %}</a>
+                  <a class="nav-link fas fa-universal-access" href="{% url 'link_public' %}" title="{% translate 'Publics Links' %}"> {% translate 'Publics Links' %}</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
@@ -67,10 +67,10 @@
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle far fa-user" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item fas fa-user" href="{% url 'me' %}" title="{% trans 'Profile' %}"> {% trans 'Profile' %}</a></li>
+                    <li><a class="dropdown-item fas fa-user" href="{% url 'me' %}" title="{% translate 'Profile' %}"> {% translate 'Profile' %}</a></li>
                     {% if user.is_staff %}
-                    <li><a class="dropdown-item fas fa-plus" href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ hostname }}/new/?post='%20+%20encodeURIComponent(url)+'&title='%20+%20encodeURIComponent(title)+'&source=bookmarklet','_blank','menubar=no,height=390,width=600,toolbar=no,scrollbars=no,status=no,dialog=1');})();" title="{% trans 'drag this link to your bookmark bar to use the bookmarklet' %}"> ShaarPy Link</a></li>
-                    <li><a class="dropdown-item fas fa-user-cog" href="{% url 'admin:login' %}" title="{% trans 'Open the admin panel' %}"> {% trans 'Admin' %}</a></li>
+                    <li><a class="dropdown-item fas fa-plus" href="javascript:(function(){var%20url%20=%20location.href;var%20title%20=%20document.title%20||%20url;window.open('{{ hostname }}/new/?post='%20+%20encodeURIComponent(url)+'&title='%20+%20encodeURIComponent(title)+'&source=bookmarklet','_blank','menubar=no,height=390,width=600,toolbar=no,scrollbars=no,status=no,dialog=1');})();" title="{% translate 'drag this link to your bookmark bar to use the bookmarklet' %}"> ShaarPy Link</a></li>
+                    <li><a class="dropdown-item fas fa-user-cog" href="{% url 'admin:login' %}" title="{% translate 'Open the admin panel' %}"> {% translate 'Admin' %}</a></li>
                     <li><hr class="dropdown-divider"></li>
                     {% endif %}
                     <li>
@@ -83,7 +83,7 @@
                 </li>
                   {% else %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'me' %}"><i class="far fa-user"> {% trans 'Login' %}</i></a>
+                    <a class="nav-link" href="{% url 'me' %}"><i class="far fa-user"> {% translate 'Login' %}</i></a>
                   </li>
                   {% endif %}
               </ul>
@@ -101,7 +101,7 @@
     <hr>
     <div class="footer d-flex align-items-center justify-content-center">
       {% block footer %}
-      <p class="fs-6"> <a class="fab fa-python" href="https://github.com/foxmask/shaarpy" title="{% trans 'ShaarPy project homepage' %}"> ShaarPy</a> - share thoughts, ideas, links, notes - <a title="Shaarpy Documentation" href="https://github.com/foxmask/shaarpy/src/branch/main/README.md">{% trans 'documentation' %}</a></p>
+      <p class="fs-6"> <a class="fab fa-python" href="https://github.com/foxmask/shaarpy" title="{% translate 'ShaarPy project homepage' %}"> ShaarPy</a> - share thoughts, ideas, links, notes - <a title="Shaarpy Documentation" href="https://github.com/foxmask/shaarpy/blob/main/README.md">{% translate 'documentation' %}</a></p>
       {% endblock %}
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
