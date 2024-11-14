@@ -16,14 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.contrib.sitemaps.views import sitemap
 from django.urls import path, re_path
+
 from shaarpy import settings
-from shaarpy.sitemaps import ShaarpySitemap
-from shaarpy.views import Me, MeUpdate
-from shaarpy.views import (LinksList, LinksCreate, LinksUpdate, LinksDetail, LinksDelete)
-from shaarpy.views import (LinksByTagList, PublicLinks, PrivateLinks, TagsList, DailyLinks)
-from shaarpy.views import LatestLinksFeed
+from shaarpy.views.daily import DailyLinks
+from shaarpy.views.feeds import LatestLinksFeed
+from shaarpy.views.links import (LinksList, LinksCreate, LinksUpdate, LinksDetail, LinksDelete)
+from shaarpy.views.me import Me, MeUpdate
+from shaarpy.views.pub_priv_links import (PublicLinks, PrivateLinks)
+from shaarpy.views.tags import (LinksByTagList, TagsList)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,9 +49,6 @@ urlpatterns = [
 
     path('feed/', LatestLinksFeed(), name='feed'),
 
-    path('sitemap.xml', sitemap,
-         {'sitemaps': {'shaarpy': ShaarpySitemap}},
-         name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 handler403 = 'shaarpy.views.error_403'

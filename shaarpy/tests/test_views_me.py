@@ -7,7 +7,7 @@ from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from shaarpy.views import Me, MeUpdate
+from shaarpy.views.me import Me, MeUpdate
 
 
 class MeTestCase(TestCase):
@@ -46,7 +46,7 @@ class MeUpdateTestCase(TestCase):
         self.factory = RequestFactory()
         self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
 
-    def test_me(self):
+    def test_me_update(self):
         """
         me view
         """

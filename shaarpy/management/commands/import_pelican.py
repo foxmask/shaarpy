@@ -17,8 +17,10 @@ def load(md_file):
     """
         load Pelican Markdown file
     """
-    if md_file.endswith('.md'):
+    if os.path.exists(md_file) and md_file.endswith('.md'):
         import_pelican(md_file)
+    else:
+        console.print("provided file does not exists", style="red")
 
 
 class Command(BaseCommand):

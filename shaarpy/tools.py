@@ -380,6 +380,7 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
     status = ''
     summary = ''
     author = ''
+    allowed_sections = ("Author: ", "Status: ", "Title: ", "Date: ", "Tags: ", "Slug", 'Status: ', 'Summary: ')
 
     with open(the_file, 'r') as f:
         data = f.readlines()
@@ -387,15 +388,15 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
         logger.debug(msg)
 
         for line in data:
-            if line.startswith('Author:'):
-                author = line.split('Author: ')[1].strip()
+            if line.title().startswith('Author: '):
+                author = line.title().split('Author: ')[1].strip()
                 author = f"</br>By {author}"
-            if line.startswith("Status: "):
-                status = line.split('Status: ')[1].strip()
-            if line.startswith("Title: "):
-                title = line.split('Title: ')[1].strip()
-            if line.startswith("Date: "):
-                date_created = line.split('Date: ')[1].strip()
+            if line.title().startswith("Status: "):
+                status = line.title().split('Status: ')[1].strip()
+            if line.title().startswith("Title: "):
+                title = line.title().split('Title: ')[1].strip()
+            if line.title().startswith("Date: "):
+                date_created = line.title().split('Date: ')[1].strip()
 
                 if len(date_created) == 10:
                     # date without hours minutes secondes
@@ -404,13 +405,16 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
                     # date with hours minutes
                     date_created += ':00'
 
-                if is_valid_date(date_created, "%Y-%m-%d %H:%M:%S%z"):
+                if is_valid_date(date_created, "%Y-%m-%d %H:%M:%S"):
+                    date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S")
+                elif is_valid_date(date_created, "%Y-%m-%d %H:%M:%S%z"):
                     date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S%z")
                 elif is_valid_date(date_created, "%Y-%m-%d %H:%M:%S.%f%z"):
                     date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S.%f%z")
 
-            if line.startswith("Tags: "):
-                tags = line.split('Tags: ')[1].strip()
+            # to handle "Tags: " or "tags: "
+            if line.title().startswith("Tags: "):
+                tags = line.title().split('Tags: ')[1].strip()
 
                 unwanted_chars = '?./:;!#&@{}[]|`\\^~*+=-_'
 
@@ -421,14 +425,18 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
                     tags = tags[:-1]
                 tags = tags.replace(' ', '')
 
-            if line.startswith("Slug: "):
-                slug = line.split('Slug: ')[1].strip()
-            if line.startswith("Summary: "):
-                summary = '# ' + line.split('Summary: ')[1] + "\n\n"
+            if line.title().startswith("Slug: "):
+                slug = line.title().split('Slug: ')[1].strip()
+            if line.title().startswith("Summary: "):
+                summary = '# ' + line.title().split('Summary: ')[1] + "\n\n"
             if status == 'published':
                 url_hashed = small_hash(date_created.strftime("%Y%m%d_%H%M%S"))
-            if not line.startswith(("Status:", "Title:", "Date:", "Tags:", "Slug", 'Status:', 'Summary:')):
-                text += summary + line
+
+            if not line.title().startswith(allowed_sections):
+                text += summary
+            if author:
+                text += author
+
     if status == 'published':
 
         try:

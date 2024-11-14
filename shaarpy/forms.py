@@ -3,10 +3,21 @@
     ShaarPy :: Forms
 """
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm, TextInput, Textarea, CheckboxInput, EmailInput, HiddenInput
 from shaarpy.models import Links
 from shaarpy.tools import url_cleaning
+
+
+def urlfields_assume_https(db_field, **kwargs):
+    """
+    ModelForm.Meta.formfield_callback function to assume HTTPS for scheme-less
+    domains in URLFields.
+    """
+    if isinstance(db_field, models.URLField):
+        kwargs["assume_scheme"] = "https"
+    return db_field.formfield(**kwargs)
 
 
 class LinksForm(ModelForm):
@@ -29,6 +40,7 @@ class LinksForm(ModelForm):
             'sticky': CheckboxInput(attrs={'class': 'form-check-input'}),
             'url_hashed': HiddenInput(),
         }
+        formfield_callback = urlfields_assume_https
 
     def clean(self):
         cleaned_data = super().clean()
