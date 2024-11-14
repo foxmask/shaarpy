@@ -2,6 +2,7 @@
 """
     ShaarPy :: Test all Link methods
 """
+from datetime import datetime
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from django.urls import reverse
@@ -9,6 +10,7 @@ from django.urls import reverse
 from shaarpy.forms import LinksForm
 from shaarpy.views.links import LinksList, LinksCreate, LinksDelete, LinksDetail, LinksUpdate
 from shaarpy.tests.test_common import CommonStuffTestCase
+from shaarpy.tools import url_cleaning, is_valid_date
 
 
 class LinksDeleteTestCase(CommonStuffTestCase):
@@ -220,6 +222,23 @@ class LinksCreateTestCase(CommonStuffTestCase):
         data = {'url': 'https://foxmask.eu.org/?utm_source=foo&utm_source=bar', 'tags': 'home,sweet,'}
         form = LinksForm(data=data)
         self.assertTrue(form.is_valid())
+
+    def test_is_not_valid_date(self):
+        date_created = "2020-01-01 99:99:99"
+        self.assertFalse(is_valid_date(date_created, "%Y-%m-%d %H:%M:%S"))
+
+    def test_is_valid_date(self):
+        date_created = "2020-01-01 00:00:00"
+        self.assertTrue(is_valid_date(date_created, "%Y-%m-%d %H:%M:%S"))
+
+    def test_url_cleaning(self):
+        url_should_be = "https://foxmask.eu.org/"
+
+        for trash in ('&utm_source=', '?utm_source=', '&utm_medium=', '#xtor=RSS-'):
+            url_before = f"https://foxmask.eu.org/{trash}"
+
+            url = url_cleaning(url_before)
+            self.assertEqual(url, url_should_be)
 
     def test_form_valid2(self):
         data = {'title': 'My note', 'text': 'note text'}

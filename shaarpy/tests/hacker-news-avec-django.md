@@ -3,8 +3,10 @@ Date: 2022-02-08 14:56:47.236830+00:00
 Author: FoxMaSk 
 
 tags: Django,python,hackernews
-
+Slug: hacker-news-avec-django
+Summary: un hacker news fait avec django
 Status: published
+Tags: django,
 
 
 

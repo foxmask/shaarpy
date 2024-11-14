@@ -51,9 +51,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            {% blocktrans %}
-                Are you sure you want to remove this link ?
-            {% endblocktrans %}
+            {% translate "Are you sure you want to remove this link ?" %}
             <p>
             {% if object.link %}{{ object.link }}{% endif %}
             {% if object.title %}{{ object.title }}{% endif %}

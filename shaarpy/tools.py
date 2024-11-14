@@ -38,11 +38,9 @@ logger = logging.getLogger('tools')
 
 def is_valid_date(date_str, date_format):
     try:
-        # Try to parse the date string with the given format
         datetime.strptime(date_str, date_format)
         return True
     except ValueError:
-        # If parsing fails, it's not a valid date
         return False
 
 
