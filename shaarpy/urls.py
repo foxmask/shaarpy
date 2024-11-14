@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, re_path
+from django.views.static import serve
 
 from shaarpy import settings
 from shaarpy.views.daily import DailyLinks
@@ -50,6 +51,11 @@ urlpatterns = [
     path('feed/', LatestLinksFeed(), name='feed'),
 
 ]
+
+urlpatterns += (
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+)
 
 handler403 = 'shaarpy.views.error_403'
 handler404 = 'shaarpy.views.error_404'

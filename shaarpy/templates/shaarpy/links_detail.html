@@ -34,7 +34,9 @@
     {% if object.private %}
     <i class="fas fa-key"> {% translate 'Private' %}</i> -
     {% endif %}
-    <i class="far fa-clock"> {{ object.date_created }}</i>
+    <i class="far fa-clock"><a href="{% url 'link_detail' object.url_hashed %}">{{ object.date_created }}</a></i>
+    <a href="{% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.url_hashed %}{% endif %}">
+    {% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.url_hashed %}{% endif %}</a>
     {% if user.is_authenticated %}
     <a role="button" href="{% url 'link_edit' object.id %}" class="btn btn-outline-primary btn-sm">
       <i class="far fa-edit"> {% translate 'edit' %}</i>
@@ -65,7 +67,6 @@
       </div>
     </div>
     {% endif %}
-    <a href="{% url 'link_detail' object.url_hashed %}">{% translate 'Permalink' %}</a> - {% if object.url %}{{ object.url }}{% else %}{% url 'link_detail' object.url_hashed %}{% endif %}
     {% if object.tags %}
     - <i class="fas fa-tags"> {{ object.tags | tags | safe }}</i>
     {% endif %}
