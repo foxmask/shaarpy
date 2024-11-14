@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Test Model
 """
 from django.test import TestCase
 from shaarpy.models import Links

@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Test Tags rendering / Accessing
 """
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
@@ -48,7 +48,7 @@ class LinksByTagListTestCase(CommonStuffTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.template_name[0], template)
 
-    def test_public_links(self):
+    def test_public_links_from_anonym(self):
         # user object AnonymousUser + private = False
         self.create_link()
         template = "links_list.html"
@@ -57,6 +57,23 @@ class LinksByTagListTestCase(CommonStuffTestCase):
 
         request = RequestFactory().get(reverse('links_by_tag_list', kwargs={'tags': tags}))
         request.user = AnonymousUser()
+
+        view = LinksByTagList.as_view(template_name=template)
+        # Run.
+        response = view(request, tags=tags)
+        # Check.
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.template_name[0], template)
+
+    def test_public_links_from_user(self):
+        # user object User + private = False
+        self.create_link()
+        template = "links_list.html"
+        # Setup request and view.
+        tags = 'home'
+
+        request = RequestFactory().get(reverse('links_by_tag_list', kwargs={'tags': tags}))
+        request.user = self.user
 
         view = LinksByTagList.as_view(template_name=template)
         # Run.

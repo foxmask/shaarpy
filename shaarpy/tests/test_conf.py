@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Test Settings
 """
 from django.conf import settings
 from django.test import TestCase

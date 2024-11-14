@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-   ShaarPy :: Views
+   ShaarPy :: Views Daily
 """
 from datetime import date, datetime, timedelta, timezone
 import logging

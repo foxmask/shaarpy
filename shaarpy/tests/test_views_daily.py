@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Test Daily Links
 """
 from datetime import date, timedelta, datetime, timezone
 

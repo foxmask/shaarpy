@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy Test Feed
+    ShaarPy :: Test Feeds rendering
 """
 
 from django.test import RequestFactory, TestCase

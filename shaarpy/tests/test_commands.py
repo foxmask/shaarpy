@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy Test Feed
+    ShaarPy :: Test Managed Commands
 """
 from django.core.management import call_command
 from django.test import TestCase

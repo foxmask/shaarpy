@@ -16,7 +16,6 @@ from pathlib import Path
 import re
 from typing import NoReturn
 from urllib.parse import urlparse
-from slugify import slugify
 
 from bs4 import BeautifulSoup
 from django.utils import timezone
@@ -28,6 +27,8 @@ import newspaper
 import pypandoc
 from rich.console import Console
 from rich.table import Table
+from slugify import slugify
+
 from shaarpy.models import Links
 from shaarpy import settings
 
@@ -411,7 +412,6 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
                     date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S%z")
                 elif is_valid_date(date_created, "%Y-%m-%d %H:%M:%S.%f%z"):
                     date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S.%f%z")
-
             # to handle "Tags: " or "tags: "
             if line.title().startswith("Tags: "):
                 tags = line.title().split('Tags: ')[1].strip()

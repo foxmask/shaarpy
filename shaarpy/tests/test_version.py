@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Test the App version
 """
 from django.test import TestCase
 import shaarpy

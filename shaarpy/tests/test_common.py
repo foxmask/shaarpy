@@ -1,3 +1,8 @@
+# coding: utf-8
+"""
+    ShaarPy :: Test Common Stuff for any others TestCase
+"""
+
 from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
 

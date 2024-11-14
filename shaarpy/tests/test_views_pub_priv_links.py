@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Test Public/Private Links
 """
 from django.test import RequestFactory
 

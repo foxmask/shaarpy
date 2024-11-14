@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-   ShaarPy :: Views
+   ShaarPy :: Views Links
 """
 import logging
 from typing import Any

@@ -1,3 +1,8 @@
+# coding: utf-8
+"""
+    ShaarPy :: Test templatetags rendering
+"""
+
 from django.test import TestCase
 from django.template import Context, Template
 

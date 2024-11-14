@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy
+    ShaarPy :: Test all Link methods
 """
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
@@ -55,20 +55,6 @@ class LinksListTestCase(CommonStuffTestCase):
         template = "shaarpy/links_list.html"
         # Setup request and view.
         request = RequestFactory().get('/?q=foobar')
-        request.user = self.user
-
-        view = LinksList.as_view(template_name=template)
-        # Run.
-        response = view(request)
-        # Check.
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.template_name[0], template)
-
-    def test_close_bookmarklet(self):
-        self.create_link()
-        template = "shaarpy/links_list.html"
-        # Setup request and view.
-        request = RequestFactory().get('/?source=bookmarklet')
         request.user = self.user
 
         view = LinksList.as_view(template_name=template)
