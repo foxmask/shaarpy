@@ -242,7 +242,7 @@ def small_hash(text: str) -> str:
 
 # IMPORTING SHAARLI FILE
 
-def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:
+def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # noqa: C901
     """
     the_file: name of the file to import
     reload_article_from_url: article url
@@ -351,7 +351,7 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:
 # IMPORTING PELICAN FILE
 
 
-def import_pelican(the_file: str) -> NoReturn:
+def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
     """
     Headers are :
 
