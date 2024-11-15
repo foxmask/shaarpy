@@ -4,15 +4,13 @@
 """
 import logging
 
+import pypandoc
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
-
-import pypandoc
 
 from shaarpy import settings
 from shaarpy.models import Links
 from shaarpy.views import SettingsMixin
-
 
 logger = logging.getLogger("shaarpy.views")
 

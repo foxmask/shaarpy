@@ -6,10 +6,9 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from django.urls import reverse
 
-from shaarpy.tests.test_common import CommonStuffTestCase
-
 from shaarpy.models import Links
-from shaarpy.views.tags import TagsList, LinksByTagList
+from shaarpy.tests.test_common import CommonStuffTestCase
+from shaarpy.views.tags import LinksByTagList, TagsList
 
 
 class LinksByTagListTestCase(CommonStuffTestCase):

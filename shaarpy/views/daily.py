@@ -2,14 +2,13 @@
 """
    ShaarPy :: Views Daily
 """
-from datetime import date, datetime, timedelta, timezone
 import logging
+from datetime import date, datetime, timedelta, timezone
 
 from django.views.generic import ListView
 
 from shaarpy.models import Links
 from shaarpy.views import SettingsMixin
-
 
 logger = logging.getLogger("shaarpy.views")
 

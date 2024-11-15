@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools==69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shaarpy"
+dynamic = ["version"]
+description = "ShaarPy: Share your thoughts, links, ideas, notes. If you ever wanted Shaarli in python, that's it ^_*"
+readme = "README.md"
+license = "WTFPL"
+requires-python = ">=3.11"
+authors = [{ name = "폭스마스크", email = "foxmask+git@pm.me" }]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: Public Domain",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet",
+    "Topic :: Communications",
+    "Topic :: Database"
+]
+
+dependencies = [
+    "Django == 5.1.2",
+    "django-environ == 0.11.2",
+    "django-simple-search == 1.0.2",
+    "newspaper3k == 0.2.8",
+    "pypandoc == 1.14",
+    "rich == 13.9.4",
+    "pytz == 2024.2",
+    "python-slugify == 8.0.4",
+    "Jinja2 == 3.1.4",
+    "lxml[html_clean] == 5.3.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/foxmask/shaarpy/"
+Documentation = "https://github.com/foxmask/shaarpy/blob/main/README.md"
+Source = "https://github.com/foxmask/shaarpy/"
+
+[tool.ruff]
+line-length = 119
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = [
+    #"F",  # pyflakes
+    "DJ",  # flaoe8 django
+    "E",   # pycodestyle
+    "I",   # isort
+    "ANN", # flake8 type annotations
+    "RUF", # ruff-specific rules
+]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[project.optional-dependencies]
+test = [
+    "wheel",
+    "coverage",
+    "pytest-django",
+    "pipdeptree",
+    "twine",
+    "django-debug-toolbar",
+    "bandit",
+    "pip-audit"
+]
+lint = [
+    "ruff == 0.7.3",
+
+]

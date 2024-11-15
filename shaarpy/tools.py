@@ -8,35 +8,34 @@
 """
 import base64
 import copy
-from datetime import datetime
 import html
 import logging
 import os
-from pathlib import Path
 import re
+from datetime import datetime
+from pathlib import Path
 from typing import NoReturn
 from urllib.parse import urlparse
 
+import newspaper
+import pypandoc
 from bs4 import BeautifulSoup
 from django.utils import timezone
 from django.utils.text import Truncator
 from jinja2 import Environment, PackageLoader
 from newspaper import Article
-
-import newspaper
-import pypandoc
 from rich.console import Console
 from rich.table import Table
 from slugify import slugify
 
-from shaarpy.models import Links
 from shaarpy import settings
+from shaarpy.models import Links
 
 console = Console()
 logger = logging.getLogger('tools')
 
 
-def is_valid_date(date_str, date_format):
+def is_valid_date(date_str, date_format) -> bool | None:
     try:
         datetime.strptime(date_str, date_format)
         return True
@@ -243,7 +242,7 @@ def small_hash(text: str) -> str:
 
 # IMPORTING SHAARLI FILE
 
-def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # noqa: C901
+def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:
     """
     the_file: name of the file to import
     reload_article_from_url: article url
@@ -352,7 +351,7 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # 
 # IMPORTING PELICAN FILE
 
 
-def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
+def import_pelican(the_file: str) -> NoReturn:
     """
     Headers are :
 

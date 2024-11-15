@@ -5,6 +5,7 @@
 
 from django.core.management.base import BaseCommand
 from rich.console import Console
+
 from shaarpy.tools import import_shaarli
 
 console = Console()

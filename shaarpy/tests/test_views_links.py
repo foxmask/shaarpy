@@ -2,15 +2,14 @@
 """
     ShaarPy :: Test all Link methods
 """
-from datetime import datetime
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from django.urls import reverse
 
 from shaarpy.forms import LinksForm
-from shaarpy.views.links import LinksList, LinksCreate, LinksDelete, LinksDetail, LinksUpdate
 from shaarpy.tests.test_common import CommonStuffTestCase
-from shaarpy.tools import url_cleaning, is_valid_date
+from shaarpy.tools import is_valid_date, url_cleaning
+from shaarpy.views.links import LinksCreate, LinksDelete, LinksDetail, LinksList, LinksUpdate
 
 
 class LinksDeleteTestCase(CommonStuffTestCase):

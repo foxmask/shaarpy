@@ -7,8 +7,8 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 
-from shaarpy.views import SettingsMixin
 from shaarpy.models import Links
+from shaarpy.views import SettingsMixin
 
 logger = logging.getLogger("shaarpy.views")
 

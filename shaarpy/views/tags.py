@@ -3,10 +3,11 @@
    ShaarPy :: Views Tags
 """
 import logging
+
 from django.views.generic import ListView
 
-from shaarpy.views import SettingsMixin
 from shaarpy.models import Links
+from shaarpy.views import SettingsMixin
 
 logger = logging.getLogger("shaarpy.views")
 
@@ -47,11 +48,15 @@ class TagsList(SettingsMixin, ListView):
         Tags List
     """
     template_name = 'shaarpy/tags_list.html'
-    queryset = Links.objects.all()
+    queryset = Links.objects.none()
 
-    """
-    return tags from public link when not connected otherwise return all of them
-    """
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            queryset = Links.objects.all()
+        else:
+            queryset = Links.objects.filter(private=False)
+        return queryset
+
     def get_context_data(self, *, object_list=None, **kwargs):
         queryset = object_list if object_list is not None else self.object_list
         context_object_name = self.get_context_object_name(queryset)

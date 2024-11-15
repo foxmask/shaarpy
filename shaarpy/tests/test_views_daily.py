@@ -2,7 +2,7 @@
 """
     ShaarPy :: Test Daily Links
 """
-from datetime import date, timedelta, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory, TestCase

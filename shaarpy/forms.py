@@ -4,8 +4,9 @@
 """
 from django.contrib.auth.models import User
 from django.db import models
+from django.forms import CheckboxInput, EmailInput, HiddenInput, ModelForm, Textarea, TextInput
 from django.utils.translation import gettext_lazy as _
-from django.forms import ModelForm, TextInput, Textarea, CheckboxInput, EmailInput, HiddenInput
+
 from shaarpy.models import Links
 from shaarpy.tools import url_cleaning
 

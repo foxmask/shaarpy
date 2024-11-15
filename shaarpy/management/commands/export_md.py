@@ -2,13 +2,15 @@
 """
     ShaarPy :: Exporting in markdown
 """
-from django.core.management.base import BaseCommand
 import logging
 import os.path
+
+from django.core.management.base import BaseCommand
 from rich.console import Console
+from slugify import slugify
+
 from shaarpy.models import Links
 from shaarpy.tools import create_md_file
-from slugify import slugify
 
 console = Console()
 logger = logging.getLogger("command")

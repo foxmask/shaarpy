@@ -2,9 +2,9 @@
 """
     ShaarPy :: Extra balls (because that reminds me pinball:)
 """
-from django.urls import reverse
-from django import template
 import pypandoc
+from django import template
+from django.urls import reverse
 
 register = template.Library()
 

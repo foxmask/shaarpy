@@ -3,8 +3,8 @@
     ShaarPy :: Test Me
 """
 
-from django.test import RequestFactory, TestCase
 from django.contrib.auth.models import User
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from shaarpy.views.me import Me, MeUpdate

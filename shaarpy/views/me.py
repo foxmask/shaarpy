@@ -13,7 +13,6 @@ from django.views.generic.base import TemplateView
 from shaarpy.forms import MeForm
 from shaarpy.views import SettingsMixin
 
-
 logger = logging.getLogger("shaarpy.views")
 
 

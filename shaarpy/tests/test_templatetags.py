@@ -3,8 +3,8 @@
     ShaarPy :: Test templatetags rendering
 """
 
-from django.test import TestCase
 from django.template import Context, Template
+from django.test import TestCase
 
 
 class MyShaarpyExtrasTest(TestCase):

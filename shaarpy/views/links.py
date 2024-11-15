@@ -4,20 +4,18 @@
 """
 import logging
 from typing import Any
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import (ListView, CreateView, UpdateView, DetailView, DeleteView)
-
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from simple_search import search_form_factory
-
-from shaarpy.views import SettingsMixin, SuccessMixin
 
 from shaarpy.forms import LinksForm
 from shaarpy.models import Links
-from shaarpy.tools import (grab_full_article, small_hash, url_cleaning, _get_host)
-
+from shaarpy.tools import _get_host, grab_full_article, small_hash, url_cleaning
+from shaarpy.views import SettingsMixin, SuccessMixin
 
 logger = logging.getLogger("shaarpy.views")
 

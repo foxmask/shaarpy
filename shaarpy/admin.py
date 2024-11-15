@@ -4,6 +4,7 @@
 """
 
 from django.contrib import admin
+
 from shaarpy.models import Links
 
 

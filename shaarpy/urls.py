@@ -22,11 +22,10 @@ from django.views.static import serve
 from shaarpy import settings
 from shaarpy.views.daily import DailyLinks
 from shaarpy.views.feeds import LatestLinksFeed
-from shaarpy.views.links import (LinksList, LinksCreate, LinksUpdate, LinksDetail, LinksDelete)
+from shaarpy.views.links import LinksCreate, LinksDelete, LinksDetail, LinksList, LinksUpdate
 from shaarpy.views.me import Me, MeUpdate
-from shaarpy.views.pub_priv_links import (PublicLinks, PrivateLinks)
-from shaarpy.views.tags import (LinksByTagList, TagsList)
-
+from shaarpy.views.pub_priv_links import PrivateLinks, PublicLinks
+from shaarpy.views.tags import LinksByTagList, TagsList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -53,8 +52,8 @@ urlpatterns = [
 ]
 
 urlpatterns += (
-    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
-    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 )
 
 handler403 = 'shaarpy.views.error_403'

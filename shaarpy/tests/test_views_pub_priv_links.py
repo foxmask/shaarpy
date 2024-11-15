@@ -4,9 +4,8 @@
 """
 from django.test import RequestFactory
 
-from shaarpy.views.pub_priv_links import PrivateLinks, PublicLinks
-
 from shaarpy.tests.test_common import CommonStuffTestCase
+from shaarpy.views.pub_priv_links import PrivateLinks, PublicLinks
 
 
 class PrivateLinksTestCase(CommonStuffTestCase):

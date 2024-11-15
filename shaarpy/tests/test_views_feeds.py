@@ -4,6 +4,7 @@
 """
 
 from django.test import RequestFactory, TestCase
+
 from shaarpy.models import Links
 from shaarpy.views.feeds import LatestLinksFeed
 
