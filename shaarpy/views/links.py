@@ -90,7 +90,7 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
         initial = {}
         if self.request.GET.get('post'):
             url = self.request.GET.get('post')
-            url = url_cleaning(url)
+            url = url_cleaning(str(url))
             initial = {'url': url,
                        'title': self.request.GET.get('title')}
         return initial

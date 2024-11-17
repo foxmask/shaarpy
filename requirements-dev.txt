@@ -10,3 +10,7 @@ django-debug-toolbar
 bandit
 hypothesis
 pip-audit
+ruff
+mypy
+django-stubs[compatible-mypy]
+types-beautifulsoup4

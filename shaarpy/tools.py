@@ -14,7 +14,6 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import NoReturn
 from urllib.parse import urlparse
 
 import newspaper
@@ -35,7 +34,7 @@ console = Console()
 logger = logging.getLogger('tools')
 
 
-def is_valid_date(date_str, date_format) -> bool | None:
+def is_valid_date(date_str: str, date_format: str) -> bool | None:
     try:
         datetime.strptime(date_str, date_format)
         return True
@@ -76,7 +75,7 @@ def _get_host(url: str) -> str:
     """
 
     o = urlparse(url)
-    hostname = o.scheme + '://' + o.hostname
+    hostname = f"{o.scheme}://{o.hostname}"
     port = ''
     if o.port is not None and o.port != 80:
         port = ':' + str(o.port)
@@ -137,7 +136,7 @@ def grab_full_article(url: str) -> tuple:
             # so go pickup this one and remove it in the the content of article_html
             image, article_html = drop_image_node(article_html)
         # convert into markdown
-        output = Truncator(article_html).chars("400", html=True)
+        output = Truncator(article_html).chars(400, html=True)
         text = pypandoc.convert_text(output, 'md', format='html')
         title = r.title + ' - ' + _get_brand(url)
 
@@ -149,7 +148,7 @@ def grab_full_article(url: str) -> tuple:
 # MARKDOWN MANAGEMENT
 
 
-def rm_md_file(title: str) -> NoReturn:
+def rm_md_file(title: str) -> None:
     """
         rm a markdown file
     title: the name of the file to remove
@@ -161,7 +160,7 @@ def rm_md_file(title: str) -> NoReturn:
 
 
 def create_md_file(storage: str, title: str, url: str, text: str,
-                   tags: str, date_created: str, private: bool, image: str, video: str) -> NoReturn:
+                   tags: str, date_created: str, private: bool, image: str, video: str) -> None:
     """
         create a markdown file
     storage: path of the folder where to store the file
@@ -242,12 +241,14 @@ def small_hash(text: str) -> str:
 
 # IMPORTING SHAARLI FILE
 
-def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # noqa: C901
+def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa: C901
     """
     the_file: name of the file to import
     reload_article_from_url: article url
     """
     private = 0
+    date_created: datetime
+
     with open(the_file, 'r') as f:
         data = f.read()
         msg = f"ShaarPy :: importing {the_file}"
@@ -269,7 +270,6 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # 
                     'tags': '',
                     'image': None,
                     'video': None,
-                    'date_created': '',
                     'private': False}
             if i == 1:
                 continue
@@ -281,63 +281,66 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # 
             for line in html_article.split('<DD>'):
                 if line.startswith('<A '):
                     matches = re.match(r"<A (.*?)>(.*?)</A>", line)
+                    if matches:
+                        attrs = matches.group(1)
 
-                    attrs = matches[1]
-
-                    link['title'] = matches[2] if matches[2] else ''
-                    link['title'] = html.unescape(link['title'])
+                        link['title'] = matches.group(2) if matches.group(2) else ''
+                        link['title'] = html.unescape(str(link['title']))
 
                     for attr in attrs.split(" "):
                         matches = re.match(r'([A-Z_]+)="(.+)"', attr)
-                        attr_found = matches[1]
-                        value_found = matches[2]
+                        attr_found = matches.group(1) if matches else ""
+                        value_found = matches.group(2) if matches else ""
                         if attr_found == 'HREF':
                             link['url'] = html.unescape(value_found)
                         elif attr_found == 'ADD_DATE':
-                            raw_add_date = int(value_found)
+                            raw_add_date = float(value_found)
                             if raw_add_date > 30000000000:
                                 raw_add_date /= 1000
-                            link['date_created'] = datetime.fromtimestamp(raw_add_date).replace(tzinfo=timezone.utc)
+                            date_created = datetime.fromtimestamp(raw_add_date).replace(tzinfo=timezone.utc)
                         elif attr == 'PRIVATE':
-                            link['private'] = 0 if value_found == '0' else 1
+                            link['private'] = False if value_found == '0' else True
                         elif attr == 'TAGS':
                             link['tags'] = value_found
 
                     if link['url'] != '' and link['url']:
 
                         if reload_article_from_url:
-                            if link['url'].startswith('?'):
+                            if str(link['url']).startswith('?'):
                                 continue
-                            link['title'], link['text'], link['image'], link['video'] = grab_full_article(link['url'])
+                            url = str(link['url'])
+                            link['title'], link['text'], link['image'], link['video'] = grab_full_article(url)
 
                         if private:
-                            link['private'] = 1
+                            link['private'] = True
 
-                        table.add_row(link['title'],
+                        table.add_row(str(link['title']),
                                       "Yes" if link['private'] else "No",
-                                      str(link['date_created']))
+                                      str(date_created))
+
+                        to_hash = date_created.strftime("%Y%m%d_%H%M%S")
 
                         try:
                             obj = Links.objects.get(url=link['url'])
-                            obj.title = link['title']
-                            obj.text = link['text']
-                            obj.tags = link['tags']
-                            obj.private = private
-                            obj.date_created = link['date_created']
-                            obj.image = link['image']
-                            obj.video = link['video']
-                            obj.url_hashed = small_hash(link['date_created'].strftime("%Y%m%d_%H%M%S"))
+                            obj.title = str(link['title'])
+                            obj.text = str(link['text'])
+                            obj.tags = str(link['tags'])
+                            obj.private = bool(private)
+                            obj.date_created = date_created
+                            obj.image = str(link['image'])
+                            obj.video = str(link['video'])
+                            obj.url_hashed = small_hash(to_hash)
                             msg = f"ShaarPy :: updating {obj.url}"
                             logger.debug(msg)
                             obj.save()
                         except Links.DoesNotExist:
                             new_values = {'url': link['url'],
-                                          'url_hashed': small_hash(link['date_created'].strftime("%Y%m%d_%H%M%S")),
+                                          'url_hashed': small_hash(to_hash),
                                           'title': link['title'],
                                           'text': link['text'],
                                           'tags': link['tags'],
                                           'private': private,
-                                          'date_created': link['date_created'],
+                                          'date_created': date_created,
                                           'image': link['image'],
                                           'video': link['video'],
                                           }
@@ -351,7 +354,7 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> NoReturn:  # 
 # IMPORTING PELICAN FILE
 
 
-def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
+def import_pelican(the_file: str) -> None:  # noqa: C901
     """
     Headers are :
 
@@ -368,16 +371,16 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
 
     the_file: path of the file to create
     """
-    private = 0
-    title = ''
-    date_created = ''
-    slug = ''
-    tags = ''
-    url_hashed = ''
-    text = ''
-    status = ''
-    summary = ''
-    author = ''
+    private: bool = False
+    my_title: str
+    date_created: datetime
+    slug: str
+    tags: str
+    url_hashed: str
+    text: str = ""
+    status: str
+    summary: str
+    author: str
     allowed_sections = ("Author: ", "Status: ", "Title: ", "Date: ", "Tags: ", "Slug", 'Status: ', 'Summary: ')
 
     with open(the_file, 'r') as f:
@@ -392,23 +395,23 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
             if line.title().startswith("Status: "):
                 status = line.title().split('Status: ')[1].strip()
             if line.title().startswith("Title: "):
-                title = line.title().split('Title: ')[1].strip()
+                my_title = line.title().split('Title: ')[1].strip()
             if line.title().startswith("Date: "):
-                date_created = line.title().split('Date: ')[1].strip()
+                date_created_str = line.title().split('Date: ')[1].strip()
 
-                if len(date_created) == 10:
+                if len(date_created_str) == 10:
                     # date without hours minutes secondes
-                    date_created += ' 00:00:00'
-                elif len(date_created) == 16:
+                    date_created_str += ' 00:00:00'
+                elif len(date_created_str) == 16:
                     # date with hours minutes
-                    date_created += ':00'
+                    date_created_str += ':00'
 
-                if is_valid_date(date_created, "%Y-%m-%d %H:%M:%S"):
-                    date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S")
-                elif is_valid_date(date_created, "%Y-%m-%d %H:%M:%S%z"):
-                    date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S%z")
-                elif is_valid_date(date_created, "%Y-%m-%d %H:%M:%S.%f%z"):
-                    date_created = datetime.strptime(date_created, "%Y-%m-%d %H:%M:%S.%f%z")
+                if is_valid_date(date_created_str, "%Y-%m-%d %H:%M:%S"):
+                    date_created = datetime.strptime(date_created_str, "%Y-%m-%d %H:%M:%S")
+                elif is_valid_date(date_created_str, "%Y-%m-%d %H:%M:%S%z"):
+                    date_created = datetime.strptime(date_created_str, "%Y-%m-%d %H:%M:%S%z")
+                elif is_valid_date(date_created_str, "%Y-%m-%d %H:%M:%S.%f%z"):
+                    date_created = datetime.strptime(date_created_str, "%Y-%m-%d %H:%M:%S.%f%z")
             # to handle "Tags: " or "tags: "
             if line.title().startswith("Tags: "):
                 tags = line.title().split('Tags: ')[1].strip()
@@ -438,20 +441,20 @@ def import_pelican(the_file: str) -> NoReturn:  # noqa: C901
 
         try:
             Links.objects.get(url_hashed=url_hashed)
-            console.print(f"Shaarpy :: {title} already exists", style="yellow")
+            console.print(f"Shaarpy :: {my_title} already exists", style="yellow")
         except Links.DoesNotExist:
             Links.objects.create(
-                title=title,
+                title=my_title,
                 tags=tags,
                 url=slug,
                 url_hashed=url_hashed,
                 text=text,
                 date_created=date_created,
-                private=private)
-            console.print(f"Shaarpy :: {title} added", style="magenta")
+                private=bool(private))
+            console.print(f"Shaarpy :: {my_title} added", style="magenta")
 
 
-def import_pelican_folder(folder: str) -> NoReturn:
+def import_pelican_folder(folder: str) -> None:
     """
     folder: folder path where to find md file to import
     """
