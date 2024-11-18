@@ -1,7 +1,8 @@
 # coding: utf-8
 """
-   ShaarPy :: Views Me
+ShaarPy :: Views Me
 """
+
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,27 +18,27 @@ logger = logging.getLogger("shaarpy.views")
 
 
 class Me(SettingsMixin, LoginRequiredMixin, TemplateView):
-
     """
-        access to the profile page
+    access to the profile page
     """
 
     template_name = "me.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object'] = self.request.user
+        context["object"] = self.request.user
         return context
 
 
 class MeUpdate(SettingsMixin, LoginRequiredMixin, UpdateView):
     """
-        Update the User profile
+    Update the User profile
     """
+
     model = User
     form_class = MeForm
-    template_name = 'edit_me.html'
-    success_url = reverse_lazy('me')
+    template_name = "edit_me.html"
+    success_url = reverse_lazy("me")
 
     def get_object(self, queryset=None):
         """

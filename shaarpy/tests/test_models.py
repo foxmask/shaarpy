@@ -1,23 +1,22 @@
 # coding: utf-8
 """
-    ShaarPy :: Test Model
+ShaarPy :: Test Model
 """
+
 from django.test import TestCase
 
 from shaarpy.models import Links
 
 
 class LinksTest(TestCase):
-
     """
-        Links Model
+    Links Model
     """
 
     def create_link(self):
-
-        url = 'https://foxmask.org/'
-        title = 'Le Free de la passion'
-        text = '# Le Free de la Passion'
+        url = "https://foxmask.org/"
+        title = "Le Free de la passion"
+        text = "# Le Free de la Passion"
         private = False
         sticky = True
 

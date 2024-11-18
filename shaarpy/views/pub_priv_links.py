@@ -1,7 +1,8 @@
 # coding: utf-8
 """
-   ShaarPy :: Views Public/Private Links
+ShaarPy :: Views Public/Private Links
 """
+
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -15,8 +16,9 @@ logger = logging.getLogger("shaarpy.views")
 
 class PublicLinks(SettingsMixin, ListView):
     """
-        Public Links List
+    Public Links List
     """
+
     def get_queryset(self):
         return Links.objects.filter(private=False)
 
@@ -26,11 +28,11 @@ class PublicLinks(SettingsMixin, ListView):
         context_object_name = self.get_context_object_name(queryset)
         context = super(PublicLinks, self).get_context_data(**kwargs)
         paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size or 1)
-        context['paginator'] = paginator
-        context['page_obj'] = page
-        context['is_paginated'] = is_paginated
-        context['object_list'] = queryset
-        context['audience'] = 'public'
+        context["paginator"] = paginator
+        context["page_obj"] = page
+        context["is_paginated"] = is_paginated
+        context["object_list"] = queryset
+        context["audience"] = "public"
 
         if context_object_name is not None:
             context[context_object_name] = queryset
@@ -41,8 +43,9 @@ class PublicLinks(SettingsMixin, ListView):
 
 class PrivateLinks(LoginRequiredMixin, SettingsMixin, ListView):
     """
-        Private Links List
+    Private Links List
     """
+
     def get_queryset(self):
         return Links.objects.filter(private=True)
 
@@ -52,11 +55,11 @@ class PrivateLinks(LoginRequiredMixin, SettingsMixin, ListView):
         context_object_name = self.get_context_object_name(queryset)
         context = super(PrivateLinks, self).get_context_data(**kwargs)
         paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size or 1)
-        context['paginator'] = paginator
-        context['page_obj'] = page
-        context['is_paginated'] = is_paginated
-        context['object_list'] = queryset
-        context['audience'] = 'private'
+        context["paginator"] = paginator
+        context["page_obj"] = page
+        context["is_paginated"] = is_paginated
+        context["object_list"] = queryset
+        context["audience"] = "private"
 
         if context_object_name is not None:
             context[context_object_name] = queryset

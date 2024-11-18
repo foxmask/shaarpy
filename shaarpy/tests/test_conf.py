@@ -1,15 +1,15 @@
 # coding: utf-8
 """
-    ShaarPy :: Test Settings
+ShaarPy :: Test Settings
 """
+
 from django.conf import settings
 from django.test import TestCase
 
 
 class SettingsTestCase(TestCase):
-
     """
-      check that all the needed config is present
+    check that all the needed config is present
     """
 
     def test_get_config_service(self):

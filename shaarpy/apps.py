@@ -1,12 +1,12 @@
 # coding: utf-8
 """
-    ShaarPy :: AppConfig
+ShaarPy :: AppConfig
 """
 
 from django.apps import AppConfig
 
 
 class ShaarpyConfig(AppConfig):
-    name = 'shaarpy'
+    name = "shaarpy"
     verbose_name = "ShaarPy"
-    default_auto_field = 'django.db.models.AutoField'
+    default_auto_field = "django.db.models.AutoField"

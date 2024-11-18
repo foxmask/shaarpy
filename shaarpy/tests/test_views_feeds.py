@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy :: Test Feeds rendering
+ShaarPy :: Test Feeds rendering
 """
 
 from django.test import RequestFactory, TestCase
@@ -18,13 +18,15 @@ class LatestLinksFeedTestCase(TestCase):
         """
         fixture
         """
-        url = 'https://foxmask.org/'
-        title = 'Le Free de la passion'
-        text = '# Le Free de la Passion'
+        url = "https://foxmask.org/"
+        title = "Le Free de la passion"
+        text = "# Le Free de la Passion"
         private = False
         sticky = True
-        tags = 'home,sweet,'
-        return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky, tags=tags)
+        tags = "home,sweet,"
+        return Links.objects.create(
+            url=url, title=title, text=text, private=private, sticky=sticky, tags=tags
+        )
 
     def test_linksfeed(self):
         """
@@ -32,7 +34,7 @@ class LatestLinksFeedTestCase(TestCase):
         """
         # Setup request and view.
         self.create_links()
-        request = RequestFactory().get('feed')
+        request = RequestFactory().get("feed")
         view = LatestLinksFeed()
         # Run.
         response = view(request)

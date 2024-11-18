@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-    ShaarPy :: Test Common Stuff for any others TestCase
+ShaarPy :: Test Common Stuff for any others TestCase
 """
 
 from django.contrib.auth.models import User
@@ -18,24 +18,21 @@ class CommonStuffTestCase(TestCase):
         """
         create a link
         """
-        url = 'https://foxmask.eu.org/'
-        title = 'Le Free de la passion'
-        text = '# Le Free de la Passion'
+        url = "https://foxmask.eu.org/"
+        title = "Le Free de la passion"
+        text = "# Le Free de la Passion"
         private = False
         sticky = True
-        tags = 'home,sweet,'
+        tags = "home,sweet,"
 
-        return Links.objects.create(url=url,
-                                    title=title,
-                                    text=text,
-                                    private=private,
-                                    sticky=sticky,
-                                    tags=tags)
+        return Links.objects.create(
+            url=url, title=title, text=text, private=private, sticky=sticky, tags=tags
+        )
 
     def setUp(self):
         super(CommonStuffTestCase, self).setUp()
         self.factory = RequestFactory()
         self.create_link()
-        self.user = User.objects.create_user(username='foxmask',
-                                             email='my@email.org',
-                                             password='top_secret')
+        self.user = User.objects.create_user(
+            username="foxmask", email="my@email.org", password="top_secret"
+        )

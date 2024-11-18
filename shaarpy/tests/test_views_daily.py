@@ -1,7 +1,8 @@
 # coding: utf-8
 """
-    ShaarPy :: Test Daily Links
+ShaarPy :: Test Daily Links
 """
+
 from datetime import date, datetime, timedelta, timezone
 
 from django.contrib.auth.models import AnonymousUser, User
@@ -16,60 +17,69 @@ class CommonDailyTestCase(TestCase):
     """
     Common fixtures
     """
+
     def create_links_today(self):
-        url = 'https://foxmask.org/'
-        title = 'Le Free de la passion'
-        text = '# Le Free de la Passion'
+        url = "https://foxmask.org/"
+        title = "Le Free de la passion"
+        text = "# Le Free de la Passion"
         private = False
         sticky = True
-        tags = 'home'
+        tags = "home"
         today = datetime.now(tz=timezone.utc)
-        Links.objects.create(url=url,
-                             title=title,
-                             text=text,
-                             private=private,
-                             sticky=sticky,
-                             tags=tags,
-                             date_created=today)
+        Links.objects.create(
+            url=url,
+            title=title,
+            text=text,
+            private=private,
+            sticky=sticky,
+            tags=tags,
+            date_created=today,
+        )
 
     def create_links_before_yesterday(self):
-        url = 'https://foxmask.eu.org/'
-        title = 'Le Free de la passion'
-        text = '# Le Free de la Passion'
+        url = "https://foxmask.eu.org/"
+        title = "Le Free de la passion"
+        text = "# Le Free de la Passion"
         private = False
         sticky = True
-        tags = 'home'
+        tags = "home"
         today = datetime.now(tz=timezone.utc)
         yesterday = today - timedelta(days=2)
-        Links.objects.create(url=url,
-                             title=title,
-                             text=text,
-                             private=private,
-                             sticky=sticky,
-                             tags=tags,
-                             date_created=yesterday)
+        Links.objects.create(
+            url=url,
+            title=title,
+            text=text,
+            private=private,
+            sticky=sticky,
+            tags=tags,
+            date_created=yesterday,
+        )
 
     def create_links_yesterday(self):
-        url = 'https://www.starlette.io/'
-        title = ' ✨ The little ASGI framework that shines. ✨ '
-        text = '# Starlette is a lightweight ASGI framework/toolkit'
+        url = "https://www.starlette.io/"
+        title = " ✨ The little ASGI framework that shines. ✨ "
+        text = "# Starlette is a lightweight ASGI framework/toolkit"
         private = False
         sticky = True
-        tags = 'home'
+        tags = "home"
         today = datetime.now(tz=timezone.utc)
         yesterday = today - timedelta(days=1)
-        Links.objects.create(url=url,
-                             title=title,
-                             text=text,
-                             private=private,
-                             sticky=sticky,
-                             tags=tags,
-                             date_created=yesterday)
+        Links.objects.create(
+            url=url,
+            title=title,
+            text=text,
+            private=private,
+            sticky=sticky,
+            tags=tags,
+            date_created=yesterday,
+        )
 
     def setUp(self):
         super(CommonDailyTestCase, self).setUp()
         self.factory = RequestFactory()
-        self.user = User.objects.create_user(username='foxmask', email='my@email.org', password='top_secret')
+        self.user = User.objects.create_user(
+            username="foxmask", email="my@email.org", password="top_secret"
+        )
 
 
 class DailyListAnonymousTestCase(CommonDailyTestCase):
@@ -85,7 +95,7 @@ class DailyListAnonymousTestCase(CommonDailyTestCase):
         self.create_links_today()
         template = "daily_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('daily'))
+        request = RequestFactory().get(reverse("daily"))
         view = DailyLinks.as_view(template_name=template)
         request.user = AnonymousUser()
         # Run.
@@ -101,7 +111,7 @@ class DailyListAnonymousTestCase(CommonDailyTestCase):
         yesterday = today - timedelta(days=1)
         template = "daily_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('daily'), kwargs={'yesterday': str(yesterday)})
+        request = RequestFactory().get(reverse("daily"), kwargs={"yesterday": str(yesterday)})
         view = DailyLinks.as_view(template_name=template)
         request.user = AnonymousUser()
         # Run.
@@ -112,7 +122,6 @@ class DailyListAnonymousTestCase(CommonDailyTestCase):
 
 
 class DailyLinksTestCase(CommonDailyTestCase):
-
     """
     Deal with Daily links
     """
@@ -125,7 +134,7 @@ class DailyLinksTestCase(CommonDailyTestCase):
         self.create_links_today()
         template = "daily_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('daily'))
+        request = RequestFactory().get(reverse("daily"))
         view = DailyLinks.as_view(template_name=template)
         request.user = self.user
         # Run.
@@ -141,7 +150,7 @@ class DailyLinksTestCase(CommonDailyTestCase):
         yesterday = today - timedelta(days=1)
         template = "daily_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('daily'), kwargs={'yesterday': str(yesterday)})
+        request = RequestFactory().get(reverse("daily"), kwargs={"yesterday": str(yesterday)})
         view = DailyLinks.as_view(template_name=template)
         request.user = self.user
         # Run.

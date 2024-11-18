@@ -1,11 +1,12 @@
 # coding: utf-8
 """
-    ShaarPy :: Tools
+ShaarPy :: Tools
 
-    - Importing/Exporting in Netscape HTML File
-    - Load article from url with image/video
-    - Manage Markdown file creation
+- Importing/Exporting in Netscape HTML File
+- Load article from url with image/video
+- Manage Markdown file creation
 """
+
 import base64
 import copy
 import html
@@ -31,7 +32,7 @@ from shaarpy import settings
 from shaarpy.models import Links
 
 console = Console()
-logger = logging.getLogger('tools')
+logger = logging.getLogger("tools")
 
 
 def is_valid_date(date_str: str, date_format: str) -> bool | None:
@@ -56,7 +57,7 @@ def url_cleaning(url: str) -> str:
     """
 
     if url:
-        for pattern in ('&utm_source=', '?utm_source=', '&utm_medium=', '#xtor=RSS-'):
+        for pattern in ("&utm_source=", "?utm_source=", "&utm_medium=", "#xtor=RSS-"):
             pos = url.find(pattern)
             if pos > 0:
                 url = url[0:pos]
@@ -76,9 +77,9 @@ def _get_host(url: str) -> str:
 
     o = urlparse(url)
     hostname = f"{o.scheme}://{o.hostname}"
-    port = ''
+    port = ""
     if o.port is not None and o.port != 80:
-        port = ':' + str(o.port)
+        port = ":" + str(o.port)
     hostname += port
     return hostname
 
@@ -103,11 +104,11 @@ def drop_image_node(content: str) -> tuple:
     content: content of the html possibly containing the img
     return the first found image and the content
     """
-    my_image = ''
-    soup = BeautifulSoup(content, 'html.parser')
-    if soup.find_all('img', src=True):
-        image = soup.find_all('img', src=True)[0]
-        my_image = copy.copy(image['src'])
+    my_image = ""
+    soup = BeautifulSoup(content, "html.parser")
+    if soup.find_all("img", src=True):
+        image = soup.find_all("img", src=True)[0]
+        my_image = copy.copy(image["src"])
         # if not using copy.copy(image) before
         # image.decompose(), it drops content of the 2 vars
         # image and my_image
@@ -127,8 +128,8 @@ def grab_full_article(url: str) -> tuple:
         r.download()
         r.parse()
         article_html = r.article_html
-        video = r.movies[0] if len(r.movies) > 0 else ''
-        image = ''
+        video = r.movies[0] if len(r.movies) > 0 else ""
+        image = ""
         # check if there is a top_image
         if r.top_image:
             # go to check image in the article_html and grab the first one found in article_html
@@ -137,8 +138,8 @@ def grab_full_article(url: str) -> tuple:
             image, article_html = drop_image_node(article_html)
         # convert into markdown
         output = Truncator(article_html).chars(400, html=True)
-        text = pypandoc.convert_text(output, 'md', format='html')
-        title = r.title + ' - ' + _get_brand(url)
+        text = pypandoc.convert_text(output, "md", format="html")
+        title = r.title + " - " + _get_brand(url)
 
         return title, text, image, video
     except newspaper.article.ArticleException:
@@ -153,14 +154,23 @@ def rm_md_file(title: str) -> None:
         rm a markdown file
     title: the name of the file to remove
     """
-    file_name = slugify(title) + '.md'
-    file_md = f'{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}'
+    file_name = slugify(title) + ".md"
+    file_md = f"{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}"
     if os.path.exists(file_md):
         os.remove(file_md)
 
 
-def create_md_file(storage: str, title: str, url: str, text: str,
-                   tags: str, date_created: str, private: bool, image: str, video: str) -> None:
+def create_md_file(
+    storage: str,
+    title: str,
+    url: str,
+    text: str,
+    tags: str,
+    date_created: str,
+    private: bool,
+    image: str,
+    video: str,
+) -> None:
     """
         create a markdown file
     storage: path of the folder where to store the file
@@ -174,26 +184,26 @@ def create_md_file(storage: str, title: str, url: str, text: str,
     video: the main video if any
     """
 
-    data = {'title': title,
-            'url': url,
-            'text': text,
-            'date': date_created,
-            'private': private,
-            'tags': tags,
-            'image': image,
-            'video': video,
-            'author': settings.SHAARPY_AUTHOR,
-            'style': settings.SHAARPY_STYLE}
+    data = {
+        "title": title,
+        "url": url,
+        "text": text,
+        "date": date_created,
+        "private": private,
+        "tags": tags,
+        "image": image,
+        "video": video,
+        "author": settings.SHAARPY_AUTHOR,
+        "style": settings.SHAARPY_STYLE,
+    }
 
-    env = Environment(
-        loader=PackageLoader('shaarpy', 'templates'), autoescape=True
-    )
-    template = env.get_template('shaarpy/shaarpy_markdown.md')
+    env = Environment(loader=PackageLoader("shaarpy", "templates"), autoescape=True)
+    template = env.get_template("shaarpy/shaarpy_markdown.md")
     output = template.render(data=data)
-    file_name = slugify(title) + '.md'
-    file_md = f'{storage}/{file_name}'
+    file_name = slugify(title) + ".md"
+    file_md = f"{storage}/{file_name}"
     # overwrite existing file with same slug name
-    with open(file_md, 'w') as ls:
+    with open(file_md, "w") as ls:
         ls.write(output)
 
 
@@ -209,37 +219,38 @@ def crc_that(string: str) -> int:
        https://stackoverflow.com/a/50843127/636849
     """
     a = bytearray(string, "utf-8")
-    crc = 0xffffffff
+    crc = 0xFFFFFFFF
     for x in a:
         crc ^= x << 24
         for k in range(8):
-            crc = (crc << 1) ^ 0x04c11db7 if crc & 0x80000000 else crc << 1
+            crc = (crc << 1) ^ 0x04C11DB7 if crc & 0x80000000 else crc << 1
     crc = ~crc
-    crc &= 0xffffffff
-    return int.from_bytes(crc.to_bytes(4, 'big'), 'little')
+    crc &= 0xFFFFFFFF
+    return int.from_bytes(crc.to_bytes(4, "big"), "little")
 
 
 def small_hash(text: str) -> str:
     """
-    Returns the small hash of a string, using RFC 4648 base64url format
-   eg. smallHash('20111006_131924') --> yZH23w
-   Small hashes:
-     - are unique (well, as unique as crc32, at last)
-     - are always 6 characters long.
-     - only use the following characters: a-z A-Z 0-9 - _ @
-     - are NOT cryptographically secure (they CAN be forged)
-    In Shaarli, they are used as a tinyurl-like link to individual entries.
+     Returns the small hash of a string, using RFC 4648 base64url format
+    eg. smallHash('20111006_131924') --> yZH23w
+    Small hashes:
+      - are unique (well, as unique as crc32, at last)
+      - are always 6 characters long.
+      - only use the following characters: a-z A-Z 0-9 - _ @
+      - are NOT cryptographically secure (they CAN be forged)
+     In Shaarli, they are used as a tinyurl-like link to individual entries.
     """
     number = crc_that(text)
 
-    number_bytes = number.to_bytes((number.bit_length() + 7) // 8, byteorder='big')
+    number_bytes = number.to_bytes((number.bit_length() + 7) // 8, byteorder="big")
 
     encoded = base64.b64encode(number_bytes)
-    final_value = encoded.decode().rstrip('=').replace('+', '-').replace('/', '_')
+    final_value = encoded.decode().rstrip("=").replace("+", "-").replace("/", "_")
     return final_value
 
 
 # IMPORTING SHAARLI FILE
+
 
 def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa: C901
     """
@@ -249,12 +260,12 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa
     private = 0
     date_created: datetime
 
-    with open(the_file, 'r') as f:
+    with open(the_file, "r") as f:
         data = f.read()
         msg = f"ShaarPy :: importing {the_file}"
         logger.debug(msg)
 
-    if data.startswith('<!DOCTYPE NETSCAPE-Bookmark-file-1>'):
+    if data.startswith("<!DOCTYPE NETSCAPE-Bookmark-file-1>"):
         i = 0
         table = Table(show_header=True, header_style="bold magenta")
 
@@ -262,94 +273,103 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa
         table.add_column("Private", style="yellow")
         table.add_column("Date", style="dim")
 
-        for html_article in data.split('<DT>'):
+        for html_article in data.split("<DT>"):
             i += 1
-            link = {'url': '',
-                    'title': '',
-                    'text': '',
-                    'tags': '',
-                    'image': None,
-                    'video': None,
-                    'private': False}
+            link = {
+                "url": "",
+                "title": "",
+                "text": "",
+                "tags": "",
+                "image": None,
+                "video": None,
+                "private": False,
+            }
             if i == 1:
                 continue
 
-            if len(html_article.split('<DD>')) == 2:
-                line, text = html_article.split('<DD>')
-                link['text'] = html.unescape(text)
+            if len(html_article.split("<DD>")) == 2:
+                line, text = html_article.split("<DD>")
+                link["text"] = html.unescape(text)
 
-            for line in html_article.split('<DD>'):
-                if line.startswith('<A '):
+            for line in html_article.split("<DD>"):
+                if line.startswith("<A "):
                     matches = re.match(r"<A (.*?)>(.*?)</A>", line)
                     if matches:
                         attrs = matches.group(1)
 
-                        link['title'] = matches.group(2) if matches.group(2) else ''
-                        link['title'] = html.unescape(str(link['title']))
+                        link["title"] = matches.group(2) if matches.group(2) else ""
+                        link["title"] = html.unescape(str(link["title"]))
 
                     for attr in attrs.split(" "):
                         matches = re.match(r'([A-Z_]+)="(.+)"', attr)
                         attr_found = matches.group(1) if matches else ""
                         value_found = matches.group(2) if matches else ""
-                        if attr_found == 'HREF':
-                            link['url'] = html.unescape(value_found)
-                        elif attr_found == 'ADD_DATE':
+                        if attr_found == "HREF":
+                            link["url"] = html.unescape(value_found)
+                        elif attr_found == "ADD_DATE":
                             raw_add_date = float(value_found)
                             if raw_add_date > 30000000000:
                                 raw_add_date /= 1000
-                            date_created = datetime.fromtimestamp(raw_add_date).replace(tzinfo=timezone.utc)
-                        elif attr == 'PRIVATE':
-                            link['private'] = False if value_found == '0' else True
-                        elif attr == 'TAGS':
-                            link['tags'] = value_found
+                            date_created = datetime.fromtimestamp(raw_add_date).replace(
+                                tzinfo=timezone.utc
+                            )
+                        elif attr == "PRIVATE":
+                            link["private"] = False if value_found == "0" else True
+                        elif attr == "TAGS":
+                            link["tags"] = value_found
 
-                    if link['url'] != '' and link['url']:
-
+                    if link["url"] != "" and link["url"]:
                         if reload_article_from_url:
-                            if str(link['url']).startswith('?'):
+                            if str(link["url"]).startswith("?"):
                                 continue
-                            url = str(link['url'])
-                            link['title'], link['text'], link['image'], link['video'] = grab_full_article(url)
+                            url = str(link["url"])
+                            link["title"], link["text"], link["image"], link["video"] = (
+                                grab_full_article(url)
+                            )
 
                         if private:
-                            link['private'] = True
+                            link["private"] = True
 
-                        table.add_row(str(link['title']),
-                                      "Yes" if link['private'] else "No",
-                                      str(date_created))
+                        table.add_row(
+                            str(link["title"]),
+                            "Yes" if link["private"] else "No",
+                            str(date_created),
+                        )
 
                         to_hash = date_created.strftime("%Y%m%d_%H%M%S")
 
                         try:
-                            obj = Links.objects.get(url=link['url'])
-                            obj.title = str(link['title'])
-                            obj.text = str(link['text'])
-                            obj.tags = str(link['tags'])
+                            obj = Links.objects.get(url=link["url"])
+                            obj.title = str(link["title"])
+                            obj.text = str(link["text"])
+                            obj.tags = str(link["tags"])
                             obj.private = bool(private)
                             obj.date_created = date_created
-                            obj.image = str(link['image'])
-                            obj.video = str(link['video'])
+                            obj.image = str(link["image"])
+                            obj.video = str(link["video"])
                             obj.url_hashed = small_hash(to_hash)
                             msg = f"ShaarPy :: updating {obj.url}"
                             logger.debug(msg)
                             obj.save()
                         except Links.DoesNotExist:
-                            new_values = {'url': link['url'],
-                                          'url_hashed': small_hash(to_hash),
-                                          'title': link['title'],
-                                          'text': link['text'],
-                                          'tags': link['tags'],
-                                          'private': private,
-                                          'date_created': date_created,
-                                          'image': link['image'],
-                                          'video': link['video'],
-                                          }
+                            new_values = {
+                                "url": link["url"],
+                                "url_hashed": small_hash(to_hash),
+                                "title": link["title"],
+                                "text": link["text"],
+                                "tags": link["tags"],
+                                "private": private,
+                                "date_created": date_created,
+                                "image": link["image"],
+                                "video": link["video"],
+                            }
                             obj = Links(**new_values)
                             obj.save()
                             msg = f"ShaarPy :: creating {obj.url}"
                             logger.debug(msg)
 
         console.print(table)
+
 
 # IMPORTING PELICAN FILE
 
@@ -381,30 +401,39 @@ def import_pelican(the_file: str) -> None:  # noqa: C901
     status: str
     summary: str
     author: str
-    allowed_sections = ("Author: ", "Status: ", "Title: ", "Date: ", "Tags: ", "Slug", 'Status: ', 'Summary: ')
+    allowed_sections = (
+        "Author: ",
+        "Status: ",
+        "Title: ",
+        "Date: ",
+        "Tags: ",
+        "Slug",
+        "Status: ",
+        "Summary: ",
+    )
 
-    with open(the_file, 'r') as f:
+    with open(the_file, "r") as f:
         data = f.readlines()
         msg = f"ShaarPy :: importing {the_file}"
         logger.debug(msg)
 
         for line in data:
-            if line.title().startswith('Author: '):
-                author = line.title().split('Author: ')[1].strip()
+            if line.title().startswith("Author: "):
+                author = line.title().split("Author: ")[1].strip()
                 author = f"</br>By {author}"
             if line.title().startswith("Status: "):
-                status = line.title().split('Status: ')[1].strip()
+                status = line.title().split("Status: ")[1].strip()
             if line.title().startswith("Title: "):
-                my_title = line.title().split('Title: ')[1].strip()
+                my_title = line.title().split("Title: ")[1].strip()
             if line.title().startswith("Date: "):
-                date_created_str = line.title().split('Date: ')[1].strip()
+                date_created_str = line.title().split("Date: ")[1].strip()
 
                 if len(date_created_str) == 10:
                     # date without hours minutes secondes
-                    date_created_str += ' 00:00:00'
+                    date_created_str += " 00:00:00"
                 elif len(date_created_str) == 16:
                     # date with hours minutes
-                    date_created_str += ':00'
+                    date_created_str += ":00"
 
                 if is_valid_date(date_created_str, "%Y-%m-%d %H:%M:%S"):
                     date_created = datetime.strptime(date_created_str, "%Y-%m-%d %H:%M:%S")
@@ -414,22 +443,22 @@ def import_pelican(the_file: str) -> None:  # noqa: C901
                     date_created = datetime.strptime(date_created_str, "%Y-%m-%d %H:%M:%S.%f%z")
             # to handle "Tags: " or "tags: "
             if line.title().startswith("Tags: "):
-                tags = line.title().split('Tags: ')[1].strip()
+                tags = line.title().split("Tags: ")[1].strip()
 
-                unwanted_chars = '?./:;!#&@{}[]|`\\^~*+=-_'
+                unwanted_chars = "?./:;!#&@{}[]|`\\^~*+=-_"
 
                 if any(s in unwanted_chars for s in tags):
-                    tags = ''
+                    tags = ""
 
-                if tags.endswith(','):
+                if tags.endswith(","):
                     tags = tags[:-1]
-                tags = tags.replace(' ', '')
+                tags = tags.replace(" ", "")
 
             if line.title().startswith("Slug: "):
-                slug = line.title().split('Slug: ')[1].strip()
+                slug = line.title().split("Slug: ")[1].strip()
             if line.title().startswith("Summary: "):
-                summary = '# ' + line.title().split('Summary: ')[1] + "\n\n"
-            if status == 'published':
+                summary = "# " + line.title().split("Summary: ")[1] + "\n\n"
+            if status == "published":
                 url_hashed = small_hash(date_created.strftime("%Y%m%d_%H%M%S"))
 
             if not line.title().startswith(allowed_sections):
@@ -437,8 +466,7 @@ def import_pelican(the_file: str) -> None:  # noqa: C901
             if author:
                 text += author
 
-    if status == 'published':
-
+    if status == "published":
         try:
             Links.objects.get(url_hashed=url_hashed)
             console.print(f"Shaarpy :: {my_title} already exists", style="yellow")
@@ -450,7 +478,8 @@ def import_pelican(the_file: str) -> None:  # noqa: C901
                 url_hashed=url_hashed,
                 text=text,
                 date_created=date_created,
-                private=bool(private))
+                private=bool(private),
+            )
             console.print(f"Shaarpy :: {my_title} added", style="magenta")
 
 
@@ -459,5 +488,5 @@ def import_pelican_folder(folder: str) -> None:
     folder: folder path where to find md file to import
     """
 
-    for p in Path(folder).glob('*.md'):
+    for p in Path(folder).glob("*.md"):
         import_pelican(folder + "/" + p.name)

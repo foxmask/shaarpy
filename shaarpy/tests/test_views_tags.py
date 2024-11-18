@@ -1,7 +1,8 @@
 # coding: utf-8
 """
-    ShaarPy :: Test Tags rendering / Accessing
+ShaarPy :: Test Tags rendering / Accessing
 """
+
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from django.urls import reverse
@@ -20,9 +21,9 @@ class LinksByTagListTestCase(CommonStuffTestCase):
         self.create_link()
         template = "links_list.html"
         # Setup request and view.
-        tags = 'foobar'
+        tags = "foobar"
 
-        request = RequestFactory().get(reverse('links_by_tag_list', kwargs={'tags': tags}))
+        request = RequestFactory().get(reverse("links_by_tag_list", kwargs={"tags": tags}))
         request.user = self.user
 
         view = LinksByTagList.as_view(template_name=template)
@@ -37,8 +38,8 @@ class LinksByTagListTestCase(CommonStuffTestCase):
 
         template = "links_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('links_by_tag_list', kwargs={'tags': '0Tag'}))
-        tags = '0Tag'
+        request = RequestFactory().get(reverse("links_by_tag_list", kwargs={"tags": "0Tag"}))
+        tags = "0Tag"
         request.user = self.user
         view = LinksByTagList.as_view(template_name=template)
         # Run.
@@ -52,9 +53,9 @@ class LinksByTagListTestCase(CommonStuffTestCase):
         self.create_link()
         template = "links_list.html"
         # Setup request and view.
-        tags = 'home'
+        tags = "home"
 
-        request = RequestFactory().get(reverse('links_by_tag_list', kwargs={'tags': tags}))
+        request = RequestFactory().get(reverse("links_by_tag_list", kwargs={"tags": tags}))
         request.user = AnonymousUser()
 
         view = LinksByTagList.as_view(template_name=template)
@@ -69,9 +70,9 @@ class LinksByTagListTestCase(CommonStuffTestCase):
         self.create_link()
         template = "links_list.html"
         # Setup request and view.
-        tags = 'home'
+        tags = "home"
 
-        request = RequestFactory().get(reverse('links_by_tag_list', kwargs={'tags': tags}))
+        request = RequestFactory().get(reverse("links_by_tag_list", kwargs={"tags": tags}))
         request.user = self.user
 
         view = LinksByTagList.as_view(template_name=template)
@@ -86,14 +87,15 @@ class TagsListTestCase(CommonStuffTestCase):
     """
     display the list of tags
     """
+
     def setUp(self):
         super(TagsListTestCase, self).setUp()
         self.factory = RequestFactory()
 
     def create_links_no_tags(self):
-        url = 'https://foxmask.org/'
-        title = 'Le Free de la passion'
-        text = '# Le Free de la Passion'
+        url = "https://foxmask.org/"
+        title = "Le Free de la passion"
+        text = "# Le Free de la Passion"
         private = False
         sticky = True
         return Links.objects.create(url=url, title=title, text=text, private=private, sticky=sticky)
@@ -103,7 +105,7 @@ class TagsListTestCase(CommonStuffTestCase):
         self.create_links_no_tags()
         template = "tags_list.html"
         # Setup request and view.
-        request = RequestFactory().get(reverse('tags_list'))
+        request = RequestFactory().get(reverse("tags_list"))
         request.user = self.user
         view = TagsList.as_view(template_name=template)
         # Run.

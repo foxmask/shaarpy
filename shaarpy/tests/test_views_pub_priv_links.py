@@ -1,7 +1,8 @@
 # coding: utf-8
 """
-    ShaarPy :: Test Public/Private Links
+ShaarPy :: Test Public/Private Links
 """
+
 from django.test import RequestFactory
 
 from shaarpy.tests.test_common import CommonStuffTestCase
@@ -17,7 +18,7 @@ class PrivateLinksTestCase(CommonStuffTestCase):
         self.create_link()
         template = "shaarpy/links_list.html"
         # Setup request and view.
-        request = RequestFactory().get('/links/private/')
+        request = RequestFactory().get("/links/private/")
         request.user = self.user
 
         view = PrivateLinks.as_view(template_name=template)
@@ -37,7 +38,7 @@ class PublicLinksTestCase(CommonStuffTestCase):
         self.create_link()
         template = "shaarpy/links_list.html"
         # Setup request and view.
-        request = RequestFactory().get('/links/public/')
+        request = RequestFactory().get("/links/public/")
         request.user = self.user
 
         view = PublicLinks.as_view(template_name=template)

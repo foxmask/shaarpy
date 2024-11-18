@@ -78,7 +78,6 @@ test = [
 ]
 lint = [
     "ruff == 0.7.3",
-
 ]
 
 [tool.setuptools.packages.find]
