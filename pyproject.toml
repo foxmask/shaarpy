@@ -7,7 +7,7 @@ name = "shaarpy"
 version = "1.1.0"
 description = "ShaarPy: Share your thoughts, links, ideas, notes. If you ever wanted Shaarli in python, that's it ^_*"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 requires-python = ">=3.11"
 authors = [{ name = "폭스마스크", email = "foxmask+git@pm.me" }]
 
@@ -21,7 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Internet",
     "Topic :: Communications",
-    "Topic :: Database"
+    "Topic :: Database",
 ]
 
 dependencies = [
@@ -34,7 +34,7 @@ dependencies = [
     "pytz == 2024.2",
     "python-slugify == 8.0.4",
     "Jinja2 == 3.1.4",
-    "lxml[html_clean] == 5.3.0"
+    "lxml[html_clean] == 5.3.0",
 ]
 
 [project.urls]
@@ -76,9 +76,7 @@ test = [
     "bandit",
     "pip-audit",
 ]
-lint = [
-    "ruff == 0.7.3",
-]
+lint = ["ruff == 0.7.3"]
 
 [tool.setuptools.packages.find]
 include = ["shaarpy*"]
@@ -86,3 +84,18 @@ namespaces = false
 
 [tool.setuptools]
 include-package-data = false
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+#strict_optional = true
+python_version = 3.11
+disallow_untyped_defs = true
+#show_error_codes = true
+#no_implicit_optional = true
+#warn_return_any = true
+#warn_unused_ignores = true
+exclude = ["scripts", "docs", "test"]
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "shaarpy.settings"

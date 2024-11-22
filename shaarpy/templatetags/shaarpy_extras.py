@@ -12,7 +12,7 @@ register = template.Library()
 
 @register.filter(name="tags")
 # draw the tags in the "card footer"
-def tags(value):
+def tags(value: str) -> str:
     out = ""
     for tag in value.split(","):
         out += (
@@ -24,6 +24,6 @@ def tags(value):
 
 
 @register.filter(name="markdown")
-def markdown(text):
+def markdown(text: str) -> str:
     # convert into Github_Flavor_Markdown
     return pypandoc.convert_text(text, "html", format="gfm")

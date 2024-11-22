@@ -1,7 +1,8 @@
 # coding: utf-8
 """
-   ShaarPy :: Views Links
+ShaarPy :: Views Links
 """
+
 import logging
 from typing import Any
 
@@ -40,7 +41,7 @@ class LinksList(SettingsMixin, ListView):
         page_size = self.get_paginate_by(queryset)
         context_object_name = self.get_context_object_name(queryset)
 
-        SearchForm = search_form_factory(queryset, ['^title', 'text', 'tags'])
+        SearchForm = search_form_factory(queryset, ["^title", "text", "tags"])
 
         search_form = SearchForm(self.request.GET or {})
         if self.request.GET.get("q"):
@@ -49,14 +50,14 @@ class LinksList(SettingsMixin, ListView):
 
         context = super(LinksList, self).get_context_data(**kwargs)
         paginator, page, queryset, is_paginated = self.paginate_queryset(queryset, page_size)
-        context['paginator'] = paginator
-        context['page_obj'] = page
-        context['is_paginated'] = is_paginated
-        context['object_list'] = queryset
-        context['form_search'] = SearchForm
-        context['q'] = self.request.GET.get('q')
+        context["paginator"] = paginator
+        context["page_obj"] = page
+        context["is_paginated"] = is_paginated
+        context["object_list"] = queryset
+        context["form_search"] = SearchForm
+        context["q"] = self.request.GET.get("q")
         # this will be used for the URL in the bookmarklet
-        context['hostname'] = _get_host(self.request.build_absolute_uri())
+        context["hostname"] = _get_host(self.request.build_absolute_uri())
 
         if context_object_name is not None:
             context[context_object_name] = queryset
@@ -69,6 +70,7 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
     """
     add a link / note
     """
+
     model = Links
     form_class = LinksForm
 
@@ -76,11 +78,11 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = {}
         if self.object:
-            context['object'] = self.object
+            context["object"] = self.object
             context_object_name = self.get_context_object_name(self.object)
             if context_object_name:
                 context[context_object_name] = self.object
-        context['add_link'] = True
+        context["add_link"] = True
         context.update(kwargs)
         return super().get_context_data(**context)
 
@@ -88,17 +90,16 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
 
     def get_initial(self) -> dict[str, Any]:
         initial = {}
-        if self.request.GET.get('post'):
-            url = self.request.GET.get('post')
+        if self.request.GET.get("post"):
+            url = self.request.GET.get("post")
             url = url_cleaning(str(url))
-            initial = {'url': url,
-                       'title': self.request.GET.get('title')}
+            initial = {"url": url, "title": self.request.GET.get("title")}
         return initial
 
     def form_valid(self, form):
-        url = form.cleaned_data['url']
-        title = form.cleaned_data['title']
-        text = form.cleaned_data['text']
+        url = form.cleaned_data["url"]
+        title = form.cleaned_data["title"]
+        text = form.cleaned_data["text"]
         url = url_cleaning(url)
         if url:
             try:
@@ -106,19 +107,21 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
                 links = Links.objects.get(url=url)
                 msg = f"ShaarPy :: link already exists {url}"
                 logger.debug(msg)
-                return redirect('link_detail', **{'slug': links.url_hashed})
+                return redirect("link_detail", **{"slug": links.url_hashed})
             except Links.DoesNotExist:
                 pass
 
             # when you just want to save the URL and keep the title and body you entered
             # do not go to grab the article content at all
-            if title == '' and text == '':
+            if title is None and text == "":
                 self.object = form.save()
-                self.object.title, self.object.text, self.object.image, self.object.video = grab_full_article(url)
+                self.object.title, self.object.text, self.object.image, self.object.video = (
+                    grab_full_article(url)
+                )
 
         else:
             self.object = form.save()
-            if self.object.title == '':
+            if self.object.title is None:
                 self.object.title = "Note:"
 
         self.object = form.save()
@@ -129,7 +132,7 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
         self.object = form.save()
 
         # to deal with the popup form trigger from a javascript bookmarklet
-        if self.request.GET.get('source') == "bookmarklet":
+        if self.request.GET.get("source") == "bookmarklet":
             return HttpResponse('<script type="text/javascript">window.close();</script>')
 
         return super().form_valid(form)
@@ -142,16 +145,16 @@ class LinksUpdate(LoginRequiredMixin, SuccessMixin, SettingsMixin, UpdateView):
 
     model = Links
     form_class = LinksForm
-    slug_field = 'url_hashed'
+    slug_field = "url_hashed"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = {}
         if self.object:
-            context['object'] = self.object
+            context["object"] = self.object
             context_object_name = self.get_context_object_name(self.object)
             if context_object_name:
                 context[context_object_name] = self.object
-        context['edit_link'] = True
+        context["edit_link"] = True
         context.update(kwargs)
         return super().get_context_data(**context)
 
@@ -171,4 +174,4 @@ class LinksDetail(SettingsMixin, DetailView):
     """
 
     model = Links
-    slug_field = 'url_hashed'
+    slug_field = "url_hashed"

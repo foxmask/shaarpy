@@ -3,6 +3,8 @@
 ShaarPy :: Forms
 """
 
+from typing import Any
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import CheckboxInput, EmailInput, HiddenInput, ModelForm, Textarea, TextInput
@@ -12,7 +14,7 @@ from shaarpy.models import Links
 from shaarpy.tools import url_cleaning
 
 
-def urlfields_assume_https(db_field, **kwargs):
+def urlfields_assume_https(db_field: Any, **kwargs: Any) -> Any:
     """
     ModelForm.Meta.formfield_callback function to assume HTTPS for scheme-less
     domains in URLFields.
@@ -59,14 +61,14 @@ class LinksForm(ModelForm):
             self.add_error("title", msg)
             self.add_error("text", msg)
 
-    def clean_url(self):
+    def clean_url(self) -> str:
         """
         remove unwanted query parameters
         """
         data = self.cleaned_data["url"]
         return url_cleaning(data)
 
-    def clean_tags(self):
+    def clean_tags(self) -> str:
         """
         remove extra space
         """
@@ -80,6 +82,7 @@ class LinksForm(ModelForm):
             if data.endswith(","):
                 data = data[:-1]
             return data.replace(" ", "")
+        return ""
 
 
 class MeForm(ModelForm):
