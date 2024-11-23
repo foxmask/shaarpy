@@ -11,16 +11,14 @@ import base64
 import copy
 import html
 import logging
-import os
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
 import newspaper
 import pypandoc
 from bs4 import BeautifulSoup
-from django.utils import timezone
 from django.utils.text import Truncator
 from jinja2 import Environment, PackageLoader
 from newspaper import Article
@@ -149,17 +147,6 @@ def grab_full_article(url: str) -> tuple:
 # MARKDOWN MANAGEMENT
 
 
-def rm_md_file(title: str) -> None:
-    """
-        rm a markdown file
-    title: the name of the file to remove
-    """
-    file_name = slugify(title) + ".md"
-    file_md = f"{settings.SHAARPY_LOCALSTORAGE_MD}/{file_name}"
-    if os.path.exists(file_md):
-        os.remove(file_md)
-
-
 def create_md_file(
     storage: str,
     title: str,
@@ -198,7 +185,7 @@ def create_md_file(
     }
 
     env = Environment(loader=PackageLoader("shaarpy", "templates"), autoescape=True)
-    template = env.get_template("shaarpy/shaarpy_markdown.md")
+    template = env.get_template("shaarpy_markdown.md")
     output = template.render(data=data)
     file_name = slugify(title) + ".md"
     file_md = f"{storage}/{file_name}"
@@ -398,17 +385,16 @@ def import_pelican(the_file: str) -> None:  # noqa: C901
     tags: str
     url_hashed: str
     text: str = ""
-    status: str
-    summary: str
-    author: str
+    status: str = ""
+    summary: str = ""
+    author: str = ""
     allowed_sections = (
         "Author: ",
         "Status: ",
         "Title: ",
         "Date: ",
         "Tags: ",
-        "Slug",
-        "Status: ",
+        "Slug: ",
         "Summary: ",
     )
 

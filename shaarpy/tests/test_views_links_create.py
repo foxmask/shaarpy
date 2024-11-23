@@ -95,7 +95,6 @@ class LinksCreateTestCase(CommonStuffTestCase):
         # Check.
         self.assertEqual(response.status_code, 302)
 
-
     def test_create_note_wo_title(self):
         text = "# Le Free de la passion"
         title = ""

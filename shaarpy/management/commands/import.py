@@ -3,6 +3,8 @@
 ShaarPy :: Importing in Netscape HTML File
 """
 
+import os
+
 from django.core.management.base import BaseCommand
 from rich.console import Console
 
@@ -11,14 +13,6 @@ from shaarpy.tools import import_shaarli
 console = Console()
 
 __author__ = "FoxMaSk"
-
-
-def load(html_file, reload_article_from_url):
-    """
-    load an HTML Nestcape file
-    """
-    if html_file.endswith(".html"):
-        import_shaarli(html_file, reload_article_from_url)
 
 
 class Command(BaseCommand):
@@ -33,6 +27,13 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        console.print(f"Shaarpy :: Importing file {options['file']} in progress", style="green")
-        load(options["file"], options["reload"])
-        console.print(f"Shaarpy :: Importing file {options['file']} is finished", style="green")
+        file = options["file"]
+        reload = options["reload"]
+        console.print(f"Shaarpy :: Importing file {file} in progress", style="green")
+
+        if os.path.exists(file) and file.endswith(".html"):
+            import_shaarli(file, reload)
+        else:
+            console.print("provided file does not exists", style="red")
+
+        console.print(f"Shaarpy :: Importing file {file} is finished", style="green")
