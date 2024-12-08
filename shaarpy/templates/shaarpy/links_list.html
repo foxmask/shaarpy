@@ -50,7 +50,7 @@
                     {% endif %}
                     <div class="card-body">
                       {% if data.url %}
-                      <h5><a href="{{ data.url }}">{{ data.title }}</a></h5>
+                      <h5><a href="{{ data.url }}">{% if data.title %}{{ data.title }}{% else %}{{ data.url }}{% endif %}</a></h5>
                       {% else %}
                       <h5><a href="{% url 'link_detail' data.url_hashed %}">{{ data.title }}</a></h5>
                       {% endif %}
@@ -59,7 +59,7 @@
                         <iframe src="{{ data.video }}" title="video" allowfullscreen></iframe>
                       </div>
                       {% endif %}
-                      <div class="card-text">{{ data.text | truncatechars:"300" | markdown |  safe }}</div>
+                      <div class="card-text">{{ data.text | truncatechars:"300" | wrap_markdown |  safe }}</div>
                     </div>
                     <div class="card-footer text-muted">
                       {% if data.sticky %}

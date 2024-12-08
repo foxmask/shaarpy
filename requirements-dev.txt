@@ -3,7 +3,7 @@ wheel
 coverage
 flake8
 pytest-django
-#semgrep
+types-Markdown
 pipdeptree
 twine
 django-debug-toolbar
@@ -13,4 +13,3 @@ pip-audit
 ruff
 mypy
 django-stubs[compatible-mypy]
-types-beautifulsoup4

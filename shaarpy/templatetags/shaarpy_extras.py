@@ -3,7 +3,7 @@
 ShaarPy :: Extra balls (because that reminds me pinball:)
 """
 
-import pypandoc
+import markdown
 from django import template
 from django.urls import reverse
 
@@ -23,7 +23,6 @@ def tags(value: str) -> str:
     return out
 
 
-@register.filter(name="markdown")
-def markdown(text: str) -> str:
-    # convert into Github_Flavor_Markdown
-    return pypandoc.convert_text(text, "html", format="gfm")
+@register.filter(name="wrap_markdown")
+def wrap_markdown(text: str) -> str:
+    return markdown.markdown(text, extensions=["fenced_code", "codehilite", "footnotes", "tables"])

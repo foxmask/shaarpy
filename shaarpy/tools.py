@@ -8,20 +8,13 @@ ShaarPy :: Tools
 """
 
 import base64
-import copy
 import html
 import logging
 import re
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlparse
 
-import newspaper
-import pypandoc
-from bs4 import BeautifulSoup
-from django.utils.text import Truncator
 from jinja2 import Environment, PackageLoader
-from newspaper import Article
 from rich.console import Console
 from rich.table import Table
 from slugify import slugify
@@ -60,88 +53,6 @@ def url_cleaning(url: str) -> str:
             if pos > 0:
                 url = url[0:pos]
     return url
-
-
-# ARTICLES MANAGEMENT
-
-
-def _get_host(url: str) -> str:
-    """
-    go to get the schema and hostname and port related to the given url
-
-    param url: url of the website
-    :return string 'hostname'
-    """
-
-    o = urlparse(url)
-    hostname = f"{o.scheme}://{o.hostname}"
-    port = ""
-    if o.port is not None and o.port != 80:
-        port = ":" + str(o.port)
-    hostname += port
-    return hostname
-
-
-def _get_brand(url: str) -> str:
-    """
-    go to get the brand name related to the given url
-
-    url: url of the website
-    :return string of the Brand
-    """
-    brand = newspaper.build(url=_get_host(url))
-    brand.download()
-    brand.parse()
-    return brand.brand
-
-
-def drop_image_node(content: str) -> tuple:
-    """
-    drop the image node if found
-
-    content: content of the html possibly containing the img
-    return the first found image and the content
-    """
-    my_image = ""
-    soup = BeautifulSoup(content, "html.parser")
-    if soup.find_all("img", src=True):
-        image = soup.find_all("img", src=True)[0]
-        my_image = copy.copy(image["src"])
-        # if not using copy.copy(image) before
-        # image.decompose(), it drops content of the 2 vars
-        # image and my_image
-        image.decompose()
-    return my_image, soup
-
-
-def grab_full_article(url: str) -> tuple:
-    """
-        get the complete article page from the URL
-    url: URL of the article to get
-    return title text image video or the URL in case of ArticleException
-    """
-    # get the complete article
-    r = Article(url, keep_article_html=True)
-    try:
-        r.download()
-        r.parse()
-        article_html = r.article_html
-        video = r.movies[0] if len(r.movies) > 0 else ""
-        image = ""
-        # check if there is a top_image
-        if r.top_image:
-            # go to check image in the article_html and grab the first one found in article_html
-            # it may happened that top_image is not the same in the content of article_html
-            # so go pickup this one and remove it in the the content of article_html
-            image, article_html = drop_image_node(article_html)
-        # convert into markdown
-        output = Truncator(article_html).chars(400, html=True)
-        text = pypandoc.convert_text(output, "md", format="html")
-        title = r.title + " - " + _get_brand(url)
-
-        return title, text, image, video
-    except newspaper.article.ArticleException:
-        return url, "", "", ""
 
 
 # MARKDOWN MANAGEMENT
@@ -239,7 +150,7 @@ def small_hash(text: str) -> str:
 # IMPORTING SHAARLI FILE
 
 
-def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa: C901
+def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa
     """
     the_file: name of the file to import
     reload_article_from_url: article url
@@ -309,10 +220,6 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa
                         if reload_article_from_url:
                             if str(link["url"]).startswith("?"):
                                 continue
-                            url = str(link["url"])
-                            link["title"], link["text"], link["image"], link["video"] = (
-                                grab_full_article(url)
-                            )
 
                         if private:
                             link["private"] = True
@@ -361,7 +268,7 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa
 # IMPORTING PELICAN FILE
 
 
-def import_pelican(the_file: str) -> None:  # noqa: C901
+def import_pelican(the_file: str) -> None:  # noqa
     """
     Headers are :
 

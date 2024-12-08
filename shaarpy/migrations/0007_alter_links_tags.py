@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='links',
             name='tags',
-            field=models.CharField(blank=True, max_length=255, null=True, validators=[django.core.validators.RegexValidator('^[0-9a-zA-Z\\u3131-\\uD79D\\u1100-\\u11FF\\u3130-\\u318F\\uA960-\\uA97F\\uAC00-\\uD7AF\\uD7B0-\\uD7FF,]*$', 'Only alphanumeric characters are allowed.')]),
+            field=models.CharField(blank=True, max_length=255, null=True, validators=[django.core.validators.RegexValidator('^[0-9a-zA-Z\\u3131-\\uD79D\\u1100-\\u11FF\\u3130-\\u318F\\uA960-\\uA97F\\uAC00-\\uD7AF\\uD7B0-\\uD7FF,]*$', 'Only alphanumeric characters are allowed.')]),  # noqa
         ),
     ]

@@ -10,12 +10,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 from simple_search import search_form_factory
 
 from shaarpy.forms import LinksForm
 from shaarpy.models import Links
-from shaarpy.tools import _get_host, grab_full_article, small_hash, url_cleaning
+from shaarpy.tools import small_hash, url_cleaning
 from shaarpy.views import SettingsMixin, SuccessMixin
 
 logger = logging.getLogger("shaarpy.views")
@@ -57,7 +63,7 @@ class LinksList(SettingsMixin, ListView):
         context["form_search"] = SearchForm
         context["q"] = self.request.GET.get("q")
         # this will be used for the URL in the bookmarklet
-        context["hostname"] = _get_host(self.request.build_absolute_uri())
+        context["hostname"] = self.request.build_absolute_uri()
 
         if context_object_name is not None:
             context[context_object_name] = queryset
@@ -98,8 +104,6 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
 
     def form_valid(self, form):
         url = form.cleaned_data["url"]
-        title = form.cleaned_data["title"]
-        text = form.cleaned_data["text"]
         url = url_cleaning(url)
         if url:
             try:
@@ -110,14 +114,6 @@ class LinksCreate(LoginRequiredMixin, SuccessMixin, SettingsMixin, CreateView):
                 return redirect("link_detail", **{"slug": links.url_hashed})
             except Links.DoesNotExist:
                 pass
-
-            # when you just want to save the URL and keep the title and body you entered
-            # do not go to grab the article content at all
-            if title is None and text == "":
-                self.object = form.save()
-                self.object.title, self.object.text, self.object.image, self.object.video = (
-                    grab_full_article(url)
-                )
 
         else:
             self.object = form.save()

@@ -10,10 +10,10 @@ from django.test import TestCase
 class MyShaarpyExtrasTest(TestCase):
     def test_markdown(self):
         data = "# Test"
-        out = Template("{% load shaarpy_extras %}" "{{ '# Test' | markdown | safe}}").render(
+        out = Template("{% load shaarpy_extras %}" "{{ '# Test' | wrap_markdown | safe }}").render(
             Context(data)
         )
-        self.assertEqual(out, '<h1 id="test">Test</h1>\n')
+        self.assertEqual(out, "<h1>Test</h1>")
 
     def test_tags(self):
         out = ""

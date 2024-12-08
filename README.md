@@ -10,9 +10,8 @@ a 'Shaarli cloned' in Python made with Django
 
 ## Features
 
-
+* bookmarking
 * microblogging
-* Load Pelican blog markdown files
 
 ### Notes
 
@@ -93,15 +92,8 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 
 * Python from 3.10 3.11 3.12
 * Django from 5.0+
-* pandoc
 
 ### Installation
-
-pandoc
-
-```bash
-sudo apt install pandoc
-```
 
 create a virtualenv
 

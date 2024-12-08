@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "shaarpy"
 version = "1.1.0"
-description = "ShaarPy: Share your thoughts, links, ideas, notes. If you ever wanted Shaarli in python, that's it ^_*"
+description = "ShaarPy: Share your thoughts, links, ideas, notes. self-hosting bookmarks and micro blogging. If you ever wanted Shaarli in python, that's it ^_*"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
@@ -28,13 +28,12 @@ dependencies = [
     "Django == 5.1.2",
     "django-environ == 0.11.2",
     "django-simple-search == 1.0.2",
-    "newspaper3k == 0.2.8",
-    "pypandoc == 1.14",
+    "Markdown == 3.7",
+    "Pygments == 2.18.0",
     "rich == 13.9.4",
     "pytz == 2024.2",
     "python-slugify == 8.0.4",
     "Jinja2 == 3.1.4",
-    "lxml[html_clean] == 5.3.0",
 ]
 
 [project.urls]
@@ -99,3 +98,6 @@ ignore_missing_imports = true
 
 [tool.django-stubs]
 django_settings_module = "shaarpy.settings"
+
+[tool.bandit]
+exclude_dirs = ["tests"]

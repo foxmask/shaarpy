@@ -5,7 +5,7 @@ ShaarPy :: Views Feeds
 
 import logging
 
-import pypandoc
+import markdown
 from django.contrib.syndication.views import Feed
 from django.urls import reverse
 
@@ -34,7 +34,7 @@ class LatestLinksFeed(SettingsMixin, Feed):
         return item.title
 
     def item_description(self, item):
-        return pypandoc.convert_text(item.text, "html", format="gfm")
+        return markdown.markdown(item.text)
 
     def item_link(self, item):
         return reverse("link_detail", args=[item.url_hashed])
