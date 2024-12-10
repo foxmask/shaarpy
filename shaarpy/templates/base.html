@@ -33,31 +33,29 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                <a class="navbar-brand" href="{% url 'home' %}" title="Home">
-                  <span class="menu-collapsed">{{ SHAARPY_NAME }}</span>
-                </a>
+                  <a class="navbar-brand" href="{% url 'home' %}" title="Home">Home</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                  <a class="nav-link fab fa-python link-opacity-50-hover" href="{% url 'link_create' %}" title="{% translate 'Add a thought, a link, an idea, a note' %}">ShaarPy</a>
+                  <a class="nav-link" href="{% url 'link_create' %}" title="{% translate 'Add a thought, a link, an idea, a note' %}"><i class="fab fa-python link-opacity-50-hover"></i></a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link fas fa-tags link-opacity-50-hover" href="{% url 'tags_list' %}" title="{% translate 'Tags Cloud' %}"> {% translate 'Tags Cloud' %}</a>
+                  <a class="nav-link" href="{% url 'tags_list' %}" title="{% translate 'Tags Cloud' %}"><i class="fas fa-tags link-opacity-50-hover" ></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link fas fa-calendar-day link-opacity-50-hover" href="{% url 'daily' %}" title="{% translate 'Daily links' %}"> {% translate 'Daily links' %}</a>
+                  <a class="nav-link" href="{% url 'daily' %}" title="{% translate 'Daily links' %}"><i class=" fas fa-calendar-day link-opacity-50-hover"></i></a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                  <a class="nav-link fas fa-user-secret" href="{% url 'link_private' %}" title="{% translate 'Privates Links' %}"> {% translate 'Privates Links' %}</a>
+                  <a class="nav-link" href="{% url 'link_private' %}" title="{% translate 'Privates Links' %}"><i class=" fas fa-user-secret"></i></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link fas fa-universal-access" href="{% url 'link_public' %}" title="{% translate 'Publics Links' %}"> {% translate 'Publics Links' %}</a>
+                  <a class="nav-link" href="{% url 'link_public' %}" title="{% translate 'Publics Links' %}"><i class="fas fa-universal-access"></i></a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                  <a class="nav-link fas fa-rss" href="{% url 'feed' %}"> Feeds</a>
+                  <a class="nav-link" href="{% url 'feed' %}"><i class="fas fa-rss"></i></a>
                 </li>
               </ul>
               {% if form_search %}

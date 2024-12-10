@@ -124,7 +124,9 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {"format": "%(asctime)s %(levelname)s %(module)s %(process)d %(message)s"},
+        "verbose": {
+            "format": "%(asctime)s %(levelname)s %(module)s %(process)d %(message)s"
+        },
         "simple": {"format": "%(levelname)s %(message)s"},
     },
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
@@ -134,7 +136,11 @@ LOGGING = {
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
         },
-        "console": {"level": "DEBUG", "class": "logging.StreamHandler", "formatter": "simple"},
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
         "file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
@@ -186,13 +192,17 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["https://*.mydomain.com"])
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS", default=["https://*.mydomain.com"]
+)
 
 LOGOUT_REDIRECT_URL = reverse_lazy("home")
 
 SHAARPY_AUTHOR = env.str("SHAARPY_AUTHOR", default="FoxMaSk")
 SHAARPY_NAME = env.str("SHAARPY_NAME", default=f"ShaarPy - {SHAARPY_AUTHOR} Links")
-SHAARPY_DESCRIPTION = env.str("SHAARPY_DESCRIPTION", default="Share thoughts, links ideas, notes")
+SHAARPY_DESCRIPTION = env.str(
+    "SHAARPY_DESCRIPTION", default="Share thoughts, links ideas, notes"
+)
 SHAARPY_ROBOT = env.str("SHAARPY_ROBOT", default="index, follow")
 SHAARPY_LOCALSTORAGE_MD = env.str("SHAARPY_LOCALSTORAGE_MD", default="")
 SHAARPY_STYLE = env.str("SHAARPY_STYLE", default="blue")
