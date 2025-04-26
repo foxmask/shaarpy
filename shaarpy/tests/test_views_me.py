@@ -3,7 +3,7 @@
 ShaarPy :: Test Me
 """
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser, User
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
@@ -36,6 +36,16 @@ class MeTestCase(TestCase):
         # Check.
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.template_name[0], template)
+        self.assertEqual(response.context_data["object"], self.user)
+
+    def test_me_view_with_unauthenticated_user(self):
+        request = self.factory.get(reverse("me"))
+        request.user = AnonymousUser()
+
+        response = Me.as_view()(request)
+        # Check.
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("login"), response.url)
 
 
 class MeUpdateTestCase(TestCase):
@@ -64,3 +74,26 @@ class MeUpdateTestCase(TestCase):
         # Check.
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.template_name[0], template)
+        self.assertEqual(response.context_data["form"].instance, self.user)
+
+    def test_me_update_view_with_unauthenticated_user(self):
+        request = self.factory.get(reverse("edit_me"))
+        request.user = AnonymousUser()
+
+        response = MeUpdate.as_view()(request)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("login"), response.url)
+
+    def test_me_update_view_post(self):
+        data = {"username": "foxmask", "password": "top_secretsecret"}
+        request = self.factory.post(reverse("edit_me"), data=data)
+        request.user = self.user
+
+        response = MeUpdate.as_view()(request)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("me"))
+
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, "foxmask")

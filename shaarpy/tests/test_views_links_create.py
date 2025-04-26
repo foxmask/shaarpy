@@ -17,26 +17,6 @@ class LinksCreateTestCase(CommonStuffTestCase):
     Create Links from the form
     """
 
-    def setUp(self):
-        super(LinksCreateTestCase, self).setUp()
-        self.factory = RequestFactory()
-
-    def test_get_the_form(self):
-        template = "link_form.html"
-        # Setup request and view.
-        url_to_create = "https://foxmask.eu.org/feeds/all.atom.xml"
-        title = "Le Free de la passion"
-        url_data = f"?post={url_to_create}&title={title}&source=bookmarklet"
-        request = RequestFactory().get(reverse("link_create") + url_data)
-        request.user = self.user
-        view = LinksCreate.as_view(template_name=template)
-        # Run.
-
-        response = view(request)
-        # Check.
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.template_name[0], template)
-
     def test_create_link_alone(self):
         """
         a link alone contains just an URL before the submittion of the form

@@ -90,8 +90,8 @@ Then files are generated, you may found them on your mobile (thanks to syncthing
 
 ### Requirements
 
-* Python from 3.10 3.11 3.12
-* Django from 5.0+
+* Python from 3.11 3.12 3.13
+* Django from 5.1+
 
 ### Installation
 

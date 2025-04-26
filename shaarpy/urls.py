@@ -55,7 +55,3 @@ urlpatterns += (
     re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
     re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
 )
-
-handler403 = "shaarpy.views.error_403"
-handler404 = "shaarpy.views.error_404"
-handler500 = "shaarpy.views.error_500"

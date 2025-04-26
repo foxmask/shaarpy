@@ -6,7 +6,8 @@ ShaarPy :: Views Links
 import logging
 from typing import Any
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -164,10 +165,20 @@ class LinksDelete(LoginRequiredMixin, SettingsMixin, DeleteView):
     success_url = reverse_lazy("home")
 
 
-class LinksDetail(SettingsMixin, DetailView):
+class LinksDetail(PermissionRequiredMixin, SettingsMixin, DetailView):
     """
     view a link / note
     """
 
     model = Links
     slug_field = "url_hashed"
+
+    permission_required = "shaarpy.view_private_links"
+
+
+#    def get_queryset(self):
+#        if self.request.user.is_authenticated:
+#            queryset = Links.objects.filter(url_hashed=self.slug_field)
+#            return queryset
+#        else:
+#            raise PermissionDenied

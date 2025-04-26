@@ -150,10 +150,10 @@ def small_hash(text: str) -> str:
 # IMPORTING SHAARLI FILE
 
 
-def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa
+def import_shaarli(the_file: str, reload_article_from_url: bool) -> None:  # noqa
     """
     the_file: name of the file to import
-    reload_article_from_url: article url
+    reload_article_from_url: boolean
     """
     private = 0
     date_created: datetime
@@ -212,11 +212,11 @@ def import_shaarli(the_file: str, reload_article_from_url: str) -> None:  # noqa
                                 tzinfo=timezone.utc
                             )
                         elif attr == "PRIVATE":
-                            link["private"] = False if value_found == "0" else True
+                            private = link["private"] = False if value_found == "0" else True
                         elif attr == "TAGS":
                             link["tags"] = value_found
 
-                    if link["url"] != "" and link["url"]:
+                    if link["url"]:
                         if reload_article_from_url:
                             if str(link["url"]).startswith("?"):
                                 continue

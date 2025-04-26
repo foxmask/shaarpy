@@ -117,3 +117,4 @@ settings_debug.py
 my_tox
 backup
 *.log*
+

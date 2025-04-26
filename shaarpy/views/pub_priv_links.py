@@ -5,7 +5,7 @@ ShaarPy :: Views Public/Private Links
 
 import logging
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView
 
 from shaarpy.models import Links
@@ -41,13 +41,19 @@ class PublicLinks(SettingsMixin, ListView):
         return context
 
 
-class PrivateLinks(LoginRequiredMixin, SettingsMixin, ListView):
+class PrivateLinks(PermissionRequiredMixin, SettingsMixin, ListView):
     """
     Private Links List
     """
 
+    permission_required = "shaarpy.view_private_links"
+
     def get_queryset(self):
-        return Links.objects.filter(private=True)
+        if self.request.user.is_authenticated:
+            queryset = Links.objects.filter(private=True)
+        else:
+            queryset = Links.objects.none()
+        return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
         queryset = object_list if object_list is not None else self.object_list

@@ -50,6 +50,11 @@ class CommandsImportTestCase(TestCase):
         call_command("import", "shaarpy/tests/bookmarks.html")
 
 
+class CommandsImportReloadTestCase(TestCase):
+    def test_import(self):
+        call_command("import", "shaarpy/tests/bookmarks.html", "--reload")
+
+
 class CommandsImportDoesNotExistsTestCase(TestCase):
     def test_import(self):
         call_command("import", "shaarpy/tests/unexistingbookmarkfile.html")

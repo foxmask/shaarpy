@@ -37,3 +37,4 @@ class Links(models.Model):
 
         verbose_name_plural = "Links"
         ordering = ["-sticky", "-date_created"]
+        permissions = (("view_private_links", "Can view private links"),)

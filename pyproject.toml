@@ -1,10 +1,13 @@
 [build-system]
-requires = ["setuptools>=69"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+#requires = ["setuptools>=69"]
+#build-backend = "setuptools.build_meta"
 
 [project]
 name = "shaarpy"
-version = "1.1.0"
+version = "1.2.0"
 description = "ShaarPy: Share your thoughts, links, ideas, notes. self-hosting bookmarks and micro blogging. If you ever wanted Shaarli in python, that's it ^_*"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -15,7 +18,8 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Web Environment",
     "Intended Audience :: Developers",
-    "License :: WTFPL",
+    #"License :: WTFPL",
+    "License :: Public Domain",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -25,15 +29,15 @@ classifiers = [
 ]
 
 dependencies = [
-    "Django == 5.1.2",
-    "django-environ == 0.11.2",
+    "Django < 5.3",
+    "django-environ == 0.12.0",
     "django-simple-search == 1.0.2",
     "Markdown == 3.7",
-    "Pygments == 2.18.0",
-    "rich == 13.9.4",
-    "pytz == 2024.2",
+    "Pygments == 2.19.0",
+    "rich == 14.0.0",
+    "pytz == 2025.2",
     "python-slugify == 8.0.4",
-    "Jinja2 == 3.1.4",
+    "Jinja2 == 3.1.6",
 ]
 
 [project.urls]
